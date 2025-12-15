@@ -1,0 +1,62 @@
+
+services:
+  mongodb:
+    image: mongo:latest
+    container_name: mongodb
+    ports:
+      - "27020:27017"
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - agrync_network
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend 
+    container_name: agrync_backend
+    ports:
+      - "8000:8000"
+      - "4842:4842"
+    volumes:
+      - ./agrync_backend:/Agrync/agrync_backend
+    depends_on:
+      - mongodb
+    environment:
+      - MONGO_URI=mongodb://mongodb:27017
+    networks:
+      - agrync_network
+
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    container_name: agrync_frontend
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./agrync_frontend:/Agrync/agrync_frontend
+      - node_modules:/Agrync/agrync_frontend/node_modules
+    depends_on:
+      - backend
+    networks:
+      - agrync_network
+
+  orion:
+    image: telefonicaiot/fiware-orion:latest
+    depends_on:
+      - mongodb
+    ports:
+      - "1026:1026"
+    networks:
+      - agrync_network
+    environment:
+      - ORION_MONGO_URI=mongodb://mongodb:27017
+
+networks:
+  agrync_network:
+    driver: bridge
+
+volumes:
+  node_modules:
+  mongo_data:

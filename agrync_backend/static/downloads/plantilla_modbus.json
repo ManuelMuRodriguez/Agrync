@@ -1,0 +1,47 @@
+[
+    {
+        "name": "Dispositivo_1",
+        "ip": "192.168.X.X",
+        "slaves": [
+            {
+                "name": "Slave_1",
+                "slave_id": 1,
+                "variables": [
+                    {"name": "Variable_minimos_atributos", "type": "Float32", "address": 201},
+                    {"name": "Variable_por_defecto", "type": "Float32", "address": 301, "scaling": null, "decimals": 0, "endian": "Big", "interval": 5, "length": null, "writable": false, "min_value": null, "max_value": null, "unit": null},
+                    {"name": "Variable_maximos_atributos", "type": "Float32", "address": 401, "scaling": 0.1, "decimals": 2, "endian": "Little", "interval": 6, "length": 2, "writable": true, "min_value": 10.5, "max_value": 20.8, "unit": "ºC"},
+                    {"name": "Variable_update_sin_cambios","address": 501},
+                    {"name": "Variable_update_maximos_atributos", "address": 601, "interval": 6, "writable": true, "min_value": 10.5, "max_value": 20.8, "unit": "ºC" }
+                ]
+            },
+            {
+                "name": "Slave_2",
+                "slave_id": 2,
+                "variables": [
+                    {"name": "Variable_minimos_atributos", "type": "Float32", "address": 202},
+                    {"name": "Variable_por_defecto", "type": "Float32", "address": 302, "scaling": null, "decimals": 0, "endian": "Big", "interval": 5, "length": null, "writable": false, "min_value": null, "max_value": null, "unit": null},
+                    {"name": "Variable_maximos_atributos", "type": "Float32", "address": 402, "scaling": 0.1, "decimals": 2, "endian": "Little", "interval": 6, "length": 2, "writable": true, "min_value": 10.5, "max_value": 20.8, "unit": "ºC"},
+                    {"name": "Variable_update_sin_cambios","address": 502},
+                    {"name": "Variable_update_maximos_atributos", "address": 602, "interval": 6, "writable": true, "min_value": 10.5, "max_value": 20.8, "unit": "ºC" }
+                ]
+            }
+        ]
+    },
+    {
+        "name": "Dispositivo_2",
+        "ip": "192.168.X.X",
+        "slaves": [
+            {
+                "name": "Slave_1",
+                "slave_id": 100,
+                "variables": [
+                    {"name": "Variable_minimos_atributos", "type": "Float32", "address": 203},
+                    {"name": "Variable_por_defecto", "type": "Float32", "address": 303, "scaling": null, "decimals": 0, "endian": "Big", "interval": 5, "length": null, "writable": false, "min_value": null, "max_value": null, "unit": null},
+                    {"name": "Variable_maximos_atributos", "type": "Float32", "address": 403, "scaling": 0.1, "decimals": 2, "endian": "Little", "interval": 6, "length": 2, "writable": true, "min_value": 10.5, "max_value": 20.8, "unit": "ºC"},
+                    {"name": "Variable_update_sin_cambios","address": 503},
+                    {"name": "Variable_update_maximos_cambios", "address": 603, "interval": 6, "writable": true, "min_value": 10.5, "max_value": 20.8, "unit": "ºC" }
+                ]
+            }
+        ]
+    }
+]

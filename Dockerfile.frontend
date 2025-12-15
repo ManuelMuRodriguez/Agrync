@@ -1,0 +1,13 @@
+FROM node:22.14.0
+
+WORKDIR /Agrync/agrync_frontend
+
+COPY agrync_frontend/package.json ./
+
+RUN npm install --include=dev
+
+COPY agrync_frontend/ /Agrync/agrync_frontend
+
+EXPOSE 5173
+
+CMD ["npm", "run", "dev", "--", "--host", "0.0.0.0", "--open", "false"]

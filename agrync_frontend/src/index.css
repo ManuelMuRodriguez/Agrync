@@ -1,0 +1,347 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+
+@plugin "@tailwindcss/forms";
+
+@layer theme, base, components, utilities;
+@import "tailwindcss/preflight.css" layer(base);
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/utilities.css";
+
+body {
+  font-family: var(--default-font-family) !important;
+  font-size: var(--text-base) !important;
+  line-height: var(--leading-normal);
+  background-color: var(--color-white);
+  color: var(--color-black);
+
+  -webkit-font-smoothing: var(--mantine-webkit-font-smoothing);
+  -moz-osx-font-smoothing: var(--mantine-moz-font-smoothing);
+}
+
+@media (hover: hover) {
+  .mantine-22yr1m[data-selected]:hover {
+    background-color: #033F36 !important;
+  }
+}
+
+@media (hover: hover) {
+  .mantine-i0mq7l[data-disabled]:hover {
+    background-color: #056153;
+  }
+}
+
+@media (hover: hover) {
+  .mantine-lz0o7e:hover {
+    background-color: #033F36;
+  }
+}
+
+@media (hover: hover) {
+  .mantine-lz0o7e {
+    background-color: #056153;
+    color: white;
+  }
+}
+
+
+.mantine-1d06dj6 {
+  font-family: "Inter", Helvetica;
+  
+  color: #056153 !important;
+}
+
+.mantine-1d06dj6[data-hovered] {
+  font-family: "Inter", Helvetica;
+  
+  background-color: rgb(213, 242, 244, 0.7);
+  color: #056153 !important;
+}
+
+.mantine-1sgvsm7[data-hovered] {
+  font-family: "Inter", Helvetica;
+  color: #056153;
+  background-color: rgb(235, 235, 235, 0.6);
+}
+
+input:checked + .mantine-ejxzu {
+  background-color: #056153;
+  border-color: #056153;
+  color: #fff;
+}
+
+
+
+.mantine-o7vefl {
+  font-family: "Inter", Helvetica;
+  color: #056153;
+}
+
+.mantine-1svz3tp {
+  font-family: "Inter", Helvetica;
+  color: #056153;
+}
+
+.mantine-o7vefl[data-hovered] {
+  font-family: "Inter", Helvetica;
+  color: #056153;
+  background-color: rgb(235, 235, 235, 0.6);
+}
+
+
+.mantine-eby8v3[data-hovered] {
+  font-family: "Inter", Helvetica;
+  color: #056153;
+  background-color: rgb(235, 235, 235, 0.6);
+}
+
+.mantine-1wgpz6y[data-hovered] {
+  color: #056153;
+  background-color: rgb(235, 235, 235, 0.6);
+}
+
+.mantine-1wgpz6y {
+  color: #056153;
+}
+
+
+.mantine-eby8v3 {
+  font-family: "Inter", Helvetica;
+  color: #056153;
+}
+
+
+
+.mantine-1sgvsm7 {
+  font-family: "Inter", Helvetica;
+  color: #056153;
+}
+
+
+
+.mantine-ajzg06 {
+  font-family: "Inter", Helvetica;
+  color: #056153 !important;
+}
+
+.mantine-mve552 {
+
+  color: #FB6767
+}
+
+.mantine-gszoqu[data-invalid] {
+  color: #FB6767;
+  border-color: #FB6767;
+}
+
+.mantine-gszoqu:focus, .mantine-gszoqu:focus-within {
+  outline: none !important;
+  box-shadow: none !important;
+  border-color: #056153;
+}
+
+.mantine-gszoqu {
+  outline: none !important;
+  box-shadow: none !important;
+  border-color: #EBEBEB;
+}
+
+.mantine-kcpopt:focus, .mantine-kcpopt:focus-within{
+  outline: none !important;
+  box-shadow: none !important;
+  border-color: #056153;
+}
+
+.mantine-zbh0b4[data-selected]{
+  background-color: #056153 !important;
+  color: white !important;
+}
+
+[id^="mantine-hlj3ex4co-"] {
+    outline: none !important;
+    box-shadow: none !important;
+    color:#056153
+  }
+
+  [id^="mantine-hlj3ex4co-"][data-hovered] {
+    outline: none !important;
+    box-shadow: none !important;
+    background-color: rgb(235, 235, 235, 0.6);
+    color: #056153 !important;
+
+  }
+
+  .mantine-7n5qa6 {
+  color: #056153
+}
+
+
+.mantine-Select-item{
+  color: #056153;
+  background-color: white
+}
+
+.mantine-Select-item[data-selected] {
+  color: white;
+  background-color: #056153
+}
+
+.mantine-Select-item[data-selected][data-hovered] {
+  color: white;
+  background-color: #056153
+}
+
+.mantine-Select-item[data-hovered] {
+  color: #056153;
+  background-color: rgb(235, 235, 235, 0.6);
+}
+
+  [id^="mantine-hlj3ex4co-"][data-selected] {
+    outline: none !important;
+    box-shadow: none !important;
+    background-color: #056153 !important;
+  color: white !important;
+
+  }
+
+
+  .mantine-d77r00[data-hovered] {
+  background-color: rgb(213, 242, 244, 0.7);
+    color: #056153 !important;
+}
+
+.mantine-lnot5i[data-hovered] {
+  background-color: rgb(235, 235, 235, 0.6);
+  color: #056153 !important;
+}
+
+.mantine-lnot5i {
+  color: #056153 !important;
+}
+
+
+  .mantine-d77r00 {
+  color: #056153;
+}
+
+
+
+
+
+
+
+
+
+  .mantine-uh1wb {
+    background-color: #056153;
+  }
+
+  @media (hover: hover) {
+  .mantine-uh1wb:hover {
+    background-color: #033F36;
+  }
+}
+
+  .mantine-Input-input:focus {
+    outline: none !important;
+    box-shadow: none !important;
+    border-width: 2px;
+    border-color: #056153;
+  }
+
+  
+@media (hover: hover) {
+  .mantine-10nrhov:hover {
+    background-color: #033F36;
+    color: white;
+  }
+}
+
+.mantine-10nrhov {
+    background-color: #056153;
+    color: white;
+  }
+
+
+.mantine-10o4d6t {
+  color: #868e96;
+  background-color: white;
+}
+
+.mantine-10o4d6t:hover {
+  color: white;
+  background-color: #868e96;
+}
+
+.mantine-1moub2q {
+  background-color: white;
+  color: #056153;
+}
+
+.mantine-1moub2q:hover {
+  background-color: #056153;
+  color: white;
+}
+
+
+
+@theme {
+
+  --default-font-family: "Inter", Helvetica;
+  --default-mono-font-family: "Inter", Helvetica;
+  --font-inter: "Inter";
+  --text-xs: 0.75rem;
+  --text-xs--line-height: auto;
+  --text-sm: 0.875rem;
+  --text-sm--line-height: auto;
+  --text-base: 1rem;
+  --text-base--line-height: auto;
+  --text-lg: 1.125rem;
+  --text-lg--line-height: auto;
+  --text-xl: 1.25rem;
+  --text-xl--line-height: auto;
+  --text-2xl: 1.5rem;
+  --text-2xl--line-height: auto;
+  --text-3xl: 1.875rem;
+  --text-3xl--line-height: auto;
+  --text-4xl: 2.25rem;
+  --text-4xl--line-height: auto;
+  --text-5xl: 3rem;
+  --text-5xl--line-height: auto;
+  --text-6xl: 3.75rem;
+  --text-6xl--line-height: auto;
+  --text-7xl: 4.5rem;
+  --text-7xl--line-height: auto;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+
+  --color-text-green: #0BCCAF;
+  --color-bg-green: rgb(11, 204, 175, 0.4);
+  --color-bg-section-outline: #E8F4F5;
+  --color-bg-selection: rgb(213, 242, 244, 0.7) ;
+  --color-bg-hover: rgb(235, 235, 235, 0.6);
+  --color-bg-white-almost-solid: rgb(255, 255, 255, 0.7);
+  --color-error: #FB6767;
+  --color-right-green: #60E784;
+  --color-button: #056153;
+  --color-button-hover: #033F36;
+  --color-button-cancel-card: #D4D4D4;
+  --color-title-draggable: rgb(212,212,212, 0.5);
+  --color-button-cancel-hover: #A3A3A3;
+  --color-bg-selection-dropdown: #F3F3F3;
+  --color-gap: #EBEBEB;
+  --color-button-edit: #868e96;
+  --color-bg-modal: rgb(0, 0, 0, 0.2);
+  
+}
+
+:root {
+  --toastify-icon-color-success: #ffff;  
+  --toastify-icon-color-error: #ffff;  
+}
+
+
+
+

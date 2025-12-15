@@ -1,0 +1,10 @@
+openssl req -x509 -newkey rsa:2048 -keyout my_private_key.pem -out my_cert.pem -days 355 -nodes -addext "subjectAltName = URI:urn:freeopcua:python:server,IP: 192.168.15.177" -addext "keyUsage = nonRepudiation, digitalSignature, keyEncipherment, dataEncipherment, keyCertSign" -addext "extendedKeyUsage= serverAuth, clientAuth"
+
+
+openssl x509 -outform der -in my_cert.pem -out my_cert.der
+
+countryName = ES
+stateOrProvinceName = AL
+localityName = AL
+organizationName = UAL
+commonName = PythonOpcUaServer
