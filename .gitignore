@@ -1,0 +1,105 @@
+# ─── Python ───────────────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+.eggs/
+.Python
+*.pyc
+
+# Entornos virtuales
+.venv/
+venv/
+env/
+ENV/
+.env
+
+# pytest / coverage
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+coverage.xml
+*.cover
+
+# mypy / pyright
+.mypy_cache/
+.dmypy.json
+.pyright/
+
+# ─── Node / Frontend ──────────────────────────────────────────────────────────
+node_modules/
+dist/
+.vite/
+*.local
+
+# Cobertura Vitest
+coverage/
+
+# Playwright
+test-results/
+playwright-report/
+blob-report/
+playwright/.cache/
+
+# ─── Logs ─────────────────────────────────────────────────────────────────────
+*.log
+*.log.*
+*.log.rotate.*
+agrync_backend/tasks/logModbus/
+agrync_backend/tasks/logOPCtoFIWARE/
+agrync_backend/tasks/logServer/
+
+# ─── Variables de entorno y secretos ─────────────────────────────────────────
+.env
+.env.*
+!.env.example
+!.env.test
+
+# ─── Certificados ─────────────────────────────────────────────────────────────
+*.der
+*.pem
+*.key
+*.crt
+*.p12
+*.pfx
+# Mantener el directorio certificate pero no sus archivos sensibles
+agrync_backend/tasks/certificate/my_cert.der
+
+# ─── Bases de datos locales ───────────────────────────────────────────────────
+*.sqlite
+*.sqlite3
+*.db
+
+# ─── Docker ───────────────────────────────────────────────────────────────────
+# (los Dockerfile y docker-compose.yml sí se commitean)
+.docker/
+
+# ─── IDEs y editores ──────────────────────────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ─── Sistema operativo ────────────────────────────────────────────────────────
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon?
+._*
+.Spotlight-V100
+.Trashes
+
+# ─── Descargas temporales / builds ───────────────────────────────────────────
+agrync_frontend/dist/
+agrync_backend/static/downloads/*.json
+!agrync_backend/static/downloads/plantilla_modbus.json
