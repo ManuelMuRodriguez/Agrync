@@ -1,5 +1,6 @@
 import { Dialog, Transition } from '@headlessui/react';
 import { Fragment, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
     DndContext,
     DragOverlay,
@@ -73,6 +74,7 @@ export default function ModificarDispositivosUsuario({
     setIsModalOpen,
     userId,
 }: ModifyUserDevicesProps) {
+    const { t } = useTranslation();
     const queryClient = useQueryClient();
 
     const [assigned, setAssigned] = useState<DevicesDragDrop[]>([]);
@@ -211,7 +213,7 @@ export default function ModificarDispositivosUsuario({
                                 >
                                     <div className="flex flex-col md:flex-row items-stretch gap-6">
                                         <div className="flex-1">
-                                            <DroppableColumn id="available" title="Available" items={available} />
+                                            <DroppableColumn id="available" title={t('modifyDevices.available')} items={available} />
                                         </div>
 
                                         <div className="w-full md:w-12 flex items-center justify-center">
@@ -219,7 +221,7 @@ export default function ModificarDispositivosUsuario({
                                         </div>
 
                                         <div className="flex-1">
-                                            <DroppableColumn id="assigned" title="Assigned" items={assigned} />
+                                            <DroppableColumn id="assigned" title={t('modifyDevices.assigned')} items={assigned} />
                                         </div>
                                     </div>
 

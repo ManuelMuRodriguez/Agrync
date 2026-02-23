@@ -7,7 +7,6 @@ import { Dialog, Transition, DialogPanel } from '@headlessui/react';
 import dayjs from 'dayjs';
 import 'dayjs/locale/es';
 import { useGenericDevicesNames } from "../hooks/useGenericDevicesNames";
-//import { Input } from "@mantine/core";
 import { GoDash } from "react-icons/go";
 import { IoRadio } from "react-icons/io5";
 import Highcharts from "highcharts";
@@ -21,6 +20,7 @@ import highchartsAccessibility from "highcharts/modules/accessibility";
 import highchartsExporting from 'highcharts/modules/exporting';
 import { DateTime } from 'luxon';
 import { PacmanLoader } from "react-spinners";
+import { useTranslation } from "react-i18next";
 
 if (typeof highchartsAccessibility === 'function') {
     highchartsAccessibility(Highcharts);
@@ -32,23 +32,8 @@ if (typeof highchartsExporting === 'function') {
 
 dayjs.locale('es');
 
-
-
-const optionsAgregation = [
-    { name: 'Sin Agregación', value: 'sin' },
-    { name: 'Por Horas', value: 'horas' },
-    { name: 'Por Días', value: 'dias' }
-]
-
-const initialValues: FormGraficas = {
-    variables_names: [],
-    start_date: null,
-    end_date: null,
-    aggregation: "sin"
-
-}
-
 export default function Graficas() {
+    const { t } = useTranslation();
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [devices, setDevices] = useState<GenericDevicesNames>([]);
     const [initialSelectedVariables, setInitialSelectedVariables] = useState<string[]>([]);
@@ -56,6 +41,19 @@ export default function Graficas() {
     const [tempStartDate, setTempStartDate] = useState<Date | null>(null);
     const [tempEndDate, setTempEndDate] = useState<Date | null>(null);
     const [chartData, setChartData] = useState<HistoricalData>([]);
+
+    const optionsAgregation = [
+        { name: t('charts.noAggregation'), value: 'sin' },
+        { name: t('charts.byHours'), value: 'horas' },
+        { name: t('charts.byDays'), value: 'dias' }
+    ];
+
+    const initialValues: FormGraficas = {
+        variables_names: [],
+        start_date: null,
+        end_date: null,
+        aggregation: "sin"
+    };
 
     const { register, handleSubmit, watch, setValue } = useForm({
         mode: "onTouched",
@@ -103,7 +101,7 @@ export default function Graficas() {
         },
         onSuccess: (data: HistoricalData) => {
             setChartData(data);
-            toast.success("Datos cargados correctamente", {
+            toast.success(t('charts.dataLoaded'), {
                 closeButton: false,
                 className: 'bg-right-green text-white'
             })
@@ -154,7 +152,7 @@ export default function Graficas() {
             >
                 {/* Fecha de Inicio con DatetimePicker de Mantine */}
                 <div className="w-2/3">
-                    <label htmlFor="fecha_inicio" className="block text-button text-2xl font-bold">Date range:</label>
+                    <label htmlFor="fecha_inicio" className="block text-button text-2xl font-bold">{t('charts.dateRange')}</label>
                     <div className="flex flex-row items-center gap-2">
                         <div className="flex-1 min-w-72">
                             {/* @ts-expect-error: Suppress onChange type mismatch – value is handled manually */}
@@ -164,7 +162,7 @@ export default function Graficas() {
                                 dropdownType="modal"
                                 id="start_date"
                                 locale="es"
-                                placeholder="Start date"
+                                placeholder={t('charts.startDate')}
                                 {...register("start_date")}
                                 //onChange={(date) => setValue("start_date", date)}
                                 onChange={(date) => {
@@ -212,7 +210,7 @@ export default function Graficas() {
                                 withSeconds
                                 id="end_date"
                                 locale="es"
-                                placeholder="End date"
+                                placeholder={t('charts.endDate')}
                                 {...register("end_date")}
                                 //onChange={(date) => setValue("end_date", date)} 
                                 onChange={(date) => {
@@ -252,7 +250,7 @@ export default function Graficas() {
 
                 {/* Select de Agregación */}
                 <div className="w-1/4">
-                    <label htmlFor="agregation" className="block text-button text-2xl font-bold">Aggregation:</label>
+                    <label htmlFor="agregation" className="block text-button text-2xl font-bold">{t('charts.aggregation')}</label>
                     <select
                         id="agregation"
                         className="block w-full min-w-60 rounded-md border-gap focus:border-button focus:ring-button font-medium text-2xl"
@@ -275,7 +273,7 @@ export default function Graficas() {
                     onClick={handleModalOpen}
                     className="flex items-center gap-2 justify-center bg-button hover:bg-button-hover w-full p-3 rounded-lg text-white font-medium text-2xl cursor-pointer"
                 >
-                    <IoRadio /> Select Variables
+                    <IoRadio /> {t('charts.selectVariables')}
                 </button>
 
                 {/* Modal con Headless UI */}
@@ -308,7 +306,7 @@ export default function Graficas() {
                                 >
                                     <DialogPanel className="relative transform overflow-hidden rounded-lg bg-white px-4 pt-5 pb-4 text-left shadow-xl transition-all w-10/12">
                                         {devices.length === 0 ? (
-                                            <p className="text-button text-center text-xl font-bold">No devices found</p>
+                                            <p className="text-button text-center text-xl font-bold">{t('charts.noDevices')}</p>
                                         ) : (
                                             devices.map((device, index) => (
                                                 <div key={index} className="space-y-4 last:mb-0 mb-8">
@@ -318,7 +316,7 @@ export default function Graficas() {
                                                     </div>
 
                                                     {device.variables_names.length === 0 || isError ? (
-                                                        <p className="text-center text-button font-bold">No variables available</p>
+                                                        <p className="text-center text-button font-bold">{t('charts.noVariables')}</p>
                                                     ) : (
                                                         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mt-2">
                                                             {device.variables_names.map((variable, idx) => {
@@ -362,7 +360,7 @@ export default function Graficas() {
                                             }}
                                             className="w-full p-3 bg-button hover:bg-button-hover text-white rounded-lg mt-6 font-bold text-xl"
                                         >
-                                            Save
+                                            {t('charts.save')}
                                         </button>
                                     </DialogPanel>
                                 </Transition>
@@ -373,7 +371,7 @@ export default function Graficas() {
             </form>
 
             {chartData.length === 0 ? (
-                <p className="text-3xl font-bold text-center text-button">There are no records for the selected sensors in the time range used.</p>
+                <p className="text-3xl font-bold text-center text-button">{t('charts.noData')}</p>
             ) : (
                 <div className="w-full min-w-0 border-2 border-button rounded-lg p-4 bg-white shadow-md">
                     <HighchartsReact
@@ -405,7 +403,7 @@ export default function Graficas() {
                                 }
                             },
                             title: {
-                                text: 'Selected variables',
+                                text: t('charts.chartTitle'),
                                 style: {
                                     color: '#056153',
                                 },
@@ -426,7 +424,7 @@ export default function Graficas() {
                             },
                             yAxis: {
                                 title: {
-                                    text: 'Valor',
+                                    text: t('charts.yAxisTitle'),
                                     style: {
                                         color: '#056153',
                                     }

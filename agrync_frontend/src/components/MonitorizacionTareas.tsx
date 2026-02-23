@@ -1,17 +1,11 @@
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { startTask, stopTask, getModbusTaskStatus } from "../api/TaskAPI";
 import { Task } from "../types";
 import { toast } from "react-toastify";
 import { Switch } from "@headlessui/react";
 import { PacmanLoader } from "react-spinners";
-
-const stateMap = {
-  running: "Running",
-  stopped: "Stopped",
-  failed: "Failed",
-};
-
 
 type MonitorizacionTareasProps = {
     taskName: string;
@@ -20,7 +14,14 @@ type MonitorizacionTareasProps = {
 };
 
 export default function MonitorizacionTareas({ taskName, cooldownKey, cooldownMs = 2 * 60 * 1000 }: MonitorizacionTareasProps) {
+  const { t } = useTranslation();
   const queryClient = useQueryClient();
+
+  const stateMap: Record<string, string> = {
+    running: t('monitoring.running'),
+    stopped: t('monitoring.stopped'),
+    failed: t('monitoring.failed'),
+  };
   const [logsHtml, setLogsHtml] = useState<string>("");
   const [isCooldown, setIsCooldown] = useState(false);
 
@@ -119,7 +120,7 @@ export default function MonitorizacionTareas({ taskName, cooldownKey, cooldownMs
 
   useEffect(() => {
     if (isError) {
-      toast.error("Error loading service status", {
+      toast.error(t('monitoring.errorLoading'), {
         closeButton: false,
         className: "bg-error text-white",
       });
@@ -130,14 +131,14 @@ export default function MonitorizacionTareas({ taskName, cooldownKey, cooldownMs
     <div className="flex flex-row p-4">
       <div className="w-1/3 mt-12">
         <h2 className="text-button font-bold text-2xl mb-8 text-center">
-         Service control: {taskName}
+         {t('monitoring.serviceControl', { taskName })}
         </h2>
 
         <div className="flex flex-col space-y-8">
           <h3 className="text-button font-medium text-xl text-center">
-            Service status:{" "}
+            {t('monitoring.serviceStatus')}{" "}
             <span className="text-3xl font-bold ml-2">
-              {statusData?.state ? stateMap[statusData.state] ?? statusData.state : "Desconocido"}
+              {statusData?.state ? stateMap[statusData.state] ?? statusData.state : t('monitoring.unknown')}
             </span>
           </h3>
 
@@ -165,14 +166,14 @@ export default function MonitorizacionTareas({ taskName, cooldownKey, cooldownMs
 
         {isCooldown && !isLocked && (
           <p className="text-button font-semibold my-2">
-            *Please wait at least 2 minutes before pressing the button again.*
+          {t('monitoring.cooldownWarning')}
           </p>
         )}
       </div>
 
       {estadoActual && (
         <div className="w-2/3 ml-8 bg-black rounded-md overflow-auto text-white font-mono text-sm">
-          <h3 className="mb-2 font-bold text-center text-2xl">Logs {taskName}</h3>
+          <h3 className="mb-2 font-bold text-center text-2xl">{t('monitoring.logs', { taskName })}</h3>
           <div className="ml-4" dangerouslySetInnerHTML={{ __html: logsHtml }} />
         </div>
       )}

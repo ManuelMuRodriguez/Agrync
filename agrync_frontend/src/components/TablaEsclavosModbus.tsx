@@ -11,6 +11,7 @@ import {
 } from 'mantine-react-table';
 import { ModbusSlaveTable } from '../types';
 import { useEffect, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { createSlave, deleteSlave, getSlaves, updateSlave } from '../api/ModbusAPI';
 import { MRT_Localization_ES } from 'mantine-react-table/locales/es';
@@ -21,6 +22,7 @@ import { ActionIcon, Tooltip, Button, Flex, Text } from '@mantine/core';
 import { IconEdit, IconRefresh, IconTrash } from '@tabler/icons-react';
 
 export default function TablaEsclavosModbus() {
+  const { t } = useTranslation();
 
   const [validationErrors, setValidationErrors] = useState<Record<string, string | undefined>>({});
   const [globalFilter, setGlobalFilter] = useState('');
@@ -34,9 +36,9 @@ export default function TablaEsclavosModbus() {
 
   function validateSlave(slave: ModbusSlaveTable) {
     return {
-      name: !slave.name ? 'The name is mandatory.' : undefined,
-      slave_id: !validateSlaveId(slave.slave_id) ? 'It must be a positive integer.' : undefined,
-      id_device: !slave.id_device ? 'You must select a device.' : undefined,
+      name: !slave.name ? t('slavesTable.nameRequired') : undefined,
+      slave_id: !validateSlaveId(slave.slave_id) ? t('slavesTable.positiveInteger') : undefined,
+      id_device: !slave.id_device ? t('slavesTable.deviceRequired') : undefined,
     };
   }
 
@@ -61,8 +63,8 @@ export default function TablaEsclavosModbus() {
 
       return {
         ...slave,
-        createdAt: createdAt.isValid ? createdAt.setZone('Europe/Madrid').toFormat('dd/MM/yyyy HH:mm:ss') : 'Fecha inválida',
-        updatedAt: updatedAt.isValid ? updatedAt.setZone('Europe/Madrid').toFormat('dd/MM/yyyy HH:mm:ss') : 'Fecha inválida',
+        createdAt: createdAt.isValid ? createdAt.setZone('Europe/Madrid').toFormat('dd/MM/yyyy HH:mm:ss') : t('common.invalidDate'),
+        updatedAt: updatedAt.isValid ? updatedAt.setZone('Europe/Madrid').toFormat('dd/MM/yyyy HH:mm:ss') : t('common.invalidDate'),
         id_device: slave.id_device.toString(),
       };
     }) ?? [];
@@ -79,7 +81,7 @@ export default function TablaEsclavosModbus() {
   const columns = useMemo<MRT_ColumnDef<ModbusSlaveTable>[]>(() => [
     {
       accessorKey: 'id_device',
-      header: 'Id device',
+      header: t('slavesTable.idDevice'),
       size: 200,
       enableEditing: true,
       editVariant: 'select',
@@ -97,7 +99,7 @@ export default function TablaEsclavosModbus() {
     },
     {
       accessorKey: 'name',
-      header: 'Name',
+      header: t('slavesTable.name'),
       enableGrouping: false,
       mantineEditTextInputProps: () => ({
         required: true,
@@ -107,7 +109,7 @@ export default function TablaEsclavosModbus() {
     },
     {
       accessorKey: 'slave_id',
-      header: 'ID Slave',
+      header: t('slavesTable.idSlave'),
       enableGrouping: false,
       mantineEditTextInputProps: () => ({
         required: true,
@@ -119,9 +121,9 @@ export default function TablaEsclavosModbus() {
         type: 'number'
       }),
     },
-    { accessorKey: 'createdAt', header: 'Date of creation', enableEditing: false, enableGrouping: false },
-    { accessorKey: 'updatedAt', header: 'Last modification', enableEditing: false, enableGrouping: false },
-  ], [validationErrors, formattedDeviceOptions]);
+    { accessorKey: 'createdAt', header: t('slavesTable.createdAt'), enableEditing: false, enableGrouping: false },
+    { accessorKey: 'updatedAt', header: t('slavesTable.updatedAt'), enableEditing: false, enableGrouping: false },
+  ], [validationErrors, formattedDeviceOptions, t]);
 
   useEffect(() => {
     if (columns.length === 0) return;
@@ -225,9 +227,9 @@ export default function TablaEsclavosModbus() {
 
   const openDeleteConfirmModal = (row: MRT_Row<ModbusSlaveTable>) =>
     modals.openConfirmModal({
-      title: 'Confirmar eliminación',
-      children: <Text>Are you sure you want to delete the slave {row.original.name}?</Text>,
-      labels: { confirm: 'Delete', cancel: 'Cancel' },
+      title: t('slavesTable.confirmDelete'),
+      children: <Text>{t('slavesTable.confirmDeleteMsg', { name: row.original.name })}</Text>,
+      labels: { confirm: t('slavesTable.delete'), cancel: t('slavesTable.cancel') },
       confirmProps: { style: { backgroundColor: '#FB6767', color: 'white' } },
       cancelProps: { style: { backgroundColor: '#D4D4D4', color: 'white' } },
       onConfirm: () => mutateDelete({ deviceId: row.original.id_device, slaveId: row.original.id }),
@@ -268,20 +270,20 @@ export default function TablaEsclavosModbus() {
     onCreatingRowSave: handleCreateRow,
     renderTopToolbarCustomActions: ({ table }) => (
       <Flex justify="space-between" align="center">
-        <Button onClick={() => table.setCreatingRow(true)}>Create New Slave</Button>
-        <Tooltip label="Refrescar">
+        <Button onClick={() => table.setCreatingRow(true)}>{t('slavesTable.createNew')}</Button>
+        <Tooltip label={t('slavesTable.refresh')}>
           <ActionIcon onClick={() => refetch()}><IconRefresh /></ActionIcon>
         </Tooltip>
       </Flex>
     ),
     renderRowActions: ({ row, table }) => (
       <Flex gap="md" style={{ overflowX: 'auto', whiteSpace: 'nowrap' }}>
-        <Tooltip label='Editar'>
+        <Tooltip label={t('slavesTable.edit')}>
           <ActionIcon variant="light" color="gray" onClick={() => table.setEditingRow(row)} className="text-button-edit bg-gap hover:text-white hover:bg-button-edit disabled:text-button-cancel-card">
             <IconEdit />
           </ActionIcon>
         </Tooltip>
-        <Tooltip label='Eliminar'>
+        <Tooltip label={t('slavesTable.remove')}>
           <ActionIcon color="red" onClick={() => openDeleteConfirmModal(row)} className="text-error bg-gap hover:text-white hover:bg-error disabled:text-button-cancel-card">
             <IconTrash />
           </ActionIcon>
@@ -307,7 +309,7 @@ export default function TablaEsclavosModbus() {
 
   useEffect(() => {
     if (isError && error) {
-      toast.error(error.message || 'Error loading slaves', {
+      toast.error(error.message || t('slavesTable.errorLoading'), {
         closeButton: false,
         className: 'bg-error text-white',
       });

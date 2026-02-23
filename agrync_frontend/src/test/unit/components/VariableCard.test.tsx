@@ -123,59 +123,59 @@ describe('VariableCard', () => {
   describe('Formulario de escritura', () => {
     it('no muestra el formulario si la variable no es writable', () => {
       renderCard({ writable: false })
-      expect(screen.queryByPlaceholderText('Nuevo Valor')).toBeNull()
+      expect(screen.queryByPlaceholderText('New Value')).toBeNull()
     })
 
     it('muestra el formulario si la variable es writable', () => {
       renderCard({ writable: true })
-      expect(screen.getByPlaceholderText('Nuevo Valor')).toBeInTheDocument()
+      expect(screen.getByPlaceholderText('New Value')).toBeInTheDocument()
     })
 
     it('el input está deshabilitado para rol Lector', () => {
       renderCard({ writable: true }, {}, 'Lector')
-      const input = screen.getByPlaceholderText('Nuevo Valor')
+      const input = screen.getByPlaceholderText('New Value')
       expect(input).toBeDisabled()
     })
 
     it('el input está habilitado para rol Administrador', () => {
       renderCard({ writable: true }, {}, 'Administrador')
-      const input = screen.getByPlaceholderText('Nuevo Valor')
+      const input = screen.getByPlaceholderText('New Value')
       expect(input).not.toBeDisabled()
     })
 
     it('el botón Modificar está deshabilitado para Lector', () => {
       renderCard({ writable: true }, {}, 'Lector')
-      expect(screen.getByDisplayValue('Modificar')).toBeDisabled()
+      expect(screen.getByDisplayValue('Modify')).toBeDisabled()
     })
 
     it('muestra error si se envía el formulario vacío', async () => {
       const user = userEvent.setup()
       renderCard({ writable: true })
-      await user.click(screen.getByDisplayValue('Modificar'))
+      await user.click(screen.getByDisplayValue('Modify'))
       await waitFor(() => {
-        expect(screen.getByText('El valor es obligatorio')).toBeInTheDocument()
+        expect(screen.getByText('Value is required')).toBeInTheDocument()
       })
     })
 
     it('muestra error si el valor no es un número', async () => {
       const user = userEvent.setup()
       renderCard({ writable: true })
-      await user.type(screen.getByPlaceholderText('Nuevo Valor'), 'abc')
-      await user.click(screen.getByDisplayValue('Modificar'))
+      await user.type(screen.getByPlaceholderText('New Value'), 'abc')
+      await user.click(screen.getByDisplayValue('Modify'))
       await waitFor(() => {
-        expect(screen.getByText('Debe introducirse un número')).toBeInTheDocument()
+        expect(screen.getByText('Must be a number')).toBeInTheDocument()
       })
     })
 
     it('acepta valores negativos', async () => {
       const user = userEvent.setup()
       renderCard({ writable: true })
-      const input = screen.getByPlaceholderText('Nuevo Valor')
+      const input = screen.getByPlaceholderText('New Value')
       await user.type(input, '-15.3')
       // Should not show a format error
-      await user.click(screen.getByDisplayValue('Modificar'))
+      await user.click(screen.getByDisplayValue('Modify'))
       await waitFor(() => {
-        expect(screen.queryByText('Debe introducirse un número')).toBeNull()
+        expect(screen.queryByText('Must be a number')).toBeNull()
       })
     })
   })

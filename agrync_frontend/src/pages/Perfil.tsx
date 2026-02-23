@@ -5,9 +5,11 @@ import { useAuth } from '../hooks/useAuth';
 import { changeFullName } from "../api/UserAPI";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
+import { useTranslation } from "react-i18next";
 
 export default function Perfil() {
 
+  const { t } = useTranslation();
   const queryClient = useQueryClient();
   const { data } = useAuth();
 
@@ -43,7 +45,7 @@ export default function Perfil() {
   const userId = data?.id;
 
   if (formData.full_name === data?.full_name) {
-    toast.error("The name you are trying to enter is the same as the current one", {
+    toast.error(t('profile.sameName'), {
       closeButton: false,
       className: 'bg-error text-white'
     });
@@ -60,7 +62,7 @@ export default function Perfil() {
       <div className="flex flex-col items-start space-y-12">
 
           <h2 className=" text-4xl text-button text-center font-bold">
-            Change username
+            {t('profile.title')}
           </h2>
 
           <form
@@ -73,10 +75,10 @@ export default function Perfil() {
                       <input
                         id="full_name"
                         type="text"
-                        placeholder="User name"
+                        placeholder={t('profile.placeholder')}
                         className={`w-full p-3 outline-0 focus:ring-0 border-2 placeholder:text-gap font-medium text-2xl rounded-lg ${errors.full_name ? 'text-error border-error focus:border-error' : 'border-gap focus:border-button'}`}
                         {...register("full_name", {
-                          required: "The name cannot be left blank."
+                          required: t('profile.nameRequired')
                         })}
                       />
                       {errors.full_name && (
@@ -88,7 +90,7 @@ export default function Perfil() {
                   <div>
                     <input
                       type="submit"
-                      value='Guardar Cambios'
+                      value={t('profile.saveChanges')}
                       className="bg-button hover:bg-button-hover w-full p-3 rounded-lg text-white font-medium text-2xl cursor-pointer"
                     />
                   </div>

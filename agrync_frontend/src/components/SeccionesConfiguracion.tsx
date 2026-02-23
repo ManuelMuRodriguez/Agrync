@@ -1,14 +1,16 @@
 import { Link, useLocation } from 'react-router-dom'
 import { CgProfile } from "react-icons/cg";
 import { TbLockPassword } from "react-icons/tb";
-
-const tabs = [
-    {name: 'User profile', href: '/configuracion/perfil', icon: CgProfile},
-    {name: 'Credentials', href: '/configuracion/credenciales', icon: TbLockPassword}
-]
+import { useTranslation } from 'react-i18next';
 
 export default function SeccionesConfiguracion() {
+    const { t } = useTranslation();
     const location = useLocation()
+
+    const tabs = [
+        {name: t('configSections.profile'), href: '/configuracion/perfil', icon: CgProfile},
+        {name: t('configSections.credentials'), href: '/configuracion/credenciales', icon: TbLockPassword}
+    ]
     
     return (
         <div className='-mt-8 mb-10 w-fit sticky top-0 bg-white pt-8'>
@@ -17,7 +19,7 @@ export default function SeccionesConfiguracion() {
                     <nav className="flex" aria-label="Tabs">
                         {tabs.map((tab) => (
                             <Link
-                                key={tab.name}
+                                key={tab.href}
                                 to={tab.href}
                                 className= {`${location.pathname === tab.href ? 'border-text-green text-text-green' : 'border-transparent text-gap hover:border-button-cancel-hover hover:text-button-cancel-hover'} group inline-flex items-center border-b-2 py-4 px-16 text-3xl font-semibold`}
                                 

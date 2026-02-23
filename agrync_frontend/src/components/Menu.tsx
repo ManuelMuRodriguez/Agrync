@@ -8,14 +8,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { logout } from '../api/AuthAPI';
 import { toast } from 'react-toastify';
 import { Role } from "../types";
-
-
-const tabs = [
-    { name: 'Dashboard', href: '/dashboard', icon: LuLayoutDashboard },
-    { name: 'Graphs', href: '/graficas', icon: VscGraphLine },
-    { name: 'Configuration', href: '/configuracion/perfil', icon: IoSettingsOutline },
-    { name: 'Administration', href: '/administracion/monitorizacion/modbus', icon: RiAdminLine },
-]
+import { useTranslation } from 'react-i18next';
 
 
 type MenuProps = {
@@ -24,10 +17,17 @@ type MenuProps = {
 
 export default function Menu({role}: MenuProps) {
 
+    const { t, i18n } = useTranslation();
     const queryClient = useQueryClient()
     const navigate = useNavigate()
     const location = useLocation()
-    //const currentTab = tabs.filter(tab => tab.href === location.pathname)[0].href
+
+    const tabs = [
+        { name: t('menu.dashboard'), href: '/dashboard', icon: LuLayoutDashboard },
+        { name: t('menu.graphs'), href: '/graficas', icon: VscGraphLine },
+        { name: t('menu.configuration'), href: '/configuracion/perfil', icon: IoSettingsOutline },
+        { name: t('menu.administration'), href: '/administracion/monitorizacion/modbus', icon: RiAdminLine },
+    ];
 
     const {mutate} = useMutation({
     mutationFn: logout,
@@ -52,6 +52,11 @@ export default function Menu({role}: MenuProps) {
 
     const handleLogout = () => mutate()
 
+    const handleLanguageToggle = () => {
+        const newLang = i18n.language.startsWith('es') ? 'en' : 'es';
+        i18n.changeLanguage(newLang);
+    };
+
     //const queryClient = useQueryClient()
     //const logout = () => {
     //    localStorage.removeItem('ACCESS_TOKEN_AGRYNC')
@@ -60,7 +65,7 @@ export default function Menu({role}: MenuProps) {
 
 
   const filteredTabs = tabs.filter(tab => {
-    if (tab.name === 'Administration' && role !== 'Administrador') {
+    if (tab.name === t('menu.administration') && role !== 'Administrador') {
       return false;
     }
     return true;
@@ -76,7 +81,7 @@ export default function Menu({role}: MenuProps) {
 
         {filteredTabs.map((tab) => (
                             <Link
-                                key={tab.name}
+                                key={tab.href}
                                 to={tab.href}
                                 className={`${location.pathname.split("/")[1] == tab.href.split("/")[1] ? 'bg-bg-selection': 'hover:bg-bg-hover transition duration-300'} w-65 text-xl text-text-green font-semibold flex items-center justify-center rounded-2xl h-17 `}
                             >
@@ -91,14 +96,22 @@ export default function Menu({role}: MenuProps) {
 
         </div>
 
-        <div className='mb-4'>
+        <div className='mb-4 flex flex-col items-center gap-2'>
+
+            <button
+                onClick={handleLanguageToggle}
+                className='w-65 text-sm text-text-green font-semibold flex items-center justify-center rounded-lg h-10 hover:bg-bg-hover transition duration-300 border border-gap'
+                title={t('common.language')}
+            >
+                {i18n.language.startsWith('es') ? '🇬🇧 EN' : '🇪🇸 ES'}
+            </button>
 
             <button
                 key="cerrar-sesion"
                 className=' w-65 text-xl text-text-green font-semibold flex items-center justify-center rounded-lg h-17  hover:bg-bg-hover transition duration-300'
                 onClick={handleLogout}
             > <RiLogoutBoxLine className='mr-2'
-            aria-hidden="true" />  Log out</button>
+            aria-hidden="true" />  {t('menu.logout')}</button>
 
         </div>
 

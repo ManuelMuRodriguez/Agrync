@@ -6,9 +6,11 @@ import { useMutation } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { changeEmail } from "../api/UserAPI";
 import { useAuth } from "../hooks/useAuth";
+import { useTranslation } from "react-i18next";
 
 export default function CambiarEmail() {
 
+    const { t } = useTranslation();
     const { data } = useAuth();
 
     const initialValues: ChangeEmailForm = {
@@ -60,7 +62,7 @@ export default function CambiarEmail() {
         <div className="w-1/2 flex flex-col space-y-12 min-w-md">
           
           <h2 className=" text-4xl text-button text-start font-bold">
-            Change Email
+            {t('changeEmail.title')}
           </h2>
 
           <form
@@ -75,13 +77,13 @@ export default function CambiarEmail() {
                 <input
                   id="email"
                   type="email"
-                  placeholder="Current email"
+                  placeholder={t('changeEmail.currentEmail')}
                   className={`w-full p-3 outline-0 focus:ring-0 border-2 placeholder:text-gap font-medium text-2xl rounded-lg ${errors.email ? 'text-error border-error focus:border-error' : 'border-gap focus:border-button'}`}
                   {...register("email", {
-                    required: "You must enter your current email address.",
+                    required: t('changeEmail.currentRequired'),
                     pattern: {
                         value: /[^@]+@[^@]+\.[a-zA-Z]{2,6}/,
-                        message: "Email Invalid",
+                        message: t('changeEmail.invalidEmail'),
                       }
                   })}
                 />
@@ -94,13 +96,13 @@ export default function CambiarEmail() {
                 <input
                   id="new_email"
                   type="email"
-                  placeholder="New Email"
+                  placeholder={t('changeEmail.newEmail')}
                   className={`w-full p-3 outline-0 focus:ring-0 border-2 placeholder:text-gap font-medium text-2xl rounded-lg  ${errors.new_email ? 'text-error border-error focus:border-error' : 'border-gap focus:border-button'}`}
                   {...register("new_email", {
-                    required: "The new mailbox cannot be empty",
+                    required: t('changeEmail.newRequired'),
                     pattern: {
                         value: /[^@]+@[^@]+\.[a-zA-Z]{2,6}/,
-                        message: "Email Invalid",
+                        message: t('changeEmail.invalidEmail'),
                       },
                   })}
                 />
@@ -113,15 +115,15 @@ export default function CambiarEmail() {
                 <input
                   id="new_email_confirmation"
                   type="email"
-                  placeholder="Resend new email"
+                  placeholder={t('changeEmail.confirmEmail')}
                   className={`w-full p-3 outline-0 focus:ring-0 border-2 placeholder:text-gap font-medium text-2xl rounded-lg  ${errors.new_email_confirmation ? 'text-error border-error focus:border-error' : 'border-gap focus:border-button'}`}
                   {...register("new_email_confirmation", {
-                    required: "Repeat new email",
+                    required: t('changeEmail.confirmRequired'),
                     pattern: {
                         value: /[^@]+@[^@]+\.[a-zA-Z]{2,6}/,
-                        message: "Invalid email address",
+                        message: t('changeEmail.invalidEmail'),
                       },
-                    validate: value => value === new_email || "Las nuevas contraseñas no coinciden"
+                    validate: value => value === new_email || t('changeEmail.emailMismatch')
 
                   })}
                 />
@@ -136,7 +138,7 @@ export default function CambiarEmail() {
             <div>
               <input
                 type="submit"
-                value='Save new email'
+                value={t('changeEmail.save')}
                 className="bg-button hover:bg-button-hover w-full p-3 rounded-lg  text-white font-medium text-2xl cursor-pointer"
               />
             </div>

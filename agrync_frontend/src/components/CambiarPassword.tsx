@@ -6,9 +6,11 @@ import { changePassword } from "../api/UserAPI";
 import { useAuth } from "../hooks/useAuth";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "react-toastify";
+import { useTranslation } from "react-i18next";
 
 export default function CambiarPassword() {
 
+    const { t } = useTranslation();
     const { data } = useAuth();
     const initialValues: ChangePasswordForm = {
         password: '',
@@ -58,7 +60,7 @@ export default function CambiarPassword() {
         <div className="w-1/2 flex flex-col space-y-12 min-w-lg">
           
           <h2 className=" text-4xl text-button text-start font-bold">
-            Change password
+            {t('changePassword.title')}
           </h2>
 
           <form
@@ -73,10 +75,10 @@ export default function CambiarPassword() {
                 <input
                   id="password"
                   type="password"
-                  placeholder="Current password"
+                  placeholder={t('changePassword.current')}
                   className={`w-full p-3 outline-0 focus:ring-0 border-2 placeholder:text-gap font-medium text-2xl rounded-lg ${errors.password ? 'text-error border-error focus:border-error' : 'border-gap focus:border-button'}`}
                   {...register("password", {
-                    required: "You must enter your current password"
+                    required: t('changePassword.currentRequired')
                   })}
                 />
                 {errors.password && (
@@ -88,13 +90,13 @@ export default function CambiarPassword() {
                 <input
                   id="new_password"
                   type="password"
-                  placeholder="New password"
+                  placeholder={t('changePassword.new')}
                   className={`w-full p-3 outline-0 focus:ring-0 border-2 placeholder:text-gap font-medium text-2xl rounded-lg  ${errors.new_password ? 'text-error border-error focus:border-error' : 'border-gap focus:border-button'}`}
                   {...register("new_password", {
-                    required: "The new password cannot be empty",
+                    required: t('changePassword.newRequired'),
                     minLength: {
                       value: 8,
-                      message: 'The password must be at least 8 characters long'
+                      message: t('changePassword.minLength')
                     }
                   })}
                 />
@@ -107,11 +109,11 @@ export default function CambiarPassword() {
                 <input
                   id="new_password_confirmation"
                   type="password"
-                  placeholder="Repeat new password"
+                  placeholder={t('changePassword.confirm')}
                   className={`w-full p-3 outline-0 focus:ring-0 border-2 placeholder:text-gap font-medium text-2xl rounded-lg  ${errors.new_password_confirmation ? 'text-error border-error focus:border-error' : 'border-gap focus:border-button'}`}
                   {...register("new_password_confirmation", {
-                    required: "Repeating the new password is mandatory",
-                    validate: value => value === new_password || "The new passwords do not match"
+                    required: t('changePassword.confirmRequired'),
+                    validate: value => value === new_password || t('changePassword.mismatch')
                   })}
                 />
                 {errors.new_password_confirmation && (
@@ -125,7 +127,7 @@ export default function CambiarPassword() {
             <div>
               <input
                 type="submit"
-                value='Save New Password'
+                value={t('changePassword.save')}
                 className="bg-button hover:bg-button-hover w-full p-3 rounded-lg  text-white font-medium text-2xl cursor-pointer"
               />
             </div>

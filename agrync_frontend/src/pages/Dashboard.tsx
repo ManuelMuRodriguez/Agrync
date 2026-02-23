@@ -12,12 +12,14 @@ import { useMutation } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { getDashboardBody, getLastData } from "../api/GenericDevicesApi";
 import { PacmanLoader } from "react-spinners";
+import { useTranslation } from "react-i18next";
 
 
 
 
 
 export default function Dashboard() {
+  const { t } = useTranslation();
   const [devices, setDevices] = useState<GenericDevicesNames>([]);
   const [dataGenericDevices, setDataGenericDevices] = useState<GenericDevices>([]);
   const [initialSelectedVariables, setInitialSelectedVariables] = useState<string[]>([]);
@@ -80,7 +82,7 @@ export default function Dashboard() {
       setlastData(mapped);
     },
     onError: (err) => {
-      console.error("Error obtaining real-time values", err);
+      console.error(t('dashboard.errorRealtime'), err);
     }
   });
 
@@ -100,7 +102,7 @@ export default function Dashboard() {
     },
     onSuccess: (dataGenericDevices: GenericDevices) => {
       setDataGenericDevices(dataGenericDevices);
-      toast.success("Data successfully uploaded", {
+      toast.success(t('dashboard.dataLoaded'), {
         closeButton: false,
         className: "bg-right-green text-white"
       });
@@ -168,7 +170,7 @@ export default function Dashboard() {
           onClick={handleModalOpen}
           className="flex items-center gap-2 justify-center bg-button hover:bg-button-hover w-full p-3 rounded-lg text-white font-medium text-2xl cursor-pointer"
         >
-          <IoRadio /> Select Variables
+          <IoRadio /> {t('dashboard.selectVariables')}
         </button>
 
         {/* Modal */}
@@ -202,7 +204,7 @@ export default function Dashboard() {
                   <DialogPanel className="relative transform overflow-hidden rounded-lg bg-white px-4 pt-5 pb-4 text-left shadow-xl transition-all w-10/12">
                     {devices.length === 0 ? (
                       <p className="text-button text-center text-xl font-bold">
-                        No devices found
+                        {t('dashboard.noDevices')}
                       </p>
                     ) : (
                       devices.map((device, index) => (
@@ -213,7 +215,7 @@ export default function Dashboard() {
                           </div>
 
                           {device.variables_names.length === 0 || isError ? (
-                            <p className="text-center text-button font-bold">No variables available</p>
+                            <p className="text-center text-button font-bold">{t('dashboard.noVariables')}</p>
                           ) : (
                             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mt-2">
                               {device.variables_names.map((variable, idx) => {
@@ -257,8 +259,7 @@ export default function Dashboard() {
                       }}
                       className="w-full p-3 bg-button hover:bg-button-hover text-white rounded-lg mt-6 font-bold text-xl"
                     >
-                      Save
-                    </button>
+                      {t('dashboard.save')}
                   </DialogPanel>
                 </Transition>
               </div>
@@ -271,7 +272,7 @@ export default function Dashboard() {
 
       {dataGenericDevices.length === 0 && (
         <p className="text-center text-3xl text-button font-bold mt-48">
-          No variables have been selected yet. To select them, press the button above.
+          {t('dashboard.noSelected')}
         </p>
       )}
 

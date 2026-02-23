@@ -6,8 +6,10 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { login } from "../api/AuthAPI";
 import { toast } from "react-toastify";
 import { PacmanLoader } from "react-spinners";
+import { useTranslation } from "react-i18next";
 
 export default function Login() {
+  const { t } = useTranslation();
   const queryClient = useQueryClient();
   const navigate = useNavigate()
   const initialValues: UserLoginForm = {
@@ -25,7 +27,7 @@ export default function Login() {
       })
     },
     onSuccess: () => {
-      toast.success("Inicio de sesión satisfactorio", {
+      toast.success(t('login.successLogin'), {
       closeButton: false,
       className: 'bg-right-green text-white'
       })
@@ -35,7 +37,6 @@ export default function Login() {
     
   })
 
-  
   
 
   const handleLogin = (formData: UserLoginForm) => mutate(formData)
@@ -58,10 +59,10 @@ export default function Login() {
               placeholder="Email"
               className={`w-full p-3 outline-0 focus:ring-0 border-2 placeholder:text-gap bg-bg-white-almost-solid font-medium text-2xl rounded-lg ${errors.username ? 'text-error border-error focus:border-error' : 'border-gap focus:border-button'}`}
               {...register("username", {
-                required: "El email es obligatorio",
+                required: t('login.emailRequired'),
                 pattern: {
                   value: /[^@]+@[^@]+\.[a-zA-Z]{2,6}/,
-                  message: "Invalid email address",
+                  message: t('login.invalidEmail'),
                 },
               })}
             />
@@ -77,7 +78,7 @@ export default function Login() {
               placeholder="Password"
               className={`w-full p-3 outline-0 focus:ring-0 border-2 placeholder:text-gap bg-bg-white-almost-solid font-medium text-2xl rounded-lg  ${errors.password ? 'text-error border-error focus:border-error' : 'border-gap focus:border-button'}`}
               {...register("password", {
-                required: "The password is mandatory",
+                required: t('login.passwordRequired'),
 
               })}
             />
@@ -91,7 +92,7 @@ export default function Login() {
         <div>
           <input
             type="submit"
-            value='Iniciar Sesión'
+            value={t('login.signIn')}
             disabled={isPending}
             className="bg-button hover:bg-button-hover w-full p-3 rounded-lg text-white font-medium text-2xl cursor-pointer"
           />
@@ -103,7 +104,7 @@ export default function Login() {
               to={'/crear-password'}
               className="text-text-green hover:underline font-bold text-lg"
             
-            >Haven't activated your account yet? Activate it here.</Link>
+            >{t('login.activateAccount')}</Link>
       </nav>
     </div>
 
@@ -120,7 +121,3 @@ export default function Login() {
     </>
   )
 }
-
-
-
-

@@ -19,10 +19,12 @@ import { toast } from 'react-toastify';
 import { modals } from '@mantine/modals';
 import { MRT_Localization_ES } from 'mantine-react-table/locales/es';
 import { IconEdit, IconRefresh, IconTrash } from '@tabler/icons-react';
+import { useTranslation } from 'react-i18next';
 
 
 export default function TablaDispositivosModbus() {
 
+    const { t } = useTranslation();
     const [validationErrors, setValidationErrors] = useState<Record<string, string | undefined>>({});
     const [columnFilters, setColumnFilters] = useState<MRT_ColumnFiltersState>([]);
   const [globalFilter, setGlobalFilter] = useState('');
@@ -35,15 +37,15 @@ export default function TablaDispositivosModbus() {
       // Validate full device
       function validateDevice(device: ModbusDeviceTable) {
         return {
-          name: !device.name ? 'The name is mandatory.' : undefined,
-          ip: !validateIp(device.ip) ? 'Incorrect IP format' : undefined
+          name: !device.name ? t('devicesTable.nameRequired') : undefined,
+          ip: !validateIp(device.ip) ? t('devicesTable.invalidIp') : undefined
         };
       }
 
     const columns = useMemo<MRT_ColumnDef<ModbusDeviceTable>[]>(() => [
     {
       accessorKey: 'name',
-      header: 'Name',
+      header: t('devicesTable.name'),
       mantineEditTextInputProps: () => ({
         required: true,
         error: validationErrors?.name,
@@ -56,7 +58,7 @@ export default function TablaDispositivosModbus() {
     },
     {
       accessorKey: 'ip',
-      header: 'IP address',
+      header: t('devicesTable.ipAddress'),
       mantineEditTextInputProps: () => ({
         required: true,
         error: validationErrors?.ip,
@@ -66,8 +68,8 @@ export default function TablaDispositivosModbus() {
         },
       }),
     },
-    { accessorKey: 'createdAt', header: 'Date of creation', enableEditing: false },
-    { accessorKey: 'updatedAt', header: 'Last modification', enableEditing: false },
+    { accessorKey: 'createdAt', header: t('devicesTable.createdAt'), enableEditing: false },
+    { accessorKey: 'updatedAt', header: t('devicesTable.updatedAt'), enableEditing: false },
   ], [validationErrors]);
 
 
@@ -125,7 +127,7 @@ export default function TablaDispositivosModbus() {
           },
           onError: (error: any) => {
             queryClient.invalidateQueries({ queryKey: ['tableDevicesModbus'] });
-            toast.error(error?.message ?? 'Unexpected error', { closeButton: false, className: 'bg-error text-white' });
+            toast.error(error?.message ?? t('devicesTable.unexpectedError'), { closeButton: false, className: 'bg-error text-white' });
           },
         });
       
@@ -141,7 +143,7 @@ export default function TablaDispositivosModbus() {
             })
           },
           onError: (error: any) => {
-            toast.error(error?.message ?? 'Unexpected error', { closeButton: false, className: 'bg-error text-white' });
+            toast.error(error?.message ?? t('devicesTable.unexpectedError'), { closeButton: false, className: 'bg-error text-white' });
           },
         });
       
@@ -158,7 +160,7 @@ export default function TablaDispositivosModbus() {
             })
           },
           onError: (error: any) => {
-            toast.error(error?.message ?? 'Unexpected error', { closeButton: false, className: 'bg-error text-white' });
+            toast.error(error?.message ?? t('devicesTable.unexpectedError'), { closeButton: false, className: 'bg-error text-white' });
           },
         });
 
@@ -194,9 +196,9 @@ export default function TablaDispositivosModbus() {
 
           const openDeleteConfirmModal = (row: MRT_Row<ModbusDeviceTable>) =>
               modals.openConfirmModal({
-                title: 'Confirm deletion',
-                children: <Text>Are you sure you want to remove the device {row.original.name}?</Text>,
-                labels: { confirm: 'Delete', cancel: 'Cancel' },
+              title: t('devicesTable.confirmDelete'),
+              children: <Text>{t('devicesTable.confirmDeleteMsg', { name: row.original.name })}</Text>,
+              labels: { confirm: t('devicesTable.delete'), cancel: t('devicesTable.cancel') },
                 confirmProps: {
                   style: { backgroundColor: '#FB6767', color: 'white' },
                 },
@@ -242,9 +244,9 @@ export default function TablaDispositivosModbus() {
         renderTopToolbarCustomActions: ({ table }) => (
           <Flex justify="space-between" align="center" >
             <Button onClick={() => table.setCreatingRow(true)}>
-              Create New Device
+              {t('devicesTable.createNew')}
             </Button>
-            <Tooltip label="Refrescar">
+            <Tooltip label={t('devicesTable.refresh')}>
               <ActionIcon onClick={() => refetch()}>
                 <IconRefresh />
               </ActionIcon>
@@ -255,7 +257,7 @@ export default function TablaDispositivosModbus() {
     
           return (
             <Flex gap="md" style={{ overflowX: 'auto', whiteSpace: 'nowrap' }} >
-              <Tooltip label= 'Edit'>
+              <Tooltip label= {t('devicesTable.edit')}>
                 <ActionIcon
                   variant="light"
                   color="gray"
@@ -266,7 +268,7 @@ export default function TablaDispositivosModbus() {
                 </ActionIcon>
               </Tooltip>
     
-              <Tooltip label= 'Delete'>
+              <Tooltip label= {t('devicesTable.delete')}>
                 <ActionIcon
                   color="red"
                   onClick={() => openDeleteConfirmModal(row)}

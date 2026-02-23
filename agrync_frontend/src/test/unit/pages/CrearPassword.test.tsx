@@ -47,7 +47,7 @@ describe('CrearPassword', () => {
     it('muestra error si el email está vacío', async () => {
       const user = userEvent.setup()
       renderPage()
-      await user.click(screen.getByRole('button', { name: /activar usuario/i }))
+      await user.click(screen.getByRole('button', { name: /activate user/i }))
       await waitFor(() => {
         expect(screen.getByText(/email/i)).toBeInTheDocument()
       })
@@ -57,7 +57,7 @@ describe('CrearPassword', () => {
       const user = userEvent.setup()
       renderPage()
       await user.type(screen.getByPlaceholderText(/^email$/i), 'test@example.com')
-      await user.click(screen.getByRole('button', { name: /activar usuario/i }))
+      await user.click(screen.getByRole('button', { name: /activate user/i }))
       await waitFor(() => {
         const errorMessages = screen.getAllByRole('paragraph').map(el => el.textContent)
         expect(errorMessages.some(m => m && m.trim().length > 0)).toBe(true)
@@ -67,7 +67,7 @@ describe('CrearPassword', () => {
     it('no llama a validateUser si hay errores de validación', async () => {
       const user = userEvent.setup()
       renderPage()
-      await user.click(screen.getByRole('button', { name: /activar usuario/i }))
+      await user.click(screen.getByRole('button', { name: /activate user/i }))
       await waitFor(() => expect(mockValidateUser).not.toHaveBeenCalled())
     })
   })

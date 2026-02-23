@@ -1,4 +1,5 @@
 import { LastDataCard, VariableAtributes, GenericDevice, FormWriteValue, SendValueOPC, User, Role } from '../types';
+import { useTranslation } from 'react-i18next';
 import { useForm } from 'react-hook-form';
 import ErrorMessage from './ErrorMessage';
 import { useMutation } from '@tanstack/react-query';
@@ -18,11 +19,12 @@ type VariableCardProps = {
 
 
 export default function VariableCard({ variable, last_value, deviceName, deviceType, userId, role }: VariableCardProps) {
+  const { t } = useTranslation();
 
   const lastValue = last_value.value ?? '--';
   const lastTimestamp = last_value.timestamp;
 
-  let lastTimestampSpain = 'Not available';
+  let lastTimestampSpain = t('variableCard.notAvailable');
 
   if (lastTimestamp) {
     const parsed = DateTime.fromISO(lastTimestamp, { zone: 'UTC' });
@@ -85,12 +87,12 @@ export default function VariableCard({ variable, last_value, deviceName, deviceT
 
         <div className='w-2/5'>
 
-          <p className="text-sm text-button font-medium">Type: {variable.type}</p>
+          <p className="text-sm text-button font-medium">{t('variableCard.type')} {variable.type}</p>
           {variable.scaling && (
-            <p className="text-sm text-button font-medium">Scaling: {variable.scaling}</p>
+            <p className="text-sm text-button font-medium">{t('variableCard.scaling')} {variable.scaling}</p>
           )}
           {variable.min_value && variable.max_value && (
-            <p className="text-sm text-button font-medium">Rank: {variable.min_value} - {variable.max_value}</p>
+            <p className="text-sm text-button font-medium">{t('variableCard.rank')} {variable.min_value} - {variable.max_value}</p>
           )}
 
         </div>
@@ -104,7 +106,7 @@ export default function VariableCard({ variable, last_value, deviceName, deviceT
             )}
           </p>
 
-          <p className="text-sm text-button font-medium">Timestamp: {lastTimestampSpain}</p>
+          <p className="text-sm text-button font-medium">{t('variableCard.timestamp')} {lastTimestampSpain}</p>
 
         </div>
 
@@ -123,14 +125,14 @@ export default function VariableCard({ variable, last_value, deviceName, deviceT
                 <input
                   id="value"
                   type="text"
-                  placeholder='Nuevo Valor'
+                  placeholder={t('variableCard.newValue')}
                   disabled={role === "Lector"}
                   className={`w-full rounded-md px-3 py-2 ring-0 border-2 placeholder:text-gap  ${errors.value ? 'text-error border-error focus:border-error' : 'border-gap focus:border-button'}  ${role === "Lector" ? "opacity-50 cursor-not-allowed" : ""}`}
                   {...register("value", {
-                    required: "El valor es obligatorio",
+                    required: t('variableCard.valueRequired'),
                     pattern: {
                       value: /^-?[0-9]\d*(\.\d+)?$/,
-                      message: "Debe introducirse un número"
+                      message: t('variableCard.mustBeNumber')
                     }
                   })}
                 />
@@ -140,7 +142,7 @@ export default function VariableCard({ variable, last_value, deviceName, deviceT
                   )}
                 </div>
               </div>
-              <input type="submit" disabled={role === "Lector"} className={`bg-button text-white px-3 py-2 h-auto border-2 rounded-md hover:bg-button-hover whitespace-nowrap w-1/2 ${role === "Lector" ? "opacity-50 cursor-not-allowed" : ""}`} value="Modificar" />
+              <input type="submit" disabled={role === "Lector"} className={`bg-button text-white px-3 py-2 h-auto border-2 rounded-md hover:bg-button-hover whitespace-nowrap w-1/2 ${role === "Lector" ? "opacity-50 cursor-not-allowed" : ""}`} value={t('variableCard.modify')} />
             </div>
 
           </form>

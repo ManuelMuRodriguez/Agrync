@@ -45,7 +45,7 @@ describe('Login', () => {
 
     it('muestra el botón de submit', () => {
       renderLogin()
-      expect(screen.getByRole('button', { name: /iniciar sesión/i })).toBeInTheDocument()
+      expect(screen.getByRole('button', { name: /log in/i })).toBeInTheDocument()
     })
   })
 
@@ -53,18 +53,18 @@ describe('Login', () => {
     it('muestra error si el email está vacío al hacer submit', async () => {
       const user = userEvent.setup()
       renderLogin()
-      await user.click(screen.getByRole('button', { name: /iniciar sesión/i }))
+      await user.click(screen.getByRole('button', { name: /log in/i }))
       await waitFor(() => {
-        expect(screen.getByText('El email es obligatorio')).toBeInTheDocument()
+        expect(screen.getByText('Email is required')).toBeInTheDocument()
       })
     })
 
     it('muestra error si la contraseña está vacía al hacer submit', async () => {
       const user = userEvent.setup()
       renderLogin()
-      await user.click(screen.getByRole('button', { name: /iniciar sesión/i }))
+      await user.click(screen.getByRole('button', { name: /log in/i }))
       await waitFor(() => {
-        expect(screen.getByText('The password is mandatory')).toBeInTheDocument()
+        expect(screen.getByText('Password is required')).toBeInTheDocument()
       })
     })
 
@@ -95,7 +95,7 @@ describe('Login', () => {
       renderLogin()
       await user.type(screen.getByPlaceholderText('Email'), 'admin@example.com')
       await user.type(screen.getByPlaceholderText('Password'), 'AdminPass123')
-      await user.click(screen.getByRole('button', { name: /iniciar sesión/i }))
+      await user.click(screen.getByRole('button', { name: /log in/i }))
       await waitFor(() => {
         expect(mockLogin).toHaveBeenCalledWith({
           username: 'admin@example.com',
@@ -109,7 +109,7 @@ describe('Login', () => {
       renderLogin()
       // Solo rellenamos email para dejar password vacío
       await user.type(screen.getByPlaceholderText('Email'), 'admin@example.com')
-      await user.click(screen.getByRole('button', { name: /iniciar sesión/i }))
+      await user.click(screen.getByRole('button', { name: /log in/i }))
       await waitFor(() => {
         expect(mockLogin).not.toHaveBeenCalled()
       })

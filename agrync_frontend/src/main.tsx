@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import "react-toastify/dist/ReactToastify.css";
 import './index.css'
+import './i18n'
 import App from './App.tsx'
 import { ToastContainer } from "react-toastify"
 

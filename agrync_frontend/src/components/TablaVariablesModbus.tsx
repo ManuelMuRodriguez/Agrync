@@ -10,6 +10,7 @@ import {
     type MRT_Row,
 } from 'mantine-react-table';
 import { useEffect, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { DateTime } from 'luxon';
 import { toast } from 'react-toastify';
@@ -21,6 +22,7 @@ import { MRT_Localization_ES } from 'mantine-react-table/locales/es';
 import { endianOptions, ModbusVariableTable, opcTypes } from '../types';
 
 export default function TablaVariablesModbus() {
+    const { t } = useTranslation();
     const [validationErrors, setValidationErrors] = useState<Record<string, string | undefined>>({});
     const [globalFilter, setGlobalFilter] = useState('');
     const [sorting, setSorting] = useState<MRT_SortingState>([]);
@@ -46,52 +48,52 @@ export default function TablaVariablesModbus() {
     function validateVariable(variable: ModbusVariableTable) {
         return {
             id_device_slave: !variable.id_device_slave || variable.id_device_slave.trim() === ''
-                ? 'You must select a slave device.'
+                ? t('variablesTable.slaveRequired')
                 : undefined,
-            name: !variable.name ? 'The name is mandatory' : undefined,
-            type: !variable.type ? 'The type is mandatory' : undefined,
+            name: !variable.name ? t('variablesTable.nameRequired') : undefined,
+            type: !variable.type ? t('variablesTable.typeRequired') : undefined,
             address:
                 variable.address === null ||
                     variable.address === undefined ||
                     isNaN(Number(variable.address)) ||
                     Number(variable.address) <= 0
-                    ? 'The address is mandatory and must be a number greater than 0'
+                    ? t('variablesTable.addressRequired')
                     : undefined,
 
             scaling:
                 variable.scaling !== null && variable.scaling !== undefined && variable.scaling.toString() !== '' &&
                     Number(variable.scaling) <= 0
-                    ? 'The scaling must be a number greater than 0'
+                    ? t('variablesTable.scalingRequired')
                     : undefined,
 
             decimals:
                 variable.decimals !== null && variable.decimals !== undefined && variable.decimals.toString() !== '' &&
                     (isNaN(Number(variable.decimals)) || !Number.isInteger(Number(variable.decimals)) || Number(variable.decimals) < 0)
-                    ? 'Decimals must be an integer greater than or equal to 0'
+                    ? t('variablesTable.decimalsRequired')
                     : undefined,
 
             interval:
                 variable.interval !== null && variable.interval !== undefined && variable.interval.toString() !== '' &&
                     (isNaN(Number(variable.interval)) || !Number.isInteger(Number(variable.interval)) || Number(variable.interval) <= 1)
-                    ? 'El intervalo debe ser un número entero mayor a 1'
+                    ? t('variablesTable.intervalRequired')
                     : undefined,
 
             length:
                 variable.length !== null && variable.length !== undefined && variable.length.toString() !== '' &&
                     (isNaN(Number(variable.length)) || !Number.isInteger(Number(variable.length)) || Number(variable.length) <= 0)
-                    ? 'The interval must be an integer greater than 1'
+                    ? t('variablesTable.lengthRequired')
                     : undefined,
 
             min_value:
                 variable.min_value !== null && variable.min_value !== undefined &&
                     isNaN(Number(variable.min_value))
-                    ? 'The minimum value must be a number'
+                    ? t('variablesTable.minValueRequired')
                     : undefined,
 
             max_value:
                 variable.max_value !== null && variable.max_value !== undefined &&
                     isNaN(Number(variable.max_value))
-                    ? 'The maximum value must be a number'
+                    ? t('variablesTable.maxValueRequired')
                     : undefined,
         };
     }
@@ -126,8 +128,8 @@ export default function TablaVariablesModbus() {
                 //min_value: normalizeValue(variable.min_value),
                 //max_value: normalizeValue(variable.max_value),
                 //unit: normalizeValue(variable.unit),
-                createdAt: createdAt.isValid ? createdAt.setZone('Europe/Madrid').toFormat('dd/MM/yyyy HH:mm:ss') : 'Fecha inválida',
-                updatedAt: updatedAt.isValid ? updatedAt.setZone('Europe/Madrid').toFormat('dd/MM/yyyy HH:mm:ss') : 'Fecha inválida',
+                createdAt: createdAt.isValid ? createdAt.setZone('Europe/Madrid').toFormat('dd/MM/yyyy HH:mm:ss') : t('common.invalidDate'),
+                updatedAt: updatedAt.isValid ? updatedAt.setZone('Europe/Madrid').toFormat('dd/MM/yyyy HH:mm:ss') : t('common.invalidDate'),
             };
         }) ?? [];
     }, [dataTableVariables]);
@@ -141,7 +143,7 @@ export default function TablaVariablesModbus() {
     const columns = useMemo<MRT_ColumnDef<ModbusVariableTable>[]>(() => [
         {
             accessorKey: 'id_device_slave',
-            header: 'Dispositivo - Esclavo',
+            header: t('variablesTable.deviceSlave'),
             editVariant: 'select',
             enableEditing: true,
             mantineEditSelectProps: ({ table }) => ({
@@ -155,7 +157,7 @@ export default function TablaVariablesModbus() {
         },
         {
             accessorKey: 'name',
-            header: 'Name',
+            header: t('variablesTable.name'),
             enableGrouping: false,
             mantineEditTextInputProps: () => ({
                 required: true,
@@ -165,7 +167,7 @@ export default function TablaVariablesModbus() {
         },
         {
             accessorKey: 'type',
-            header: 'Type',
+            header: t('variablesTable.type'),
             editVariant: 'select',
             mantineEditSelectProps: ({ table }) => ({
                 data: opcTypes,
@@ -180,7 +182,7 @@ export default function TablaVariablesModbus() {
         },
         {
             accessorKey: 'address',
-            header: 'Addres',
+            header: t('variablesTable.address'),
             enableGrouping: false,
             mantineEditTextInputProps: ({ table }) => ({
                 type: 'number',
@@ -192,7 +194,7 @@ export default function TablaVariablesModbus() {
         },
         {
             accessorKey: 'scaling',
-            header: 'Scaling',
+            header: t('variablesTable.scaling'),
             enableGrouping: false,
             mantineEditTextInputProps: ({ table }) => ({
                 type: 'number',
@@ -208,7 +210,7 @@ export default function TablaVariablesModbus() {
         },
         {
             accessorKey: 'decimals',
-            header: 'Decimals',
+            header: t('variablesTable.decimals'),
             enableGrouping: false,
             mantineEditTextInputProps: ({ table }) => ({
                 type: 'number',
@@ -222,7 +224,7 @@ export default function TablaVariablesModbus() {
         },
         {
             accessorKey: 'endian',
-            header: 'Endian',
+            header: t('variablesTable.endian'),
             editVariant: 'select',
             enableGrouping: false,
             mantineEditSelectProps: ({ table }) => ({
@@ -232,7 +234,7 @@ export default function TablaVariablesModbus() {
         },
         {
             accessorKey: 'interval',
-            header: 'Interval',
+            header: t('variablesTable.interval'),
             enableGrouping: false,
             mantineEditTextInputProps: () => ({
                 type: 'number',
@@ -245,7 +247,7 @@ export default function TablaVariablesModbus() {
         },
         {
             accessorKey: 'length',
-            header: 'Length',
+            header: t('variablesTable.length'),
             enableGrouping: false,
             mantineEditTextInputProps: ({ table }) => ({
                 type: 'number',
@@ -259,20 +261,20 @@ export default function TablaVariablesModbus() {
         },
         {
             accessorKey: 'writable',
-            header: 'Writable',
+            header: t('variablesTable.writable'),
             editVariant: 'select',
             enableGrouping: false,
-            Cell: ({ cell }) => cell.getValue() === true ? 'Sí' : 'No',
+            Cell: ({ cell }) => cell.getValue() === true ? t('variablesTable.yes') : t('variablesTable.no'),
             mantineEditSelectProps: () => ({
                 data: [
-                    { label: 'Sí', value: "true" },
-                    { label: 'No', value: "false" },
+                    { label: t('variablesTable.yes'), value: "true" },
+                    { label: t('variablesTable.no'), value: "false" },
                 ],
             }),
         },
         {
             accessorKey: 'min_value',
-            header: 'Min value',
+            header: t('variablesTable.minValue'),
             enableGrouping: false,
             mantineEditTextInputProps: () => ({
                 type: 'number',
@@ -290,7 +292,7 @@ export default function TablaVariablesModbus() {
         },
         {
             accessorKey: 'max_value',
-            header: 'Max Value',
+            header: t('variablesTable.maxValue'),
             enableGrouping: false,
             mantineEditTextInputProps: () => ({
                 type: 'number',
@@ -308,7 +310,7 @@ export default function TablaVariablesModbus() {
         },
         {
             accessorKey: 'unit',
-            header: 'Unit',
+            header: t('variablesTable.unit'),
             enableGrouping: false,
             Cell: ({ cell }) => {
                 const value = cell.getValue();
@@ -316,9 +318,9 @@ export default function TablaVariablesModbus() {
                 return <>{value}</>; 
             }
         },
-        { accessorKey: 'createdAt', header: 'Date of creation', enableEditing: false, enableGrouping: false },
-        { accessorKey: 'updatedAt', header: 'Last modified', enableEditing: false, enableGrouping: false },
-    ], [validationErrors, formattedDeviceSlaveOptions]);
+        { accessorKey: 'createdAt', header: t('variablesTable.createdAt'), enableEditing: false, enableGrouping: false },
+        { accessorKey: 'updatedAt', header: t('variablesTable.updatedAt'), enableEditing: false, enableGrouping: false },
+    ], [validationErrors, formattedDeviceSlaveOptions, t]);
 
     useEffect(() => {
         if (columns.length === 0) return;
@@ -339,7 +341,7 @@ export default function TablaVariablesModbus() {
             toast.success(data, { closeButton: false, className: 'bg-right-green text-white' });
         },
         onError: (error: any) => {
-            toast.error(error?.message ?? 'Error inesperado', { closeButton: false, className: 'bg-error text-white' });
+            toast.error(error?.message ?? t('variablesTable.unexpectedError'), { closeButton: false, className: 'bg-error text-white' });
         }
     });
 
@@ -350,7 +352,7 @@ export default function TablaVariablesModbus() {
             toast.success(data, { closeButton: false, className: 'bg-right-green text-white' });
         },
         onError: (error: any) => {
-            toast.error(error?.message ?? 'Error inesperado', { closeButton: false, className: 'bg-error text-white' });
+            toast.error(error?.message ?? t('variablesTable.unexpectedError'), { closeButton: false, className: 'bg-error text-white' });
         },
     });
 
@@ -362,7 +364,7 @@ export default function TablaVariablesModbus() {
             toast.success(data, { closeButton: false, className: 'bg-right-green text-white' });
         },
         onError: (error: any) => {
-            toast.error(error?.message ?? 'Error inesperado', { closeButton: false, className: 'bg-error text-white' });
+            toast.error(error?.message ?? t('variablesTable.unexpectedError'), { closeButton: false, className: 'bg-error text-white' });
         },
     });
 
@@ -457,9 +459,9 @@ export default function TablaVariablesModbus() {
 
     const openDeleteConfirmModal = (row: MRT_Row<ModbusVariableTable>) =>
         modals.openConfirmModal({
-            title: 'Confirm deletion',
-            children: <Text>Are you sure you want to delete the variable {row.original.name}?</Text>,
-            labels: { confirm: 'Delete', cancel: 'Cancel' },
+            title: t('variablesTable.confirmDelete'),
+            children: <Text>{t('variablesTable.confirmDeleteMsg', { name: row.original.name })}</Text>,
+            labels: { confirm: t('variablesTable.delete'), cancel: t('variablesTable.cancel') },
             confirmProps: { style: { backgroundColor: '#FB6767', color: 'white' } },
             cancelProps: { style: { backgroundColor: '#D4D4D4', color: 'white' } },
             onConfirm: () =>
@@ -520,20 +522,20 @@ export default function TablaVariablesModbus() {
         mantineTableContainerProps: { sx: { maxWidth: '100%', overflowX: 'auto' } },
         renderTopToolbarCustomActions: ({ table }) => (
             <Flex justify="space-between" align="center">
-                <Button onClick={() => table.setCreatingRow(true)}>Create New Variable</Button>
-                <Tooltip label="Refrescar">
+                <Button onClick={() => table.setCreatingRow(true)}>{t('variablesTable.createNew')}</Button>
+                <Tooltip label={t('variablesTable.refresh')}>
                     <ActionIcon onClick={() => refetch()}><IconRefresh /></ActionIcon>
                 </Tooltip>
             </Flex>
         ),
         renderRowActions: ({ row, table }) => (
             <Flex gap="md" style={{ overflowX: 'auto', whiteSpace: 'nowrap' }}>
-                <Tooltip label='Editar'>
+                <Tooltip label={t('variablesTable.edit')}>
                     <ActionIcon variant="light" color="gray" onClick={() => table.setEditingRow(row)} className="text-button-edit bg-gap hover:text-white hover:bg-button-edit disabled:text-button-cancel-card">
                         <IconEdit />
                     </ActionIcon>
                 </Tooltip>
-                <Tooltip label='Eliminar'>
+                <Tooltip label={t('variablesTable.remove')}>
                     <ActionIcon color="red" onClick={() => openDeleteConfirmModal(row)} className="text-error bg-gap hover:text-white hover:bg-error disabled:text-button-cancel-card">
                         <IconTrash />
                     </ActionIcon>
@@ -544,7 +546,7 @@ export default function TablaVariablesModbus() {
 
     useEffect(() => {
         if (isError && error) {
-            toast.error(error.message || 'Error loading slaves', {
+            toast.error(error.message || t('variablesTable.errorLoading'), {
                 closeButton: false,
                 className: 'bg-error text-white',
             });

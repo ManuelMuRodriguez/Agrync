@@ -6,9 +6,11 @@ import { CreatePasswordForm } from "../types";
 import ErrorMessage from "../components/ErrorMessage";
 import { Link, useNavigate } from "react-router-dom";
 import { validateUser } from "../api/AuthAPI";
+import { useTranslation } from "react-i18next";
 
 export default function CrearPassword() {
 
+  const { t } = useTranslation();
   const navigate = useNavigate()
   const initialValues: CreatePasswordForm = {
     email: '',
@@ -62,10 +64,10 @@ export default function CrearPassword() {
               placeholder="Email"
               className={`w-full p-3 outline-0 focus:ring-0 border-2 placeholder:text-gap bg-bg-white-almost-solid font-medium text-2xl rounded-lg ${errors.email ? 'text-error border-error focus:border-error' : 'border-gap focus:border-button'}`}
               {...register("email", {
-                required: "Email is mandatory.",
+                required: t('createPassword.emailRequired'),
                 pattern: {
                   value: /[^@]+@[^@]+\.[a-zA-Z]{2,6}/,
-                  message: "Invalid email address",
+                  message: t('login.invalidEmail'),
                 },
               })}
             />
@@ -81,10 +83,10 @@ export default function CrearPassword() {
               placeholder="Password"
               className={`w-full p-3 outline-0 focus:ring-0 border-2 placeholder:text-gap bg-bg-white-almost-solid font-medium text-2xl rounded-lg  ${errors.password ? 'text-error border-error focus:border-error' : 'border-gap focus:border-button'}`}
               {...register("password", {
-                required: "The password is mandatory",
+                required: t('createPassword.passwordRequired'),
                 minLength: {
                   value: 8,
-                  message: 'The password must be at least 8 characters long'
+                  message: t('createPassword.passwordMinLength')
                 }
               })}
             />
@@ -97,11 +99,11 @@ export default function CrearPassword() {
             <input
               id="password_confirmation"
               type="password"
-              placeholder="Repeat password"
+              placeholder={t('createPassword.repeatPassword')}
               className={`w-full p-3 outline-0 focus:ring-0 border-2 placeholder:text-gap bg-bg-white-almost-solid font-medium text-2xl rounded-lg  ${errors.password_confirmation ? 'text-error border-error focus:border-error' : 'border-gap focus:border-button'}`}
               {...register("password_confirmation", {
-                required: "Password repetition is mandatory",
-                validate: value => value === password || "Passwords do not match"
+                required: t('createPassword.confirmRequired'),
+                validate: value => value === password || t('createPassword.passwordMismatch')
               })}
             />
             {errors.password_confirmation && (
@@ -115,7 +117,7 @@ export default function CrearPassword() {
         <div>
           <input
             type="submit"
-            value='Activar usuario'
+            value={t('createPassword.activate')}
             className="bg-button hover:bg-button-hover w-full p-3 rounded-lg  text-white font-medium text-2xl cursor-pointer"
           />
         </div>

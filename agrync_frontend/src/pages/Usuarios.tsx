@@ -22,10 +22,12 @@ import { MRT_Localization_ES } from 'mantine-react-table/locales/es';
 import { useAuth } from '../hooks/useAuth';
 import { IoRadio } from "react-icons/io5";
 import ModificarDispositivosUsuario from '../components/ModificarDispositivosUsuario';
+import { useTranslation } from 'react-i18next';
 
 
 export default function Usuarios() {
 
+  const { t } = useTranslation();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState<UserTable | null>(null);
 
@@ -43,16 +45,16 @@ export default function Usuarios() {
 
   function validateUser(user: UserTable) {
     return {
-      email: !validateEmail(user.email) ? 'Invalid email format' : undefined,
-      full_name: !user.full_name ? 'Full name required' : undefined,
-      role: !user.role ? 'Required role' : undefined,
+      email: !validateEmail(user.email) ? t('users.invalidEmail') : undefined,
+      full_name: !user.full_name ? t('users.fullNameRequired') : undefined,
+      role: !user.role ? t('users.roleRequired') : undefined,
     };
   }
 
   const columns = useMemo<MRT_ColumnDef<UserTable>[]>(() => [
     {
       accessorKey: 'email',
-      header: 'Email',
+      header: t('users.email'),
       mantineEditTextInputProps: () => ({
         type: 'email',
         required: true,
@@ -66,7 +68,7 @@ export default function Usuarios() {
     },
     {
       accessorKey: 'full_name',
-      header: 'Name',
+      header: t('users.name'),
       mantineEditTextInputProps: () => ({
         required: true,
         error: validationErrors?.full_name,
@@ -78,7 +80,7 @@ export default function Usuarios() {
     },
     {
       accessorKey: 'role',
-      header: 'Role',
+      header: t('users.role'),
       editVariant: 'select',
       mantineEditSelectProps: () => ({
         data: roleOptions,
@@ -92,13 +94,13 @@ export default function Usuarios() {
     },
     {
       accessorKey: 'active',
-      header: 'active',
+      header: t('users.active'),
       size: 120,
-      Cell: ({ cell }) => (cell.getValue<boolean>() ? 'Sí' : 'No'),
+      Cell: ({ cell }) => (cell.getValue<boolean>() ? t('users.yes') : t('users.no')),
       enableEditing: false,
     },
-    { accessorKey: 'createdAt', header: 'Date of creation', enableEditing: false },
-    { accessorKey: 'updatedAt', header: 'Last modified', enableEditing: false },
+    { accessorKey: 'createdAt', header: t('users.createdAt'), enableEditing: false },
+    { accessorKey: 'updatedAt', header: t('users.updatedAt'), enableEditing: false },
   ], [validationErrors]);
 
   const [columnFilters, setColumnFilters] = useState<MRT_ColumnFiltersState>([]);
@@ -154,7 +156,7 @@ export default function Usuarios() {
     },
     onError: (error: any) => {
       queryClient.invalidateQueries({ queryKey: ['tableUsers'] });
-      toast.error(error?.message ?? 'Unexpected error', { closeButton: false, className: 'bg-error text-white' });
+      toast.error(error?.message ?? t('users.unexpectedError'), { closeButton: false, className: 'bg-error text-white' });
     },
   });
 
@@ -168,7 +170,7 @@ export default function Usuarios() {
       })
     },
     onError: (error: any) => {
-      toast.error(error?.message ?? 'Unexpected error', { closeButton: false, className: 'bg-error text-white' });
+      toast.error(error?.message ?? t('users.unexpectedError'), { closeButton: false, className: 'bg-error text-white' });
     },
   });
 
@@ -183,7 +185,7 @@ export default function Usuarios() {
       })
     },
     onError: (error: any) => {
-      toast.error(error?.message ?? 'Error inesperado', { closeButton: false, className: 'bg-error text-white' });
+      toast.error(error?.message ?? t('users.unexpectedError'), { closeButton: false, className: 'bg-error text-white' });
     },
   });
 
@@ -218,9 +220,9 @@ export default function Usuarios() {
 
   const openDeleteConfirmModal = (row: MRT_Row<UserTable>) =>
     modals.openConfirmModal({
-      title: 'Confirm deletion',
-      children: <Text>Are you sure you want to delete {row.original.full_name}?</Text>,
-      labels: { confirm: 'Delete', cancel: 'Cancel' },
+      title: t('users.confirmDelete'),
+      children: <Text>{t('users.confirmDeleteMsg', { name: row.original.full_name })}</Text>,
+      labels: { confirm: t('users.delete'), cancel: t('users.cancel') },
       confirmProps: {
         style: { backgroundColor: '#FB6767', color: 'white' },
       },
@@ -266,9 +268,9 @@ export default function Usuarios() {
     renderTopToolbarCustomActions: ({ table }) => (
       <Flex justify="space-between" align="center" >
         <Button onClick={() => table.setCreatingRow(true)}>
-          Create New User
+          {t('users.createNew')}
         </Button>
-        <Tooltip label="Refrescar">
+        <Tooltip label={t('users.refresh')}>
           <ActionIcon onClick={() => refetch()}>
             <IconRefresh />
           </ActionIcon>
@@ -285,7 +287,7 @@ export default function Usuarios() {
 
       return (
         <Flex gap="md" style={{ overflowX: 'auto', whiteSpace: 'nowrap' }} >
-          <Tooltip label={disableActions ? 'No editable' : 'Edit'}>
+          <Tooltip label={disableActions ? t('users.notEditable') : t('users.edit')}>
             <ActionIcon
               variant="light"
               color="gray"
@@ -297,7 +299,7 @@ export default function Usuarios() {
             </ActionIcon>
           </Tooltip>
 
-          <Tooltip label={disableActions ? 'No eliminable' : 'Delete'}>
+          <Tooltip label={disableActions ? t('users.notDeletable') : t('users.delete')}>
             <ActionIcon
               color="red"
               onClick={() => !disableActions && openDeleteConfirmModal(row)}
@@ -308,7 +310,7 @@ export default function Usuarios() {
             </ActionIcon>
           </Tooltip>
 
-          <Tooltip label={disableDeviceEdit ? 'No editable' : "Edit devices"}>
+          <Tooltip label={disableDeviceEdit ? t('users.notEditable') : t('users.editDevices')}>
             <ActionIcon
               variant="light"
               onClick={() => !disableDeviceEdit && openDeviceModal(row)}
@@ -341,7 +343,7 @@ export default function Usuarios() {
 
   useEffect(() => {
     if (isError && error) {
-      toast.error(error.message || 'Error loading users', {
+      toast.error(error.message || t('users.errorLoading'), {
         closeButton: false,
         className: 'bg-error text-white',
       });

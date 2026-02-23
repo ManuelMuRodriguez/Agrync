@@ -4,9 +4,11 @@ import TablaDispositivosModbus from "../components/TablaDispositivosModbus";
 import TablaEsclavosModbus from "../components/TablaEsclavosModbus";
 import TablaVariablesModbus from "../components/TablaVariablesModbus";
 import React, { useRef } from "react";
+import { useTranslation } from "react-i18next";
 
 export default function ModbusDispositivos() {
 
+  const { t } = useTranslation();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
 
@@ -27,7 +29,7 @@ export default function ModbusDispositivos() {
           className: 'bg-error text-white'
         })
       } else {
-        toast.error("Error desconocido", {
+        toast.error(t('modbus.unknownError'), {
           closeButton: false,
           className: 'bg-error text-white'
         })
@@ -49,13 +51,13 @@ export default function ModbusDispositivos() {
     if (!file) return;
 
     if (file.size > MAX_SIZE_BYTES) {
-    toast.error("The file is too large. The limit is 10 MB.");
+    toast.error(t('modbus.fileTooLarge'));
     return;
   }
 
     try {
       await uploadFileModbus(file);
-      toast.success("File uploaded successfully", {
+      toast.success(t('modbus.uploadSuccess'), {
         closeButton: false,
         className: 'bg-right-green text-white',
       });
@@ -66,7 +68,7 @@ export default function ModbusDispositivos() {
           className: "bg-error text-white",
         });
       } else {
-        toast.error("Unknown error", {
+        toast.error(t('modbus.unknownError'), {
           closeButton: false,
           className: "bg-error text-white",
         });
@@ -83,13 +85,13 @@ export default function ModbusDispositivos() {
           onClick={handleDownload}
           className="bg-button hover:bg-button-hover text-xl text-white px-4 py-2 rounded"
         >
-          Download template
+          {t('modbus.downloadTemplate')}
         </button>
         <button
           onClick={handleUploadClick}
           className="bg-button hover:bg-button-hover text-xl text-white px-4 py-2 rounded"
         >
-          Upload configuration file
+          {t('modbus.uploadFile')}
         </button>
         <input
           ref={fileInputRef}
