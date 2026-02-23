@@ -6,6 +6,6 @@ import tailwindcss from '@tailwindcss/vite'
 export default defineConfig({
   plugins: [react(), tailwindcss(),],
   server: {
-    open: '/login', // Abrir directamente la ruta /login
+    open: process.env.CI ? false : '/login', // Don't try to open a browser in CI
   },
 })

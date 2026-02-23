@@ -26,10 +26,14 @@ module.exports = defineConfig({
 
   // Levanta el servidor de Vite automáticamente antes de los tests E2E
   webServer: {
-    command: 'npm run dev',
+    // In CI: build once and serve a stable static bundle via vite preview
+    // Locally: use the dev server (faster feedback, HMR)
+    command: process.env.CI
+      ? 'npm run build && npx vite preview --port 5173'
+      : 'npm run dev',
     url: 'http://localhost:5173',
     reuseExistingServer: !process.env.CI,
-    timeout: 30_000,
+    timeout: process.env.CI ? 120_000 : 30_000,
     env: {
       VITE_API_URL: 'http://localhost:8000/api/v1',
     },
