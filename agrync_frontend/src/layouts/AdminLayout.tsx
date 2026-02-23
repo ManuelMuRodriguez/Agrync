@@ -1,5 +1,5 @@
 import { Navigate, Outlet } from "react-router-dom"
-import SeccionesAdministracion from "../components/SeccionesAdministracion"
+import SeccionesAdministracion from "../components/AdminSections"
 import { useAuth } from "../hooks/useAuth"
 
 export default function EsqueletoAdministracion() {

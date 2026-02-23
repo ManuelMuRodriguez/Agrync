@@ -3,7 +3,10 @@ import { vi } from "vitest";
 import { server } from "./mocks/server";
 
 vi.mock("react-i18next", async () => {
-  const en = (await import("../i18n/locales/en.json")).default as Record<string, unknown>;
+  const en = (await import("../i18n/locales/en.json")).default as Record<
+    string,
+    unknown
+  >;
 
   function resolveKey(key: string, opts?: Record<string, unknown>): string {
     const parts = key.split(".");
@@ -16,7 +19,7 @@ vi.mock("react-i18next", async () => {
     if (opts) {
       str = Object.entries(opts).reduce(
         (acc, [k, v]) => acc.replace(new RegExp(`{{${k}}}`, "g"), String(v)),
-        str
+        str,
       );
     }
     return str;

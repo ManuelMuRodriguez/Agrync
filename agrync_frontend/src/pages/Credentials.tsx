@@ -1,5 +1,5 @@
-import CambiarEmail from "../components/CambiarEmail";
-import CambiarPassword from "../components/CambiarPassword";
+import CambiarEmail from "../components/ChangeEmail";
+import CambiarPassword from "../components/ChangePassword";
 
 
 export default function Credenciales() {

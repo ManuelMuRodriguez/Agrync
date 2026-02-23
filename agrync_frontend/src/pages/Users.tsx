@@ -21,7 +21,7 @@ import { DateTime } from 'luxon';
 import { MRT_Localization_ES } from 'mantine-react-table/locales/es';
 import { useAuth } from '../hooks/useAuth';
 import { IoRadio } from "react-icons/io5";
-import ModificarDispositivosUsuario from '../components/ModificarDispositivosUsuario';
+import ModificarDispositivosUsuario from '../components/ModifyUserDevices';
 import { useTranslation } from 'react-i18next';
 
 

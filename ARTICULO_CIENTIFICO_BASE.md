@@ -160,7 +160,7 @@ Agrync
 
 **Bulk import:**
 - Upload of JSON files with a predefined structure
-- Template available at `agrync_backend/static/downloads/plantilla_modbus.json`
+- Template available at `agrync_backend/static/downloads/modbus_template.json`
 - Automatic schema validation
 
 **JSON template example:**

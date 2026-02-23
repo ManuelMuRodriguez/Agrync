@@ -102,4 +102,4 @@ Icon?
 # ─── Descargas temporales / builds ───────────────────────────────────────────
 agrync_frontend/dist/
 agrync_backend/static/downloads/*.json
-!agrync_backend/static/downloads/plantilla_modbus.json
+!agrync_backend/static/downloads/modbus_template.json

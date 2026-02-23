@@ -381,11 +381,11 @@ async def get_devices(skip: int = 0, limit: int = 10):
 
 @modbus_router.get("/download-template", response_class=FileResponse)
 async def download_json():
-    file_path = Path("static/downloads/plantilla_modbus.json")
+    file_path = Path("static/downloads/modbus_template.json")
     if file_path.exists():
         return FileResponse(
             path=file_path,
-            filename="plantilla_modbus.json",
+            filename="modbus_template.json",
             media_type="application/json"
         )
     else:

@@ -1,5 +1,5 @@
 import { Outlet } from "react-router-dom"
-import SeccionesConfiguracion from "../components/SeccionesConfiguracion"
+import SeccionesConfiguracion from "../components/ConfigSections"
 
 export default function EsqueletoConfiguracion() {
 

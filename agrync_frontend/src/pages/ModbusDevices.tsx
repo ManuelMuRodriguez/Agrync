@@ -1,8 +1,8 @@
 import { toast } from "react-toastify";
 import { getTemplate, uploadFileModbus } from "../api/FilesAPI";
-import TablaDispositivosModbus from "../components/TablaDispositivosModbus";
-import TablaEsclavosModbus from "../components/TablaEsclavosModbus";
-import TablaVariablesModbus from "../components/TablaVariablesModbus";
+import TablaDispositivosModbus from "../components/ModbusDevicesTable";
+import TablaEsclavosModbus from "../components/ModbusSlavesTable";
+import TablaVariablesModbus from "../components/ModbusVariablesTable";
 import React, { useRef } from "react";
 import { useTranslation } from "react-i18next";
 

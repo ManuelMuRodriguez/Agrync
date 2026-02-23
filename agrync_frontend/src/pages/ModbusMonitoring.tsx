@@ -1,4 +1,4 @@
-import MonitorizacionTareas from "../components/MonitorizacionTareas";
+import MonitorizacionTareas from "../components/TaskMonitoring";
 
 
 
