@@ -12,8 +12,7 @@ services:
 
   backend:
     build:
-      context: .
-      dockerfile: Dockerfile.backend 
+      context: ./agrync_backend
     container_name: agrync_backend
     ports:
       - "8000:8000"
@@ -29,8 +28,7 @@ services:
 
   frontend:
     build:
-      context: .
-      dockerfile: Dockerfile.frontend
+      context: ./agrync_frontend
     container_name: agrync_frontend
     ports:
       - "5173:5173"
