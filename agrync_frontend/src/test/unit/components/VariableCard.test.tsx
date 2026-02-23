@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { render, screen, fireEvent, waitFor } from '@testing-library/react'
+import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import VariableCard from '../../../components/VariableCard'
 import { TestWrapper } from '../../mocks/wrapper'
@@ -18,10 +18,6 @@ vi.mock('../../../api/WriteValueAPI', () => ({
 const defaultVariable: VariableAtributes = {
   name: 'Temperatura',
   type: 'Float32',
-  address: 100,
-  length: 2,
-  endian: 'Big',
-  interval: 5,
   decimals: 2,
   writable: false,
   scaling: null,

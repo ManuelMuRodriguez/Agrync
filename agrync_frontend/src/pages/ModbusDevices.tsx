@@ -1,5 +1,5 @@
 import { toast } from "react-toastify";
-import { getTemplate, uploadFileModbus } from "../api/FilesAPI";
+import { getTemplate, uploadFileModbus } from "../api/filesAPI";
 import TablaDispositivosModbus from "../components/ModbusDevicesTable";
 import TablaEsclavosModbus from "../components/ModbusSlavesTable";
 import TablaVariablesModbus from "../components/ModbusVariablesTable";

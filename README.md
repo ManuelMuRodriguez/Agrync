@@ -1,11 +1,12 @@
-docker compose up --build
-docker compose down
-git add .
-git commit -m "Initial commit"
-git push -u origin main
-docker build -f Dockerfile.backend -t agrync-backend:latest .
-docker build -f Dockerfile.frontend -t agrync-frontend:latest .
 # Agrync / Agroconnect V2
+
+[![CI](https://github.com/ManuelMuRodriguez/Agrync/actions/workflows/ci.yml/badge.svg)](https://github.com/ManuelMuRodriguez/Agrync/actions/workflows/ci.yml)
+![Python](https://img.shields.io/badge/Python-3.13-3776ab?logo=python&logoColor=white)
+![Node](https://img.shields.io/badge/Node.js-22-339933?logo=node.js&logoColor=white)
+![FastAPI](https://img.shields.io/badge/FastAPI-0.115-009688?logo=fastapi&logoColor=white)
+![React](https://img.shields.io/badge/React-18-61dafb?logo=react&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.7-3178c6?logo=typescript&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-Compose-2496ed?logo=docker&logoColor=white)
 
 Agrync is a full-stack platform to collect, manage and visualize telemetry from industrial and IoT devices. It includes a FastAPI backend and a React + Vite frontend. The project is designed to bridge multiple industrial protocols and make sensor management simple for agroindustrial plants.
 
@@ -23,10 +24,10 @@ Agrync is a full-stack platform to collect, manage and visualize telemetry from 
 
 ## Repository layout
 
-- `agrync_backend/` — FastAPI backend
-- `agrync_frontend/` — Vite + React + TypeScript frontend
+- `agrync_backend/` — FastAPI backend (includes `Dockerfile`)
+- `agrync_frontend/` — Vite + React + TypeScript frontend (includes `Dockerfile`)
 - `docker-compose.yml` — Docker Compose configuration for development
-- `Dockerfile.backend`, `Dockerfile.frontend` — Dockerfiles for building images
+- `.github/workflows/ci.yml` — GitHub Actions CI pipeline
 
 ---
 
@@ -119,13 +120,13 @@ npm run dev
 Build backend image:
 
 ```bash
-docker build -f Dockerfile.backend -t agrync-backend:latest .
+docker build agrync_backend -t agrync-backend:latest
 ```
 
 Build frontend image:
 
 ```bash
-docker build -f Dockerfile.frontend -t agrync-frontend:latest .
+docker build agrync_frontend -t agrync-frontend:latest
 ```
 
 ---
@@ -145,24 +146,6 @@ docker build -f Dockerfile.frontend -t agrync-frontend:latest .
 
 ---
 
-## Suggested improvements
-
-- Add i18n (react-i18next) to the frontend for proper localization.
-- Add unit and integration tests (pytest for backend; Jest/Vitest for frontend).
-- Add GitHub Actions CI to lint, test and build on PRs.
-
----
-
 ## License
 
-Add a `LICENSE` file (for example MIT) at the repository root.
-
----
-
-## Next steps I can do for you
-
-- Run a workspace search and translate any remaining Spanish UI strings in the frontend.
-- Create a `.env.example` listing environment variables used by backend and frontend.
-- Create a `CONTRIBUTING.md` and a basic GitHub Actions workflow for CI.
-
-Tell me which of these you want me to do next and I will proceed.
+See [LICENSE](LICENSE).

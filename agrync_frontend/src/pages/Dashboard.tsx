@@ -260,6 +260,7 @@ export default function Dashboard() {
                       className="w-full p-3 bg-button hover:bg-button-hover text-white rounded-lg mt-6 font-bold text-xl"
                     >
                       {t('dashboard.save')}
+                    </button>
                   </DialogPanel>
                 </Transition>
               </div>
