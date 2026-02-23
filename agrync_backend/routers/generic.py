@@ -40,11 +40,11 @@ async def get_filtered_devices_by_variables_names(user_id: PydanticObjectId, dev
     for device_input in devices_names:
 
         if device_input.name not in user_devices:
-            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Uno o más dispositivos no están disponibles para el usuario")
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="One or more devices are not available for this user")
         
         generic_device = await GenericDevice.by_name(device_input.name)
         if generic_device is None:
-            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Uno o más dispositivos no existen")
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="One or more devices do not exist")
 
 
         for variable_name in device_input.variables_names:
@@ -53,7 +53,7 @@ async def get_filtered_devices_by_variables_names(user_id: PydanticObjectId, dev
             if variable is None:
                 raise HTTPException(
                     status_code=status.HTTP_400_BAD_REQUEST,
-                    detail="Una o más variables no están disponibles para el usuario"
+                    detail="One or more variables are not available for this user"
                 )
 
                 
@@ -103,11 +103,11 @@ async def validate_and_get_deviceVariable_name_for_user(user_id: PydanticObjectI
     for device_input in devices_names:
         
         if device_input.name not in user_devices:
-            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Uno o más dispositivos no están disponibles para el usuario")
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="One or more devices are not available for this user")
         
         generic_device = await GenericDevice.by_name(device_input.name)
         if generic_device is None:
-            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Uno o más dispositivos no existen")
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="One or more devices do not exist")
 
 
         for variable_name in device_input.variables_names:
@@ -116,7 +116,7 @@ async def validate_and_get_deviceVariable_name_for_user(user_id: PydanticObjectI
             if variable is None:
                 raise HTTPException(
                     status_code=status.HTTP_400_BAD_REQUEST,
-                    detail="Una o más variables no están disponibles para el usuario"
+                    detail="One or more variables are not available for this user"
                 )
             
             device_variable_names.append(device_input.name + "-" + variable_name)
@@ -134,7 +134,7 @@ async def get_last_variables(device_variable_names: list[str]):
         if last_value is None:
             raise HTTPException(
                     status_code=status.HTTP_400_BAD_REQUEST,
-                    detail="No se pudo obtener uno o más de los últimos valores"
+                    detail="Failed to retrieve one or more of the latest values"
                 )
 
         last_values.append(last_value)

@@ -64,7 +64,7 @@ export default function Graficas() {
         defaultValues: initialValues
     });
 
-    // Obtenemos los valores guardados del formulario
+    // Retrieve saved form values
     const selectedCheckboxes = watch("variables_names") as string[] || [];
     const fechaInicio = watch("start_date");
     const fechaFin = watch("end_date");
@@ -131,7 +131,7 @@ export default function Graficas() {
 
 
 
-    // Ejecución consulta solo si todas las condiciones se cumplen
+    // Run query only when all conditions are met
     useEffect(() => {
         if (fechaInicio && fechaFin && selectedCheckboxes.length > 0) {
             handleSubmit(onSubmit)();
@@ -157,7 +157,7 @@ export default function Graficas() {
                     <label htmlFor="fecha_inicio" className="block text-button text-2xl font-bold">Date range:</label>
                     <div className="flex flex-row items-center gap-2">
                         <div className="flex-1 min-w-72">
-                            {/* @ts-expect-error: Ignorar incompatibilidad en onChange porque se maneja el valor manualmente */}
+                            {/* @ts-expect-error: Suppress onChange type mismatch – value is handled manually */}
                             <DateTimePicker
                                 
                                 withSeconds={true}
@@ -168,7 +168,7 @@ export default function Graficas() {
                                 {...register("start_date")}
                                 //onChange={(date) => setValue("start_date", date)}
                                 onChange={(date) => {
-                                    setTempStartDate(date); // Guardamos la fecha temporalmente cuando el usuario selecciona una fecha
+                                    setTempStartDate(date); // Temporarily store the date while the user is picking
                                 }}
                                 classNames={{
                                     day: 'data[selected]:hover:bg-button-hover data-[selected]:bg-button data-[selected]:text-white ',
@@ -206,7 +206,7 @@ export default function Graficas() {
                         <GoDash className="flex-shrink-0 text-button" />
                         {/* Fecha de Fin con DatetimePicker de Mantine */}
                         <div className="flex-1 min-w-72">
-                            {/* @ts-expect-error: Ignorar incompatibilidad en onChange porque se maneja el valor manualmente */}
+                            {/* @ts-expect-error: Suppress onChange type mismatch – value is handled manually */}
                             <DateTimePicker
                                 dropdownType="modal"
                                 withSeconds
@@ -216,7 +216,7 @@ export default function Graficas() {
                                 {...register("end_date")}
                                 //onChange={(date) => setValue("end_date", date)} 
                                 onChange={(date) => {
-                                    setTempEndDate(date); // Guardamos la fecha temporalmente cuando el usuario selecciona una fecha
+                                    setTempEndDate(date); // Temporarily store the date while the user is picking
                                 }}
                                 classNames={{
                                     day: ' data-[selected]:bg-button data-[selected]:text-white data[selected]:hover:bg-button-hover',
@@ -241,7 +241,7 @@ export default function Graficas() {
                                         }
                                     }
                                 }}
-                                disabled={!fechaInicio} // El campo de fecha de fin está deshabilitado si no hay fecha de inicio
+                                disabled={!fechaInicio} // End date field is disabled until a start date is selected
                                 minDate={fechaInicio || undefined} 
                                 maxDate={maxDate}
                             />

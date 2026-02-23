@@ -17,19 +17,19 @@ export default function SeleccionTask() {
     const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         const newValue = e.target.value;
     
-        // Obtener la URL actual
+        // Get current URL path
         const currentPath = window.location.pathname;
      
-        // Dividir la URL en segmentos
+        // Split the URL into segments
         const pathSegments = currentPath.split("/");
     
-        // Reemplazar el último segmento con el nuevo valor
+        // Replace the last segment with the new value
         pathSegments[pathSegments.length - 1] = newValue;
     
-        // Unir los segmentos y actualizar la URL
+        // Join segments and update the URL
         const newPath = pathSegments.join("/");
     
-        // Navegar a la nueva URL
+        // Navigate to the new URL
         navigate(newPath);
 
     };

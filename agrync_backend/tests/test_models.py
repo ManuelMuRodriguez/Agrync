@@ -1,6 +1,6 @@
 """
-Tests para los modelos de dominio (Beanie Documents y Pydantic models).
-Se cubre la lógica de negocio: métodos de clase, estados de Task, validadores de Modbus, etc.
+Tests for domain models (Beanie Documents and Pydantic models).
+Covers business logic: class methods, Task states, Modbus validators, etc.
 """
 import pytest
 from models.task import Task, NameTask, State

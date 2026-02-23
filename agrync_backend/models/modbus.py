@@ -12,7 +12,7 @@ from models.opc import InputOPC
 def depuration(text: str):
     cleaned_text = text.strip().replace(" ", "_")
     if re.search(r'[^a-zA-Z0-9_.\-]', cleaned_text):
-        raise ValueError(f"Texto inválido: '{text}' contiene caracteres prohibidos")
+        raise ValueError(f"Invalid text: '{text}' contains forbidden characters")
     return cleaned_text
 
 

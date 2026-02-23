@@ -95,7 +95,7 @@ async def start_task_endpoint(name: NameTask, current_admin: Annotated[UserByTok
                     process = psutil.Process(task.pid)
                     print(process.is_running())
                     if process.is_running() and process.status() != psutil.STATUS_ZOMBIE:
-                        return {"message": f"La tarea '{name.value}' ya se encuentra en ejecución"}
+                        return {"message": f"Task '{name.value}' is already running"}
 
             except psutil.NoSuchProcess:
                 pass
@@ -131,18 +131,18 @@ async def start_task_endpoint(name: NameTask, current_admin: Annotated[UserByTok
                 process = launch_process(script_path)
                 await task.start_task(process.pid)
 
-                return {"message": f"Tarea '{name.value}' iniciada junto a sus dependencias"}
+                return {"message": f"Task '{name.value}' started along with its dependencies"}
             
             process = launch_process(script_path)
             await task.start_task(process.pid)
 
-            return {"message": f"Tarea '{name.value}' iniciada"}
+            return {"message": f"Task '{name.value}' started"}
         
         else:
-            raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=f"La tarea '{name.value}' no puede iniciarse de forma directa")
+            raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=f"Task '{name.value}' cannot be started directly")
 
     else:
-        raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=f"La tarea '{name.value}' no existe")
+        raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=f"Task '{name.value}' does not exist")
 
         
 
@@ -182,24 +182,24 @@ async def stop_task_endpoint(name: NameTask, current_admin: Annotated[UserByToke
                             except psutil.NoSuchProcess:
                                 pass  
 
-                        return {"message": f"Tarea '{name.value}' detenida junto a sus dependencias"}
+                        return {"message": f"Task '{name.value}' stopped along with its dependencies"}
                      
-                    return {"message": f"Tarea '{name.value}' detenida"}
+                    return {"message": f"Task '{name.value}' stopped"}
             except:
                 pass
             
 
             if(task.state == State.stopped):
-                raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=f"La tarea '{name.value}' ya se encontraba detenida")
+                raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=f"Task '{name.value}' was already stopped")
             else:
                 await task.fail_task()
-                raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=f"La tarea '{name.value}' ha fallado")
+                raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=f"Task '{name.value}' has failed")
 
         else:
-            raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=f"La tarea '{name.value}' no puede detenerse de forma directa")
+            raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=f"Task '{name.value}' cannot be stopped directly")
 
     else:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"La tarea '{name.value}' no existe")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Task '{name.value}' does not exist")
     
 async def get_state(task: Task):
     process = psutil.Process(task.pid)
@@ -231,7 +231,7 @@ async def get_task_state(name: NameTask, current_admin: Annotated[UserByToken, D
     task = await Task.by_name(name)
 
     if not task:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"La tarea '{name.value}' no existe")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Task '{name.value}' does not exist")
        
             
     state = await get_state(task)

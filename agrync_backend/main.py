@@ -28,23 +28,23 @@ import time
 
 
 DESCRIPTION = """
-API para la recopilación de valores de diferentes dispositivos IoT de IFAPA con diferentes protocolos de comunicación
+API for collecting values from various IFAPA IoT devices using multiple communication protocols
 
 """
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI): 
-    """Inicialización de ODM y base de datos"""
+    """ODM and database initialization"""
     #app.db = AsyncIOMotorClient("mongodb://localhost:27017").agrync 
     app.db = AsyncIOMotorClient("mongodb://mongodb:27017").agrync 
     await init_beanie(app.db, document_models=[User, ModbusDevice, Task, GenericDevice, HistoricalVariable, LastVariable])
     await init_tasks()
     await create_initial_admin()
-    print("Inicio completado")
+    print("Startup complete")
     yield
     await stop_all_tasks()
-    print("Apagado completado")
+    print("Shutdown complete")
  
 
 
@@ -121,7 +121,7 @@ async def request_validation_exception_handler(request: Request, exc: RequestVal
 async def limit_upload_size(request: Request, call_next):
     content_length = request.headers.get("content-length")
     if content_length and int(content_length) > MAX_UPLOAD_SIZE:
-        raise HTTPException(status_code=status.HTTP_413_REQUEST_ENTITY_TOO_LARGE, detail="Archivo demasiado grande")
+        raise HTTPException(status_code=status.HTTP_413_REQUEST_ENTITY_TOO_LARGE, detail="File too large")
     
     return await call_next(request)
 

@@ -258,7 +258,7 @@ async def process_devices(devices: list[DeviceInput], time_now):
                             raise HTTPException(status_code=422, detail=f"Nombre de variable duplicado en el archivo: {var_data.name}")
 
                         if var_data.address in variable_address_set:
-                            raise HTTPException(status_code=422, detail=f"Dirección de variable duplicada en el archivo: {var_data.address + 1}")
+                            raise HTTPException(status_code=422, detail=f"Duplicate variable address in file: {var_data.address + 1}")
 
                         variable_names_set.add(var_data.name)
                         variable_address_set.add(var_data.address)
@@ -341,7 +341,7 @@ async def create_upload_file(file: UploadFile | None = None):
             #data = json.loads(content)
             data = await read_json(file)
         except json.JSONDecodeError:
-            raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail="El contenido no es un JSON válido")
+            raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail="Content is not valid JSON")
 
         try:
             loop = asyncio.get_running_loop()
@@ -361,7 +361,7 @@ async def create_upload_file(file: UploadFile | None = None):
         
         await process_devices(devices, time_now)
 
-        return {"message": "Archivo recibido"}
+        return {"message": "File received"}
 
  
 '''
@@ -526,7 +526,7 @@ async def create_device(device_data: DeviceInput):
     await device.create()
 
 
-    return {"message": "Dispositivo creado correctamente"}
+    return {"message": "Device created successfully"}
 
 
 
@@ -620,9 +620,9 @@ async def update_device(device_db_id: PydanticObjectId, device_data: DeviceUpdat
         await device.replace()
 
         
-        return {"message": "Dispositivo modificado correctamente"}
+        return {"message": "Device modified successfully"}
     
-    return {"message": "No se realizaron cambios. Los datos ya son utilizados por el dispositivo"}
+    return {"message": "No changes made. The data is already in use by this device"}
 
 
 
@@ -666,7 +666,7 @@ async def delete_device(device_db_id: PydanticObjectId):
 
         await ModbusDevice.delete(device)
 
-        return {"message": "Dispositivo eliminado correctamente"}
+        return {"message": "Device deleted successfully"}
     
     else:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Dispositivo no encontrado")
@@ -836,7 +836,7 @@ async def create_slave(device_db_id: PydanticObjectId, slave_data: SlaveInput):
     generic_device = GenericDevice(name = full_name_slave, type = DeviceType.modbus)
     await generic_device.create()
 
-    return {"message": "Esclavo creado correctamente"}
+    return {"message": "Slave created successfully"}
 
 
 
@@ -938,9 +938,9 @@ async def update_slave(device_db_id: PydanticObjectId, slave_db_id: PydanticObje
         await device.replace()
 
         
-        return {"message": "Esclavo modificado correctamente"}
+        return {"message": "Slave modified successfully"}
     
-    return {"message": "No se realizaron cambios. Los datos ya son utilizados por el esclavo"}
+    return {"message": "No changes made. The data is already in use by this slave"}
 
 
 @modbus_router.delete("/devices/{device_db_id}/slaves/{slave_db_id}", status_code=status.HTTP_200_OK)
@@ -984,7 +984,7 @@ async def delete_slave(device_db_id: PydanticObjectId, slave_db_id: PydanticObje
     await device.replace()
 
 
-    return {"message": "Esclavo eliminado correctamente"}
+    return {"message": "Slave deleted successfully"}
 
 
                 
@@ -1208,7 +1208,7 @@ async def create_variable(device_db_id: PydanticObjectId, slave_db_id: PydanticO
     device.updatedAt = actual_time
     await device.replace()
 
-    return {"message": "Variable creada correctamente"}
+    return {"message": "Variable created successfully"}
 
 
 def update_variable_name(original: str, new_variable: str) -> str:
@@ -1313,9 +1313,9 @@ async def update_variable(device_db_id: PydanticObjectId, slave_db_id: PydanticO
         await device.replace()
 
         
-        return {"message": "Variable modificada correctamente"}
+        return {"message": "Variable modified successfully"}
     
-    return {"message": "No se realizaron cambios. Los datos ya son utilizados por la variable"}
+    return {"message": "No changes made. The data is already in use by this variable"}
 
 
 
@@ -1379,7 +1379,7 @@ async def delete_variable(device_db_id: PydanticObjectId, slave_db_id: PydanticO
     device.updatedAt = actual_time
     await device.replace()
 
-    return {"message": "Variable eliminada correctamente"}
+    return {"message": "Variable deleted successfully"}
 
         
     

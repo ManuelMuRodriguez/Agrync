@@ -27,13 +27,13 @@ REFRESH_TOKEN_EXPIRE_MINUTES = os.getenv('REFRESH_TOKEN_EXPIRE_MINUTES')
 ACCESS_TOKEN_EXPIRE_MINUTES = os.getenv('ACCESS_TOKEN_EXPIRE_MINUTES')
 
 if ACCESS_TOKEN_EXPIRE_MINUTES is None:
-    raise ValueError("La variable de entorno 'ACCESS_TOKEN_EXPIRE_MINUTES' no está definida")
+    raise ValueError("Environment variable 'ACCESS_TOKEN_EXPIRE_MINUTES' is not defined")
 else: 
     ACCESS_TOKEN_EXPIRE_MINUTES = int(ACCESS_TOKEN_EXPIRE_MINUTES)
 
 
 if REFRESH_TOKEN_EXPIRE_MINUTES is None:
-    raise ValueError("La variable de entorno 'REFRESH_TOKEN_EXPIRE_MINUTES' no está definida")
+    raise ValueError("Environment variable 'REFRESH_TOKEN_EXPIRE_MINUTES' is not defined")
 else: 
     REFRESH_TOKEN_EXPIRE_MINUTES = int(REFRESH_TOKEN_EXPIRE_MINUTES)
 
@@ -110,7 +110,7 @@ async def get_current_user(auth_token: Annotated[UserByToken, Depends(oauth2_sch
     if not auth_token:
         raise HTTPException(
             status_code=401,
-            detail="Access Token no encontrado",
+            detail="Access token not found",
             headers={"WWW-Authenticate": "Bearer"},
         )
     decoded_data = await decode_token(auth_token)
@@ -119,7 +119,7 @@ async def get_current_user(auth_token: Annotated[UserByToken, Depends(oauth2_sch
 
         raise HTTPException(
             status_code=401,
-            detail="Access Token inválido",
+            detail="Invalid access token",
             headers={"WWW-Authenticate": "Bearer"},
         )
 
@@ -127,7 +127,7 @@ async def get_current_user(auth_token: Annotated[UserByToken, Depends(oauth2_sch
     if user is None:
         raise HTTPException(
             status_code=401,
-            detail="Usuario no encontrado para ese Access Token",
+            detail="No user found for this access token",
             headers={"WWW-Authenticate": "Bearer"},
         )
     return UserByToken(id=user.id, role=user.role, full_name=user.full_name)
@@ -135,12 +135,12 @@ async def get_current_user(auth_token: Annotated[UserByToken, Depends(oauth2_sch
 
 async def get_current_admin_user(user: Annotated[UserByToken, Depends(get_current_user)]) -> UserByToken:
     if user.role != Role.admin:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="No tienes permisos para realizar esta acción")
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="You do not have permission to perform this action")
     return user
 
 async def get_current_admin_or_editor_user(user: Annotated[UserByToken, Depends(get_current_user)]) -> UserByToken:
     if user.role != Role.admin and user.role != Role.editor:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="No tienes permisos para realizar esta acción")
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="You do not have permission to perform this action")
     return user
 
 
@@ -149,7 +149,7 @@ async def authenticate_user(email: EmailStr, password: str) -> User | bool:
     if not user_database:
         return False
     if user_database.active == False:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="El usuario no está validado")
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="User account is not activated")
     if not verify_password(password, user_database.password):
         return False
     return user_database
@@ -161,9 +161,9 @@ async def authenticate_user(email: EmailStr, password: str) -> User | bool:
 async def create_password(user: UserAuthForm):
     if user.email and user.password and user.password_confirmation:
         if user.password != user.password_confirmation:
-            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Las contraseñas no son iguales")
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Passwords do not match")
         if len(user.password) < 8:
-            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="La contraseña debe tener 8 caracteres como mínimo")
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Password must be at least 8 characters")
         user_database = await User.by_email(user.email)
         if user_database:
             if user_database.active == False:
@@ -171,13 +171,13 @@ async def create_password(user: UserAuthForm):
                 user_database.active = True
                 user_database.updatedAt= time_at()
                 await user_database.replace()
-                return {"message" : "Validación correcta"}
+                return {"message" : "Activation successful"}
             else:
-                raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Usuario ya ha sido validado")
+                raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="User has already been activated")
         else:
-            raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Usuario no existe")
+            raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="User does not exist")
     else:
-        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Credenciales incorrectas")
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Missing credentials")
  
  
 
@@ -198,27 +198,27 @@ async def login_for_access_token(user_form_data: Annotated[OAuth2PasswordRequest
         else:
             raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Email o contraseña incorrectos",
+            detail="Incorrect email or password",
             headers={"WWW-Authenticate": "Bearer"},
             )
 
     else:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Email o contraseña no proporcionados"
+            detail="Email or password not provided"
             )
 
 
 @authentication_router.post("/refresh", status_code=status.HTTP_201_CREATED)
 async def refresh_token(refresh_token: str = Depends(check_cookie)):
     if not refresh_token:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Refresh Token no encontrado")
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Refresh token not found")
     decoded_token = await decode_token(refresh_token, type='refresh')
     if not decoded_token:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Refresh Token inválido")
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid refresh token")
     user = await User.get(decoded_token.id)
     if not user:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Usuario no encontrado para ese Refresh Token")
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="No user found for this refresh token")
     access_token = create_access_token(data={"sub": str(user.id)})
     token_model = Token(access_token=access_token, token_type="bearer")
     return token_model.model_dump()

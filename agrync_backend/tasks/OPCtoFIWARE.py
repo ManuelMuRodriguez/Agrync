@@ -348,7 +348,7 @@ async def main():
 
 
                         if not device_checked:
-                            # Llamamos a check_data_delay solo la primera vez que procesamos una variable por dispositivo
+                            # Call check_data_delay only the first time a variable is processed per device
                             device_alert_times = check_data_delay(generical_device_name, date_time, current_time, device_alert_times)
                             device_checked = True
                         

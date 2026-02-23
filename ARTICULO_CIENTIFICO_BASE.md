@@ -1,169 +1,169 @@
-# Agrync: Plataforma de Recolección y Gestión de Telemetría IoT Industrial
+# Agrync: IoT Industrial Telemetry Collection and Management Platform
 
-## Resumen Ejecutivo
+## Executive Summary
 
-Agrync es una plataforma full-stack diseñada para la recolección, gestión y visualización de datos de telemetría procedentes de dispositivos industriales e IoT. El sistema implementa un enfoque moderno para la integración de múltiples protocolos industriales (Modbus TCP/IP, OPC UA) y facilita la interoperabilidad con plataformas IoT estándar como FIWARE, permitiendo el almacenamiento, análisis y visualización centralizada de datos en instalaciones agroindustriales.
-
----
-
-## 1. Introducción y Contexto
-
-### 1.1 Problemática
-Las plantas agroindustriales tradicionales requieren la integración de múltiples dispositivos y sensores que utilizan distintos protocolos de comunicación. Estos dispositivos generan grandes volúmenes de datos de telemetría que deben ser capturados, almacenados y analizados para optimizar procesos productivos. Las soluciones existentes suelen ser:
-
-- **Fragmentadas**: requieren múltiples sistemas desacoplados para cada protocolo
-- **Complejas**: demandan configuración manual y expertos técnicos especializados
-- **Costosas**: implican inversiones significativas en infraestructura
-- **Poco escalables**: dificultan la adicción de nuevos sensores o dispositivos
-
-### 1.2 Solución Propuesta
-Agrync aborda estos desafíos mediante una plataforma unificada que:
-
-- Integra múltiples protocolos industriales en un único sistema
-- Proporciona una interfaz web intuitiva para gestión de sensores
-- Permite tanto configuración manual como importación en lote mediante archivos JSON
-- Facilita la interoperabilidad con estándares IoT (FIWARE)
-- Utiliza contenedores Docker para despliegue simplificado
+Agrync is a full-stack platform designed for the collection, management and visualisation of telemetry data from industrial and IoT devices. The system implements a modern approach to integrating multiple industrial protocols (Modbus TCP/IP, OPC UA) and facilitates interoperability with standard IoT platforms such as FIWARE, enabling centralised storage, analysis and visualisation of data in agroindustrial facilities.
 
 ---
 
-## 2. Arquitectura del Sistema
+## 1. Introduction and Context
 
-### 2.1 Estructura General
+### 1.1 Problem Statement
+Traditional agroindustrial plants require the integration of multiple devices and sensors that use different communication protocols. These devices generate large volumes of telemetry data that must be captured, stored and analysed to optimise production processes. Existing solutions tend to be:
+
+- **Fragmented**: require multiple decoupled systems for each protocol
+- **Complex**: demand manual configuration and specialised technical experts
+- **Costly**: involve significant infrastructure investments
+- **Poorly scalable**: make it difficult to add new sensors or devices
+
+### 1.2 Proposed Solution
+Agrync addresses these challenges through a unified platform that:
+
+- Integrates multiple industrial protocols in a single system
+- Provides an intuitive web interface for sensor management
+- Supports both manual configuration and bulk import via JSON files
+- Facilitates interoperability with IoT standards (FIWARE)
+- Uses Docker containers for simplified deployment
+
+---
+
+## 2. System Architecture
+
+### 2.1 General Structure
 
 ```
 Agrync
 ├── Backend (FastAPI + Python)
-│   ├── API REST para gestión de dispositivos
-│   ├── Conectores Modbus TCP/IP
-│   ├── Servidor OPC UA
-│   ├── Integración FIWARE
-│   ├── Gestión de usuarios y autenticación
-│   └── Base de datos MongoDB
+│   ├── REST API for device management
+│   ├── Modbus TCP/IP connectors
+│   ├── OPC UA server
+│   ├── FIWARE integration
+│   ├── User management and authentication
+│   └── MongoDB database
 │
 └── Frontend (React + TypeScript + Vite)
-    ├── Interfaz de usuario web
-    ├── Gestión de tareas y monitorización
-    ├── Visualización de variables
-    ├── Configuración de dispositivos
-    └── Autenticación de usuarios
+    ├── Web user interface
+    ├── Task management and monitoring
+    ├── Variable visualisation
+    ├── Device configuration
+    └── User authentication
 ```
 
-### 2.2 Componentes Principales
+### 2.2 Main Components
 
 #### **Backend (agrync_backend/)**
 
-**Tecnologías base:**
+**Core technologies:**
 - Framework: FastAPI (Python 3.11+)
-- Base de datos: MongoDB (mediante Beanie + Motor)
-- Protocolo industrial Modbus: lectura TCP/IP
-- Servidor OPC UA: exposición de datos recolectados
-- Integración IoT: cliente FIWARE para reenvío de datos
+- Database: MongoDB (via Beanie + Motor)
+- Modbus industrial protocol: TCP/IP reading
+- OPC UA server: exposure of collected data
+- IoT integration: FIWARE client for data forwarding
 
-**Estructura de directorios:**
+**Directory structure:**
 
-| Directorio | Propósito |
-|-----------|-----------|
-| `routers/` | Endpoints REST organizados por dominio (auth, fiware, modbus, opc, task, user, generic) |
-| `models/` | Esquemas de datos (Pydantic) y modelos ORM (Beanie) |
-| `tasks/` | Servicios asíncronos: lectores Modbus, servidor OPC, integración FIWARE |
-| `utils/` | Utilidades compartidas (gestión de fechas, contraseñas, tokens) |
-| `static/` | Archivos estáticos (plantillas JSON, descargas) |
+| Directory | Purpose |
+|-----------|---------|
+| `routers/` | REST endpoints organised by domain (auth, fiware, modbus, opc, task, user, generic) |
+| `models/` | Data schemas (Pydantic) and ORM models (Beanie) |
+| `tasks/` | Asynchronous services: Modbus readers, OPC server, FIWARE integration |
+| `utils/` | Shared utilities (date management, passwords, tokens) |
+| `static/` | Static files (JSON templates, downloads) |
 
-**Endpoints principales:**
-- `POST /api/v1/auth/login` — Autenticación de usuarios
-- `GET/POST /api/v1/devices` — Gestión de dispositivos
-- `POST /api/v1/tasks/modbus` — Configuración de tareas Modbus
-- `POST /api/v1/tasks/opc` — Configuración de servidor OPC
-- `POST /api/v1/fiware/push` — Envío de datos a FIWARE
+**Main endpoints:**
+- `POST /api/v1/auth/login` — User authentication
+- `GET/POST /api/v1/devices` — Device management
+- `POST /api/v1/tasks/modbus` — Modbus task configuration
+- `POST /api/v1/tasks/opc` — OPC server configuration
+- `POST /api/v1/fiware/push` — Data push to FIWARE
 
 #### **Frontend (agrync_frontend/)**
 
-**Tecnologías base:**
+**Core technologies:**
 - Framework: React 19+
-- Lenguaje: TypeScript
-- Herramienta de construcción: Vite
-- Estilos: CSS moderno
+- Language: TypeScript
+- Build tool: Vite
+- Styles: Modern CSS
 
-**Estructura de páginas:**
-- Autenticación (login/registro)
-- Dashboard principal
-- Gestión de dispositivos Modbus
-- Configuración de variables
-- Monitorización de tareas
-- Administración de usuarios
-- Centro de configuración
+**Page structure:**
+- Authentication (login/registration)
+- Main dashboard
+- Modbus device management
+- Variable configuration
+- Task monitoring
+- User administration
+- Configuration centre
 
-**Capas de la aplicación:**
+**Application layers:**
 
-| Capa | Responsabilidad |
-|-----|-----------------|
-| `pages/` | Componentes de página completa |
-| `components/` | Componentes reutilizables (tablas, formularios, tarjetas) |
-| `api/` | Clientes HTTP (Axios) para cada dominio |
-| `hooks/` | Hooks personalizados (autenticación, datos genéricos) |
-| `lib/` | Utilidades compartidas y configuración |
-| `types/` | Definiciones TypeScript de tipos compartidos |
+| Layer | Responsibility |
+|-------|---------------|
+| `pages/` | Full-page components |
+| `components/` | Reusable components (tables, forms, cards) |
+| `api/` | HTTP clients (Axios) for each domain |
+| `hooks/` | Custom hooks (authentication, generic data) |
+| `lib/` | Shared utilities and configuration |
+| `types/` | TypeScript definitions of shared types |
 
 ---
 
-## 3. Características Técnicas Clave
+## 3. Key Technical Features
 
-### 3.1 Conectividad Modbus TCP/IP
+### 3.1 Modbus TCP/IP Connectivity
 
-**Funcionamiento:**
-1. El usuario configura un esclavo Modbus especificando:
-   - Dirección IP del dispositivo
-   - Puerto TCP (típicamente 502)
-   - ID del esclavo
-2. El sistema ejecuta una tarea asíncrona que periódicamente:
-   - Se conecta al dispositivo
-   - Lee registros especificados (bobinas, registros de entrada, registros de retención)
-   - Almacena los valores en MongoDB
-   - Reporta errores de conexión
+**How it works:**
+1. The user configures a Modbus slave by specifying:
+   - Device IP address
+   - TCP port (typically 502)
+   - Slave ID
+2. The system runs an asynchronous task that periodically:
+   - Connects to the device
+   - Reads specified registers (coils, input registers, holding registers)
+   - Stores values in MongoDB
+   - Reports connection errors
 
-**Protocolo:**
+**Protocol:**
 - Modbus TCP/IP (RFC 1006)
-- Lectura de múltiples tipos de datos: bobinas, entradas discretas, registros de entrada, registros de retención
-- Soporte para múltiples esclavos simultáneos
+- Reading of multiple data types: coils, discrete inputs, input registers, holding registers
+- Support for multiple simultaneous slaves
 
-### 3.2 Servidor OPC UA
+### 3.2 OPC UA Server
 
-**Funcionalidad:**
-- Expone variables leídas de Modbus como nodos OPC UA
-- Permite que clientes OPC UA (sistemas SCADA, herramientas de monitorización) se conecten
-- Sincronización en tiempo real de valores
+**Functionality:**
+- Exposes variables read from Modbus as OPC UA nodes
+- Allows OPC UA clients (SCADA systems, monitoring tools) to connect
+- Real-time value synchronisation
 
-**Configuración:**
-- Puerto configurable
-- Autenticación opcional
-- Certificados de seguridad en `tasks/certificate/`
+**Configuration:**
+- Configurable port
+- Optional authentication
+- Security certificates in `tasks/certificate/`
 
-### 3.3 Integración FIWARE
+### 3.3 FIWARE Integration
 
-**Propósito:**
-- Reenviar datos de telemetría a plataformas FIWARE
-- Facilitar almacenamiento en bases de datos tiempo-series
-- Integración con ecosistemas IoT estándar
+**Purpose:**
+- Forward telemetry data to FIWARE platforms
+- Facilitate storage in time-series databases
+- Integration with standard IoT ecosystems
 
-**Flujo:**
-1. Datos recolectados de Modbus → MongoDB
-2. Tarea FIWARE → lectura de MongoDB
-3. Transformación a formato FIWARE
-4. Envío HTTP POST a servidor FIWARE
+**Flow:**
+1. Data collected from Modbus → MongoDB
+2. FIWARE task → reads from MongoDB
+3. Transformation to FIWARE format
+4. HTTP POST to FIWARE server
 
-### 3.4 Gestión de Sensores y Variables
+### 3.4 Sensor and Variable Management
 
-**Configuración manual:**
-- Interfaz web para crear/editar sensores uno a uno
-- Asignación de nombres, unidades, rangos de validación
+**Manual configuration:**
+- Web interface for creating/editing sensors one by one
+- Assignment of names, units and validation ranges
 
-**Importación en lote:**
-- Subida de archivos JSON con estructura predefinida
-- Plantilla disponible en `agrync_backend/static/downloads/plantilla_modbus.json`
-- Validación automática de esquema
+**Bulk import:**
+- Upload of JSON files with a predefined structure
+- Template available at `agrync_backend/static/downloads/plantilla_modbus.json`
+- Automatic schema validation
 
-**Ejemplo de plantilla JSON:**
+**JSON template example:**
 ```json
 {
   "sensores": [
@@ -183,24 +183,24 @@ Agrync
 
 ---
 
-## 4. Procedimientos de Instalación y Lanzamiento
+## 4. Installation and Launch Procedures
 
-### 4.1 Opción 1: Despliegue Completo con Docker Compose (Recomendado)
+### 4.1 Option 1: Full Deployment with Docker Compose (Recommended)
 
-**Requisitos previos:**
+**Prerequisites:**
 - Docker Engine 20.10+
 - Docker Compose 1.29+
-- Mínimo 2GB de RAM disponible
-- Puertos 8000 (backend), 5173 (frontend) y 27017 (MongoDB) libres
+- Minimum 2 GB RAM available
+- Ports 8000 (backend), 5173 (frontend) and 27017 (MongoDB) free
 
-**Pasos:**
+**Steps:**
 
 ```bash
-# 1. Clonar repositorio
+# 1. Clone repository
 git clone https://github.com/ManuelMuRodriguez/Agrync.git
 cd Agrync
 
-# 2. Configurar variables de entorno (opcional)
+# 2. Configure environment variables (optional)
 cat > .env << EOF
 MONGODB_URI=mongodb://mongo:27017/agrync
 SECRET_KEY=your-secret-key-here
@@ -209,97 +209,97 @@ FIWARE_SERVICE=agrync
 FIWARE_SERVICEPATH=/agrync
 EOF
 
-# 3. Iniciar servicios
+# 3. Start services
 docker compose up --build
 
-# 4. Verificar estado
+# 4. Verify status
 # Backend API: http://localhost:8000/api/v1/docs
 # Frontend: http://localhost:5173
 # MongoDB: localhost:27017
 ```
 
-**Servicios iniciados:**
-- `agrync-backend` — API FastAPI en puerto 8000
-- `agrync-frontend` — App React en puerto 5173
-- `mongo` — Base de datos MongoDB en puerto 27017
-- `fiware` (opcional) — Plataforma FIWARE
+**Started services:**
+- `agrync-backend` — FastAPI on port 8000
+- `agrync-frontend` — React app on port 5173
+- `mongo` — MongoDB database on port 27017
+- `fiware` (optional) — FIWARE platform
 
-**Detener servicios:**
+**Stop services:**
 ```bash
 docker compose down
 ```
 
-### 4.2 Opción 2: Desarrollo Local (Backend)
+### 4.2 Option 2: Local Development (Backend)
 
-**Requisitos:**
+**Requirements:**
 - Python 3.11+
-- pip o poetry
-- MongoDB en ejecución (local o remota)
+- pip or poetry
+- MongoDB running (local or remote)
 
-**Pasos:**
+**Steps:**
 
 ```bash
-# 1. Navegar al backend
+# 1. Navigate to backend
 cd agrync_backend
 
-# 2. Crear entorno virtual
+# 2. Create virtual environment
 python -m venv .venv
 source .venv/bin/activate  # macOS/Linux
-# o en Windows:
+# or on Windows:
 # .venv\Scripts\activate
 
-# 3. Instalar dependencias
+# 3. Install dependencies
 pip install -r requirements.txt
 
-# 4. Configurar variables de entorno
+# 4. Configure environment variables
 export MONGODB_URI=mongodb://localhost:27017/agrync
 export SECRET_KEY=dev-secret-key
 
-# 5. Ejecutar servidor
+# 5. Run server
 uvicorn main:app --host 0.0.0.0 --port 8000 --reload
 
-# 6. Acceder a documentación API
+# 6. Access API documentation
 # Swagger UI: http://localhost:8000/api/v1/docs
 # ReDoc: http://localhost:8000/api/v1/redoc
 ```
 
-**Detalles de ejecución:**
-- `--reload`: Reinicia automáticamente ante cambios en código
-- Hot-reload habilitado para desarrollo rápido
+**Execution notes:**
+- `--reload`: Restarts automatically on code changes
+- Hot-reload enabled for rapid development
 
-### 4.3 Opción 3: Desarrollo Local (Frontend)
+### 4.3 Option 3: Local Development (Frontend)
 
-**Requisitos:**
+**Requirements:**
 - Node.js 18+
-- npm, yarn o pnpm
+- npm, yarn or pnpm
 
-**Pasos:**
+**Steps:**
 
 ```bash
-# 1. Navegar al frontend
+# 1. Navigate to frontend
 cd agrync_frontend
 
-# 2. Instalar dependencias
+# 2. Install dependencies
 npm install
-# o: yarn install, pnpm install
+# or: yarn install, pnpm install
 
-# 3. Configurar API base (si es necesario)
-# Editar src/api/axios.ts con URL del backend
-# Ej: http://localhost:8000/api/v1
+# 3. Configure API base (if needed)
+# Edit src/api/axios.ts with the backend URL
+# e.g.: http://localhost:8000/api/v1
 
-# 4. Iniciar servidor de desarrollo
+# 4. Start development server
 npm run dev
 
-# 5. Acceder a aplicación
+# 5. Access application
 # http://localhost:5173
 ```
 
-**Características de desarrollo:**
-- Hot Module Replacement (HMR) — cambios reflejados instantáneamente
-- TypeScript strict mode — validación de tipos en tiempo de desarrollo
-- ESLint configuration — análisis de calidad de código
+**Development features:**
+- Hot Module Replacement (HMR) — changes reflected instantly
+- TypeScript strict mode — type validation at development time
+- ESLint configuration — code quality analysis
 
-### 4.4 Construcción de Imágenes Docker Individuales
+### 4.4 Building Individual Docker Images
 
 **Backend:**
 ```bash
@@ -317,149 +317,149 @@ docker run -p 5173:5173 agrync-frontend:latest
 
 ---
 
-## 5. Flujo de Datos y Funcionamiento
+## 5. Data Flow and Operation
 
-### 5.1 Flujo de Configuración
+### 5.1 Configuration Flow
 
 ```
-Usuario (Web UI)
+User (Web UI)
     ↓
-[Frontend React]
+[React Frontend]
     ↓ POST /api/v1/devices
-[Backend API FastAPI]
+[FastAPI Backend]
     ↓
-[Validación Pydantic]
+[Pydantic Validation]
     ↓
 [MongoDB]
-    ↓ Confirmación
-[Frontend] ← Dispositivo configurado
+    ↓ Confirmation
+[Frontend] ← Device configured
 ```
 
-### 5.2 Flujo de Recolección de Datos
+### 5.2 Data Collection Flow
 
 ```
-[Tarea Modbus Asíncrona]
-    ↓ Conexión TCP/IP
-[Dispositivo Modbus]
-    ↓ Lectura de registros
-[Tarea Modbus] ← Valores leídos
-    ↓ Transformación y validación
-[MongoDB] ← Almacenamiento de lecturas
+[Asynchronous Modbus Task]
+    ↓ TCP/IP Connection
+[Modbus Device]
+    ↓ Register reading
+[Modbus Task] ← Values read
+    ↓ Transformation and validation
+[MongoDB] ← Reading storage
     ↓
-[Servidor OPC UA] ← Sincronización de valores
+[OPC UA Server] ← Value synchronisation
     ↓
-[Clientes OPC UA] ← Variables disponibles
+[OPC UA Clients] ← Variables available
 ```
 
-### 5.3 Flujo de Integración FIWARE
+### 5.3 FIWARE Integration Flow
 
 ```
-[MongoDB] ← Datos históricos
+[MongoDB] ← Historical data
     ↓
-[Tarea FIWARE]
-    ↓ Transformación a formato FIWARE
+[FIWARE Task]
+    ↓ Transformation to FIWARE format
 [FIWARE API]
     ↓
-[Base de datos tiempo-serie FIWARE]
+[FIWARE time-series database]
     ↓
-[Dashboards y análisis]
+[Dashboards and analysis]
 ```
 
-### 5.4 Flujo de Autenticación
+### 5.4 Authentication Flow
 
 ```
-Usuario ingresa credenciales
+User enters credentials
     ↓
 [Frontend] → POST /api/v1/auth/login
     ↓
-[Backend] → Validación en MongoDB
-    ↓ Token JWT generado
-[Frontend] ← Token almacenado en localStorage
+[Backend] → Validation in MongoDB
+    ↓ JWT token generated
+[Frontend] ← Token stored in localStorage
     ↓
-[Solicitudes posteriores] incluyen Authorization: Bearer <token>
+[Subsequent requests] include Authorization: Bearer <token>
 ```
 
 ---
 
-## 6. Modelo de Datos Principales
+## 6. Main Data Models
 
-### 6.1 Esquema de Usuario
+### 6.1 User Schema
 
 ```python
-class Usuario(BaseModel):
-    email: str  # Identificador único
-    contraseña_hash: str  # Almacenada con salt
-    nombre_completo: str
-    rol: Literal["admin", "operador", "visualizador"]
-    activo: bool
-    creado_en: datetime
-    actualizado_en: datetime
+class User(BaseModel):
+    email: str  # Unique identifier
+    password_hash: str  # Stored with salt
+    full_name: str
+    role: Literal["admin", "operator", "viewer"]
+    active: bool
+    created_at: datetime
+    updated_at: datetime
 ```
 
-### 6.2 Esquema de Dispositivo Modbus
+### 6.2 Modbus Device Schema
 
 ```python
-class DispositivoModbus(BaseModel):
-    nombre: str
-    direccion_ip: str
-    puerto: int = 502
-    id_esclavo: int
-    intervalo_lectura: int  # segundos
+class ModbusDevice(BaseModel):
+    name: str
+    ip_address: str
+    port: int = 502
+    slave_id: int
+    read_interval: int  # seconds
     variables: List[Variable]
-    activo: bool
-    creado_en: datetime
+    active: bool
+    created_at: datetime
 ```
 
-### 6.3 Esquema de Variable
+### 6.3 Variable Schema
 
 ```python
 class Variable(BaseModel):
-    nombre: str
-    registro: int
-    tipo_registro: Literal["coil", "discrete_input", "input_register", "holding_register"]
-    unidad: str
-    factor_escala: float = 1.0
-    minimo: float
-    maximo: float
-    descripcion: str
-    activo: bool
+    name: str
+    register: int
+    register_type: Literal["coil", "discrete_input", "input_register", "holding_register"]
+    unit: str
+    scale_factor: float = 1.0
+    minimum: float
+    maximum: float
+    description: str
+    active: bool
 ```
 
-### 6.4 Esquema de Lectura de Telemetría
+### 6.4 Telemetry Reading Schema
 
 ```python
-class LecturaTelemetria(BaseModel):
-    id_dispositivo: ObjectId
-    id_variable: str
-    valor: float
+class TelemetryReading(BaseModel):
+    device_id: ObjectId
+    variable_id: str
+    value: float
     timestamp: datetime
-    estado: Literal["ok", "error", "fuera_rango"]
-    mensaje_error: Optional[str]
+    status: Literal["ok", "error", "out_of_range"]
+    error_message: Optional[str]
 ```
 
 ---
 
-## 7. Configuración y Variables de Entorno
+## 7. Configuration and Environment Variables
 
-### 7.1 Variables Backend Requeridas
+### 7.1 Required Backend Variables
 
-| Variable | Descripción | Ejemplo |
-|----------|------------|---------|
-| `MONGODB_URI` | Cadena conexión MongoDB | `mongodb://localhost:27017/agrync` |
-| `SECRET_KEY` | Clave para firmar tokens JWT | `super-secret-key-123` |
-| `FIWARE_URL` | URL servidor FIWARE | `http://localhost:4041` |
-| `FIWARE_SERVICE` | Servicio FIWARE | `agrync` |
-| `FIWARE_SERVICEPATH` | Ruta de servicio FIWARE | `/agrync` |
-| `OPC_PORT` | Puerto servidor OPC UA | `4840` |
-| `LOG_LEVEL` | Nivel de logging | `INFO` |
+| Variable | Description | Example |
+|----------|-------------|---------|
+| `MONGODB_URI` | MongoDB connection string | `mongodb://localhost:27017/agrync` |
+| `SECRET_KEY` | Key for signing JWT tokens | `super-secret-key-123` |
+| `FIWARE_URL` | FIWARE server URL | `http://localhost:4041` |
+| `FIWARE_SERVICE` | FIWARE service | `agrync` |
+| `FIWARE_SERVICEPATH` | FIWARE service path | `/agrync` |
+| `OPC_PORT` | OPC UA server port | `4840` |
+| `LOG_LEVEL` | Logging level | `INFO` |
 
-### 7.2 Variables Frontend Requeridas
+### 7.2 Required Frontend Variables
 
-| Variable | Descripción | Ejemplo |
-|----------|------------|---------|
-| `VITE_API_BASE_URL` | URL base API backend | `http://localhost:8000/api/v1` |
+| Variable | Description | Example |
+|----------|-------------|---------|
+| `VITE_API_BASE_URL` | Backend API base URL | `http://localhost:8000/api/v1` |
 
-### 7.3 Archivo `.env.example`
+### 7.3 `.env.example` File
 
 ```text
 # Backend
@@ -481,140 +481,140 @@ MONGO_INITDB_ROOT_PASSWORD=password
 
 ---
 
-## 8. Consideraciones de Seguridad
+## 8. Security Considerations
 
-### 8.1 Autenticación y Autorización
+### 8.1 Authentication and Authorisation
 
-- **JWT Tokens**: Tokens de corta duración para autenticación sin estado
-- **Roles**: RBAC (Role-Based Access Control) con roles predefinidos
-- **Hashing**: Contraseñas almacenadas con algoritmos criptográficos modernos
+- **JWT Tokens**: Short-lived tokens for stateless authentication
+- **Roles**: RBAC (Role-Based Access Control) with predefined roles
+- **Hashing**: Passwords stored with modern cryptographic algorithms
 
-### 8.2 Conexiones Seguras
+### 8.2 Secure Connections
 
-- **HTTPS**: Recomendado para producción (configurar reverse proxy)
-- **Certificados OPC UA**: Soportados en `tasks/certificate/`
-- **MongoDB Authentication**: Credenciales configurables
+- **HTTPS**: Recommended for production (configure reverse proxy)
+- **OPC UA Certificates**: Supported in `tasks/certificate/`
+- **MongoDB Authentication**: Configurable credentials
 
-### 8.3 Validación de Datos
+### 8.3 Data Validation
 
-- **Validación Pydantic**: Esquemas tipados en backend
-- **Validación TypeScript**: Sistema de tipos en frontend
-- **Límites de solicitud**: Rate limiting recomendado
+- **Pydantic Validation**: Typed schemas in the backend
+- **TypeScript Validation**: Type system in the frontend
+- **Request limits**: Rate limiting recommended
 
 ---
 
-## 9. Limitaciones y Mejoras Futuras
+## 9. Limitations and Future Improvements
 
-### 9.1 Limitaciones Actuales
+### 9.1 Current Limitations
 
-1. **Monousuario en desarrollo**: MongoDB sin autenticación por defecto
-2. **Sin tests automatizados**: No hay suite de tests unitarios/integración
-3. **Logging básico**: Sistema de logging manual, podría mejorar con estructurado
-4. **Documentación**: README básico, carece de guías detalladas
+1. **Single-user in development**: MongoDB without authentication by default
+2. **No automated tests**: No unit/integration test suite
+3. **Basic logging**: Manual logging system; could be improved with structured logging
+4. **Documentation**: Basic README, lacks detailed guides
 
-### 9.2 Mejoras Propuestas
+### 9.2 Proposed Improvements
 
-1. **Internacionalización (i18n)**
-   - Implementar react-i18next para soporte multiidioma
-   - Traducir interfaz a múltiples lenguas
+1. **Internationalisation (i18n)**
+   - Implement react-i18next for multi-language support
+   - Translate interface to multiple languages
 
-2. **Suite de Tests**
-   - Tests unitarios con pytest (backend)
-   - Tests integración con Docker Compose
-   - Tests E2E con Cypress/Playwright (frontend)
+2. **Test Suite**
+   - Unit tests with pytest (backend)
+   - Integration tests with Docker Compose
+   - E2E tests with Cypress/Playwright (frontend)
 
 3. **CI/CD Pipeline**
-   - GitHub Actions para linting y tests
-   - Construcción automática de imágenes Docker
-   - Despliegue automatizado a registro
+   - GitHub Actions for linting and tests
+   - Automatic Docker image builds
+   - Automated deployment to registry
 
-4. **Monitorización**
-   - Prometheus + Grafana para métricas
-   - ELK Stack para logs centralizados
+4. **Monitoring**
+   - Prometheus + Grafana for metrics
+   - ELK Stack for centralised logs
 
-5. **Escalabilidad**
-   - Message queue (RabbitMQ) para tareas asíncronas
-   - Redis para caché
-   - Replicación MongoDB para alta disponibilidad
+5. **Scalability**
+   - Message queue (RabbitMQ) for asynchronous tasks
+   - Redis for caching
+   - MongoDB replication for high availability
 
 ---
 
-## 10. Ejemplo de Uso Completo
+## 10. Full Usage Example
 
-### Caso de uso: Monitorizar invernadero con sensores Modbus
+### Use case: Monitoring a greenhouse with Modbus sensors
 
-**Paso 1: Desplegar el sistema**
+**Step 1: Deploy the system**
 ```bash
 docker compose up --build
-# Esperar 30-60 segundos a que los servicios inicien
+# Wait 30–60 seconds for services to start
 ```
 
-**Paso 2: Acceder a la aplicación**
+**Step 2: Access the application**
 ```
 Frontend: http://localhost:5173
 API Docs: http://localhost:8000/api/v1/docs
 ```
 
-**Paso 3: Crear usuario y autenticarse**
-- Ir a pantalla de registro
-- Crear cuenta con email y contraseña
-- Iniciar sesión
+**Step 3: Create a user and log in**
+- Go to the registration screen
+- Create an account with email and password
+- Log in
 
-**Paso 4: Configurar dispositivo Modbus**
-- Ir a "Dispositivos" → "Añadir dispositivo"
-- Especificar: IP (ej: 192.168.1.100), Puerto (502), Esclavo (1)
-- Guardar
+**Step 4: Configure a Modbus device**
+- Go to "Devices" → "Add device"
+- Specify: IP (e.g. 192.168.1.100), Port (502), Slave (1)
+- Save
 
-**Paso 5: Añadir variables**
-- Ir a "Variables" → "Añadir variable"
-- Especificar: Nombre, Registro Modbus, Tipo, Unidad
-- Ejemplo: "Temperatura", Registro 100, tipo "input_register", unidad "°C"
-- Guardar
+**Step 5: Add variables**
+- Go to "Variables" → "Add variable"
+- Specify: Name, Modbus Register, Type, Unit
+- Example: "Temperature", Register 100, type "input_register", unit "°C"
+- Save
 
-**Paso 6: Iniciar lectura de datos**
-- Ir a "Tareas" → "Modbus"
-- Crear tarea para dispositivo configurado
-- Establecer intervalo de lectura (ej: 10 segundos)
-- Activar tarea
+**Step 6: Start data reading**
+- Go to "Tasks" → "Modbus"
+- Create a task for the configured device
+- Set read interval (e.g. 10 seconds)
+- Activate task
 
-**Paso 7: Monitorizar datos**
-- Dashboard mostrará valores actuales de variables
-- Gráficos de histórico disponibles
-- Alertas si valores salen de rango configurado
+**Step 7: Monitor data**
+- Dashboard will show current variable values
+- Historical graphs available
+- Alerts if values leave the configured range
 
-**Paso 8 (Opcional): Integración FIWARE**
-- Ir a "Configuración" → "FIWARE"
-- Especificar URL del servidor FIWARE
-- Activar envío automático de datos
-- Los datos se sincronizarán automáticamente
-
----
-
-## 11. Conclusión
-
-Agrync proporciona una solución integral y escalable para la recolección y gestión de telemetría en instalaciones agroindustriales. Su arquitectura modular, interfaz intuitiva y soporte para múltiples protocolos la hacen adecuada tanto para pequeñas instalaciones como para plantas de mayor escala. El uso de tecnologías modernas (FastAPI, React, Docker) garantiza mantenibilidad, escalabilidad y facilidad de despliegue.
+**Step 8 (Optional): FIWARE integration**
+- Go to "Settings" → "FIWARE"
+- Specify the FIWARE server URL
+- Activate automatic data push
+- Data will synchronise automatically
 
 ---
 
-## Bibliografía Recomendada para el Artículo Científico
+## 11. Conclusion
 
-1. **Protocolos Industriales:**
+Agrync provides a comprehensive and scalable solution for telemetry collection and management in agroindustrial facilities. Its modular architecture, intuitive interface and support for multiple protocols make it suitable for both small installations and larger-scale plants. The use of modern technologies (FastAPI, React, Docker) guarantees maintainability, scalability and ease of deployment.
+
+---
+
+## Recommended Bibliography for the Scientific Article
+
+1. **Industrial Protocols:**
    - Modbus Organization. "MODBUS Application Protocol Specification V1.1b3"
    - OPC Foundation. "OPC UA Specification" (IEC 62541)
 
-2. **IoT y FIWARE:**
+2. **IoT and FIWARE:**
    - Gómez, J., et al. (2020). "FIWARE: An Open Ecosystem for IoT". ArXiv preprint.
    - ETSI GS CIM 009 V1.1.1: "Context Information Management (CIM)"
 
-3. **Tecnologías Web:**
+3. **Web Technologies:**
    - Tiangolo, S. (2021). "FastAPI: Modern Python Web Framework"
    - React Documentation. "Declarative, Efficient, and Flexible JavaScript Library"
 
-4. **IoT en Agricultura:**
+4. **IoT in Agriculture:**
    - Sharma, A., et al. (2021). "IoT-based Smart Agriculture: A Comprehensive Survey"
    - Lobell, D. B., et al. (2015). "The use of satellite data for crop yield gap analysis"
 
 ---
 
-**Documento preparado:** 16 de diciembre de 2025
-**Versión:** 1.0
+**Document prepared:** 16 December 2025
+**Version:** 1.0

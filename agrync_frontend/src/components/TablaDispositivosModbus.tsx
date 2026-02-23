@@ -32,7 +32,7 @@ export default function TablaDispositivosModbus() {
     const validateIp = (ip: string) =>
         !!ip && /^((25[0-5]|(2[0-4]|1\d|[1-9]|)\d)\.?\b){4}$/.test(ip);
     
-      // Validar usuario completo
+      // Validate full device
       function validateDevice(device: ModbusDeviceTable) {
         return {
           name: !device.name ? 'The name is mandatory.' : undefined,

@@ -23,12 +23,12 @@ import signal
 
 BASE_DIR = Path(__file__).resolve().parent
 
-# Carga las variables de .env
+# Load environment variables
 load_dotenv()
 
 LOG_CONFIG = str(BASE_DIR / os.getenv("LOG_CONFIG", "logging.conf"))
 
-# Configuración del log para el cliente Modbus y el servidor OPC
+# Log configuration for the Modbus client and OPC server
 logging.config.fileConfig(LOG_CONFIG)
 
 
@@ -51,7 +51,7 @@ CLIENT_CERT = str(BASE_DIR /os.getenv('CLIENT_CERT'))
 CLIENT_APP_URI= os.getenv('CLIENT_APP_URI')
 
 
-# Usuario y contraseña para la conexión con el servidor OPC
+# Username and password for the OPC server connection
 USERNAME = os.getenv('USERNAME_OPC_ADMIN')
 PASSWORD = os.getenv('PASSWORD_OPC_ADMIN')
 
@@ -63,7 +63,7 @@ URI = os.getenv('URI')
 LOG_MODBUS=os.getenv("LOG_MODBUS")
 
 
-# Creación del logger para el cliente Modbus
+# Create logger for the Modbus client
 logger = logging.getLogger(LOG_MODBUS)
 
 for handler in logging.getLogger().handlers:
@@ -81,18 +81,18 @@ async def setup():
             document_models=[ModbusDevice]
         )
     except Exception as exc:
-        print(f"Error de conexión con la base de datos: {exc}")
-        logger.error(f"Error de conexión con la base de datos: {exc}")
+        print(f"Database connection error: {exc}")
+        logger.error(f"Database connection error: {exc}")
         sys.exit(3)
 
 
-# Conjunto de clientes Modbus utilizados para la conexión con los dispositivos
+# Dictionary of Modbus clients used to connect to each device
 clients: dict[str, AsyncModbusTcpClient] = {}
 
 
 
 
-# Maneja la información cuando se produce una modificación en una variable de escritura
+# Handles data changes when a writable variable is modified
 class SubscriptionHandler:
 
     def __init__(self, modbus_client: AsyncModbusTcpClient, slave_id: int, nodes_with_addresses: dict):
@@ -102,7 +102,7 @@ class SubscriptionHandler:
         self.first_write : dict[Node, bool] = {}
 
     
-    # Realiza la escritura de la variable modbus cuando se produce un cambio en la variable OPC - Se evita la modificación en el primer cambio, ya que este cambio es la obtención del primer valor
+    # Writes the Modbus variable when an OPC variable changes. The first change is skipped as it corresponds to the initial value read.
     async def datachange_notification(self, node: Node, val, data):
         if node in self.first_write:
             try:
@@ -110,33 +110,33 @@ class SubscriptionHandler:
                 modbus_address = self.nodes_with_addresses.get(node, None)
 
                 if modbus_address is not None:
-                    print(f"Variable modificada: {node}, Nuevo valor: {val}, Dirección Modbus: {modbus_address}")
-                    logger.info(f"Variable modificada: {node}, Nuevo valor: {val}, Dirección Modbus: {modbus_address}")
+                    print(f"Variable changed: {node}, New value: {val}, Modbus address: {modbus_address}")
+                    logger.info(f"Variable changed: {node}, New value: {val}, Modbus address: {modbus_address}")
                     await self.modbus_client.write_register(modbus_address, val, slave=self.slave_id)
 
             except AssertionError as exc:
-                print(f"El cliente Modbus de escritura NO está conectado: {exc}")
-                logger.warning(f"El cliente Modbus de escritura NO está conectado: {exc}")
+                print(f"Write Modbus client is NOT connected: {exc}")
+                logger.warning(f"Write Modbus client is NOT connected: {exc}")
 
             except ModbusException as exc:
-                print(f"Error en la escritura del dispositivo Modbus (Direccion={modbus_address}, Slave={self.slave_id}): {exc}")
-                logger.warning(f"Error en la escritura del dispositivo Modbus (Direccion={modbus_address}, Slave={self.slave_id}): {exc}")
+                print(f"Error writing Modbus device (Address={modbus_address}, Slave={self.slave_id}): {exc}")
+                logger.warning(f"Error writing Modbus device (Address={modbus_address}, Slave={self.slave_id}): {exc}")
 
         else:
-            print("Primera escritura")
+            print("First write")
             self.first_write[node] = True
 
         
 
     
 
-# Método para realizar la suscripción a cambios en el servidor OPC
+# Subscribe to value changes on the OPC server
 async def subscription_modification(client: AsyncModbusTcpClient, slave_id: int, writable_variables: list[WritableNode], client_opc:Client) -> None:
 
-    # Creación del cliente OPC
+    # Create OPC client
     #client_opc = await create_opc_client(URL_ADMIN)
 
-    # Conjunto de nodos OPC junto a sus direcciones modbus
+    # OPC nodes mapped to their Modbus addresses
     nodes_with_addresses = {}
 
     while True:
@@ -145,22 +145,22 @@ async def subscription_modification(client: AsyncModbusTcpClient, slave_id: int,
             client_opc.secure_channel_id=id
             await client_opc.connect()
             
-            # Inicio de la conexión con el servidor OPC
+            # Establish connection to the OPC server
             #async with client_opc:
 
-            # Obtención del namescpace del servidor
+            # Retrieve server namespace index
             nsidx = await client_opc.get_namespace_index(URI)
 
             nodes = []
 
-            # Almacenamiento de las nodos junto a sus direcciones
+            # Store nodes mapped to their Modbus addresses
             for variable_node in writable_variables:
 
                 node = client_opc.get_node(f"ns={nsidx};s={variable_node.variable_name}")
                 nodes.append(node)
-                nodes_with_addresses[node] = variable_node.address  # Asociar la dirección Modbus con el nodo
+                nodes_with_addresses[node] = variable_node.address  # Map Modbus address to the node
 
-            #Creación de la suscripción al servidor OPC para el control de la modificación de valores
+            #Create subscription to the OPC server for writable variable change detection
             handler = SubscriptionHandler(modbus_client=client, slave_id = slave_id, nodes_with_addresses = nodes_with_addresses)
             subscription = await client_opc.create_subscription(500, handler)
             await subscription.subscribe_data_change(nodes)
@@ -169,8 +169,8 @@ async def subscription_modification(client: AsyncModbusTcpClient, slave_id: int,
                 await asyncio.sleep(1)
                 await client_opc.check_connection()
         except (ConnectionError, ua.UaError):
-            logger.warning(f"Servidor OPC desconectando, fallo en la suscripción, reconectando...")
-            print(f"Servidor OPC desconectando, fallo en la suscripción, reconectando...")
+            logger.warning(f"OPC server disconnecting, subscription failed, reconnecting...")
+            print(f"OPC server disconnecting, subscription failed, reconnecting...")
             await asyncio.sleep(5)
 
 
@@ -179,46 +179,46 @@ def create_modbus_client(device_ip: str) -> AsyncModbusTcpClient:
     client = AsyncModbusTcpClient(device_ip, port=502, framer=FramerType.SOCKET, timeout = 1)
     return client
 
-# Establecimiento de conexión por modbus
+# Establish Modbus connection
 async def connect_modbus_client(client: AsyncModbusTcpClient) -> bool:
     try:
         await client.connect()
         assert client.connected
     except ModbusException as exc:
-        print(f"Conexión con el cliente Modbus ({client}) fallida: ({exc})")
-        logger.error(f"Conexión con el cliente Modbus ({client}) fallida: ({exc}) ")
+        print(f"Modbus client ({client}) connection failed: ({exc})")
+        logger.error(f"Modbus client ({client}) connection failed: ({exc})")
 
         return False
     
     except AssertionError as exc:
-        print(f"Conexión con el cliente Modbus ({client}) fallida: ({exc})")
-        logger.error(f"Conexión con el cliente Modbus ({client}) fallida: ({exc}) ")
+        print(f"Modbus client ({client}) connection failed: ({exc})")
+        logger.error(f"Modbus client ({client}) connection failed: ({exc})")
 
         return False
 
     return True
 
-# Agrupación de variables para crear las tareas encargadas de la lectura y escritura de variables
+# Group variables by interval and slave to create read/write tasks
 async def grouping_sensors_by_interval_and_sensors_by_slave(devices: list[ModbusDevice]) -> None:
     
-    # Agrupar las variables por intervalo y cliente
+    # Group variables by interval and client
     sensors_per_client_interval: dict[tuple[str, int], list[VariableWithSlave]] = {}
 
-    # Agrupar las variables por esclavo y cliente
+    # Group variables by slave and client
     sensors_per_slave_client: dict[tuple[AsyncModbusTcpClient, int], list[WritableNode]] = {}
 
     for device in devices:
 
-        # Crear un cliente para cada dispositivo
+        # Create a client for each device
         client = create_modbus_client(device.ip) 
 
-        # Se realiza la conexión con el dispositivo Modbus
+        # Connect to the Modbus device
         is_client_connected = await connect_modbus_client(client)
 
         
         if not is_client_connected:
-            print(f"No se pudo conectar con el dispositivo {device.ip}")
-            logger.error(f"No se pudo conectar con el dispositivo {device.ip}")
+            print(f"Could not connect to device {device.ip}")
+            logger.error(f"Could not connect to device {device.ip}")
 
         #Se almacena el cliente Modbus
         clients[device.ip] = client
@@ -231,34 +231,34 @@ async def grouping_sensors_by_interval_and_sensors_by_slave(devices: list[Modbus
 
                         full_name_variable = device.name+ "-" + slave.name + "-" + variable.name
 
-                        # Se guardan las variables en "sensors_per_slave_client" si tienen habilitada la escritura
+                        # Store writable variables in `sensors_per_slave_client`
                         if(variable.writable):
                             node_names = WritableNode(variable_name=full_name_variable, address= variable.address)
 
-                            # Crea una clave que combina un cliente con el id de esclavo
+                            # Build a key combining the client and slave id
                             client_slave_key = (client, slave.slave_id)
 
-                            # Si no existe la clave, se inicializa la lista
+                            # Initialise the list if the key does not exist yet
                             if client_slave_key not in sensors_per_slave_client:
                                 sensors_per_slave_client[client_slave_key] = []
 
-                            # Se asignan las variables con su cliente-esclavo correspondiente
+                            # Assign variables to their corresponding client-slave pair
                             sensors_per_slave_client[client_slave_key].append(node_names)
 
-                        # Crea una clave que combina la ip del dispositivo con el intervalo de obtención de valores de la variable
+                        # Build a key combining the device IP and the polling interval
                         client_key_interval = (device.ip, variable.interval)
 
 
-                        # Si no existe la clave, se inicializa la lista
+                        # Initialise the list if the key does not exist yet
                         if client_key_interval not in sensors_per_client_interval:
                             sensors_per_client_interval[client_key_interval] = []
 
-                        # Se asignan las variables con su ip de dispositivo-intervalo correspondiente
+                        # Assign variables to their corresponding device-IP/interval pair
                         variable_with_slave = VariableWithSlave(variable=variable, slave_id=slave.slave_id, full_name_variable=full_name_variable)
                         sensors_per_client_interval[client_key_interval].append(variable_with_slave)
 
     id = 1
-    # Se crean tareas para leer y escribir variables
+    # Create tasks for reading and writing variables
     tasks = []
     for (client_ip, interval), variables in sensors_per_client_interval.items():
         if client_ip in clients:
@@ -270,7 +270,7 @@ async def grouping_sensors_by_interval_and_sensors_by_slave(devices: list[Modbus
                     id +=1
 
     
-    logger.info("Tareas de lectura y envío a OPC creadas")
+    logger.info("Read-and-send-to-OPC tasks created")
 
     for cliente_esclavo_key, variables in sensors_per_slave_client.items():
         client, esclavo_id = cliente_esclavo_key
@@ -280,9 +280,9 @@ async def grouping_sensors_by_interval_and_sensors_by_slave(devices: list[Modbus
         client_opc.secure_channel_id=id
         id +=1
 
-    logger.info("Tareas para la suscripción de modificación de valores creadas")
+    logger.info("Value-change subscription tasks created")
 
-    # Se ejecutan cada una de las tareas
+    # Run all tasks
     for task in tasks:
         await task            
 
@@ -304,18 +304,17 @@ async def read_and_send_OPC(client: AsyncModbusTcpClient, interval: int, variabl
 
     while True:
 
-        #Obtención del tiempo inicial para controlar el intervalo de obtención de valores
+        # Record start time to control the polling interval
         start_time = time.time()
         is_connected = True
 
-        # Comprobación de que existe conexión con el servidor OPC
+        # Check Modbus client connection
         try:
             assert client.connected
 
         except AssertionError as exc:
-            print(f"Cliente Modbus ({client}) desconectado: ({exc})")
-            logger.error(f"Cliente Modbus ({client}) desconectado: ({exc})")
-            is_connected = False
+                print(f"Modbus client ({client}) disconnected: ({exc})")
+                logger.error(f"Modbus client ({client}) disconnected: ({exc})")
     
         list_values = []
 
@@ -330,13 +329,13 @@ async def read_and_send_OPC(client: AsyncModbusTcpClient, interval: int, variabl
                     read_registers = await client.read_holding_registers(variable.variable.address, count=variable.variable.length, slave=variable.slave_id)
 
                 except ModbusException as exc:
-                    print(f"Recibida ModbusException({exc}) desde la librería modbus al intentar leer registros")
+                    print(f"Received ModbusException({exc}) from modbus library while trying to read registers")
                     #logger.warning(f"Recibida ModbusException({exc}) desde la librería modbus al intentar leer registros")
                     #client.close()
                     read_registers = None
                 if read_registers and read_registers.isError():
-                    print(f"Excepción recibida en la lectura de los siguientes registros: ({read_registers})")
-                    logger.warning(f"Excepción recibida en la lectura de los siguientes registros: ({read_registers})")
+                    print(f"Error response received while reading registers: ({read_registers})")
+                    logger.warning(f"Error response received while reading registers: ({read_registers})")
                     #client.close()
                     read_registers = None
 
@@ -363,8 +362,8 @@ async def read_and_send_OPC(client: AsyncModbusTcpClient, interval: int, variabl
                         else:
                             value = None
                     except ModbusException as exc:
-                        print(f"Error durante la coversión de registros ({read_registers.registers}): {exc}")
-                        logger.error(f"Error durante la coversión de registros ({read_registers.registers}): {exc}")
+                        print(f"Error converting registers ({read_registers.registers}): {exc}")
+                        logger.error(f"Error converting registers ({read_registers.registers}): {exc}")
                         
                     
                     if value is not None:
@@ -372,20 +371,20 @@ async def read_and_send_OPC(client: AsyncModbusTcpClient, interval: int, variabl
                         if(variable.variable.scaling != None):
                             value = variable.variable.scaling * value
 
-                        # Aplicación de un redondeo al valor
+                        # Round the value
                         #if(variable.variable.decimals != 0):
                         value = round_to_decimals(value, variable.variable.decimals)
 
                 list_values.append(VariableOPC(value=value, type=variable.variable.type, variable_name=variable.full_name_variable))
 
-            # Si el valor es nulo no se envía al servidor OPC
+            # Skip sending null values to the OPC server
             await send_opc(list_values, client_opc)
 
 
-            # Se calcula cuánto tiempo ha tardado la lectura
+            # Calculate elapsed reading time
             elapsed_time = time.time() - start_time
 
-            # Se resta el tiempo transcurrido del intervalo total
+            # Compute remaining sleep time
             remaining_time = max(0, interval - elapsed_time)
 
 
@@ -401,11 +400,11 @@ async def read_and_send_OPC(client: AsyncModbusTcpClient, interval: int, variabl
             #print(f"---------{current_time}-----------------------------")
 
 
-            # Se espera el tiempo restante para completar el intervalo
+            # Wait for the remaining interval time
             await asyncio.sleep(remaining_time)
             
         else:
-            # Si el cliente esta desconectado se intenta la reconexión y se activa una espera para el siguiente reintento
+            # Client disconnected: attempt reconnection and wait before retrying
             await connect_modbus_client(client)
             try:
                 assert client.connected
@@ -424,26 +423,26 @@ async def send_opc(values_list: list[VariableOPC], client_opc: Client) -> None:
 
     attempt = 1
     client_opc.secure_channel_timeout=1000
-    # Coneción con el servidor OPC
+    # Connect to the OPC server
     while True:
         try:
-            # Conexión con el servidor OPC
+            # Connect to the OPC server
             await client_opc.disconnect()
             await client_opc.connect()
                 
-            break  # Salir del bucle si la conexión fue exitosa
+            break  # Exit loop if connection succeeded
         except RuntimeError as e:
             if "Dos canales seguros abiertos a la vez" in str(e):
-                print(f"Intento {attempt} fallido, reintentando...")
+                print(f"Attempt {attempt} failed, retrying...")
                 await asyncio.sleep(0.01)
                 attempt += 1
     
 
-    #Obtención del identificador del namespace
+    # Retrieve the namespace index
     nsidx = await client_opc.get_namespace_index(URI)
 
     for value_opc in values_list:
-        # Obtención del nodo correspondiente a la variable existente en el servidor
+        # Get the node for this variable in the OPC server
         #logger.info(f"ns={nsidx};s={value_opc.variable_name}")
         variable_opc = client_opc.get_node(f"ns={nsidx};s={value_opc.variable_name}")
 
@@ -478,17 +477,17 @@ async def send_opc(values_list: list[VariableOPC], client_opc: Client) -> None:
 
     await client_opc.close_session()
         
-#Truncamiento
+# Truncation
 #def truncate_to_decimals(value: Union[int, float], decimals: int) -> Union[int,float]:
 #    factor = 10 ** decimals
 #    return int(value * factor) / factor
 
-#Redondeo
+# Rounding
 def round_to_decimals(value: Union[int, float], decimals: int) -> Union[int, float]:
     return round(value, decimals)
 
 
-# Creación de cliente OPC
+# Create OPC client
 async def create_opc_client(url: str) -> Client:
     try:
         client_opc = Client(url, timeout=2)
@@ -504,25 +503,25 @@ async def create_opc_client(url: str) -> Client:
         client_opc.set_password(PASSWORD)
         return client_opc
     except: 
-        logger.error("La conexión con el servidor OPC ha fallado")
-        print("La conexión con el servidor OPC ha fallado")
+        logger.error("Connection to the OPC server failed")
+        print("Connection to the OPC server failed")
         sys.exit(2)
 
 
 
-# Permite controlar la pulsación de las teclas ctrl+C
+# Allow graceful shutdown on Ctrl+C
 def signal_handler(signal, frame):
     for client in clients.values():
         try:
             if client.connected:
                 client.close()  
-                print(f"Cerrando conexión con cliente {client}")
+                print(f"Closing connection with client {client}")
             else:
-                print(f"El cliente {client} ya está desconectado.")
+                print(f"Client {client} is already disconnected.")
         except Exception as e:
-            print(f"Error al cerrar el cliente {client}: {e}")
-    logger.info("Finalizando cliente pymodbus y cliente OPC...")
-    print("Finalizando cliente pymodbus y cliente OPC...")
+            print(f"Error closing client {client}: {e}")
+    logger.info("Shutting down Modbus client and OPC client...")
+    print("Shutting down Modbus client and OPC client...")
     sys.exit(0)
 
 
@@ -535,7 +534,7 @@ async def main():
 
     await asyncio.sleep(30)
 
-    logger.info("Iniciando cliente pymodbus y cliente OPC...")
+    logger.info("Starting Modbus client and OPC client...")
     signal.signal(signal.SIGINT, signal_handler)
     signal.signal(signal.SIGTERM, signal_handler)
 
@@ -545,17 +544,17 @@ async def main():
 
     #print(json.dumps(devices.pop().model_dump(), indent=4))
 
-    # Carga de los dispositivos
+    # Load devices from the database
     if not devices:
-        logger.info("No se encontraron dispositivos")
-        print("No se encontraron dispositivos")
+        logger.info("No devices found")
+        print("No devices found")
         sys.exit(0)
 
     try:
         await grouping_sensors_by_interval_and_sensors_by_slave(devices)
     except Exception as exc:
-        logger.error(f"Error inesperado a lo largo de la ejecución del programa: {exc}")
-        print(f"Error inesperado a lo largo de la ejecución del programa: {exc}")
+        logger.error(f"Unexpected error during program execution: {exc}")
+        print(f"Unexpected error during program execution: {exc}")
 
 
 

@@ -1,8 +1,8 @@
 """
-Tests del router de tareas (/tasks).
+Tests for the tasks router (/tasks).
 
-Las llamadas a psutil y subprocess se mockean para evitar
-interacciones con el sistema operativo real.
+Calls to psutil and subprocess are mocked to avoid
+interactions with the real operating system.
 """
 import pytest
 from unittest.mock import patch, MagicMock, AsyncMock
@@ -43,7 +43,7 @@ class TestGetTaskState:
     async def test_get_state_running_task_with_live_process(
         self, http_client: AsyncClient, admin_token, running_modbus_task
     ):
-        """Si el PID existe y está corriendo, el estado debe ser 'running'."""
+        """If the PID exists and is running, the state should be 'running'."""
         mock_process = MagicMock()
         mock_process.is_running.return_value = True
         mock_process.status.return_value = "running"
@@ -63,7 +63,7 @@ class TestGetTaskState:
     async def test_get_state_running_task_with_dead_process_becomes_failed(
         self, http_client: AsyncClient, admin_token, running_modbus_task
     ):
-        """Si el proceso ya no existe, el estado debe actualizarse a 'failed'."""
+        """If the process no longer exists, the state should be updated to 'failed'."""
         import psutil
         with patch("routers.task.psutil.Process", side_effect=psutil.NoSuchProcess(pid=99999)):
             resp = await http_client.get(
@@ -107,12 +107,12 @@ class TestStartTask:
                 headers={"Authorization": f"Bearer {admin_token}"},
             )
         assert resp.status_code == 200
-        assert "iniciada" in resp.json()["message"].lower()
+        assert "started" in resp.json()["message"].lower()
 
     async def test_start_already_running_task_returns_message(
         self, http_client: AsyncClient, admin_token, running_modbus_task
     ):
-        """Si el proceso sigue vivo, no debe lanzarse de nuevo."""
+        """If the process is still alive, it should not be relaunched."""
         mock_proc = MagicMock()
         mock_proc.is_running.return_value = True
         mock_proc.status.return_value = "running"
@@ -122,7 +122,7 @@ class TestStartTask:
                 headers={"Authorization": f"Bearer {admin_token}"},
             )
         assert resp.status_code == 200
-        assert "ejecución" in resp.json()["message"].lower()
+        assert "running" in resp.json()["message"].lower()
 
     async def test_start_nonexistent_task_returns_406(
         self, http_client: AsyncClient, admin_token
@@ -169,7 +169,7 @@ class TestStopTask:
                 headers={"Authorization": f"Bearer {admin_token}"},
             )
         assert resp.status_code == 200
-        assert "detenida" in resp.json()["message"].lower()
+        assert "stopped" in resp.json()["message"].lower()
 
     async def test_stop_already_stopped_task_returns_406(
         self, http_client: AsyncClient, admin_token, stopped_modbus_task
@@ -181,7 +181,7 @@ class TestStopTask:
                 headers={"Authorization": f"Bearer {admin_token}"},
             )
         assert resp.status_code == 406
-        assert "detenida" in resp.json()["detail"].lower()
+        assert "stopped" in resp.json()["detail"].lower()
 
     async def test_stop_locked_task_directly_returns_406(
         self, http_client: AsyncClient, admin_token

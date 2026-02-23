@@ -5,12 +5,12 @@ import VariableCard from '../../../components/VariableCard'
 import { TestWrapper } from '../../mocks/wrapper'
 import type { VariableAtributes, LastDataCard, GenericDevice, User, Role } from '../../../types'
 
-// Mock de react-toastify
+// Mock react-toastify
 vi.mock('react-toastify', () => ({
   toast: { error: vi.fn(), success: vi.fn() },
 }))
 
-// Mock de la API de escritura
+// Mock write API
 vi.mock('../../../api/WriteValueAPI', () => ({
   writeValue: vi.fn().mockResolvedValue({ message: 'Valor modificado correctamente' }),
 }))
@@ -93,9 +93,9 @@ describe('VariableCard', () => {
     })
 
     it('renderiza sin errores cuando min y max están definidos', () => {
-      // El componente acepta min_value/max_value sin mostrarlos como texto fijo
+      // Component accepts min_value/max_value without displaying them as fixed text
       renderCard({ min_value: 0, max_value: 100 })
-      // El componente sigue mostrando nombre y valor
+      // Component still renders name and value
       expect(screen.getByText('Temperatura')).toBeInTheDocument()
       expect(screen.getByText('23.45')).toBeInTheDocument()
     })
@@ -103,7 +103,7 @@ describe('VariableCard', () => {
 
   describe('Formato de timestamp', () => {
     it('convierte UTC a hora de Madrid correctamente', () => {
-      // 2024-06-15T10:30:00Z → Madrid (UTC+2 en verano) → 12:30:00
+      // 2024-06-15T10:30:00Z → Madrid (UTC+2 in summer) → 12:30:00
       renderCard()
       expect(screen.getByText(/Timestamp:/)).toBeInTheDocument()
       expect(screen.getByText(/12:30:00/)).toBeInTheDocument()
@@ -172,7 +172,7 @@ describe('VariableCard', () => {
       renderCard({ writable: true })
       const input = screen.getByPlaceholderText('Nuevo Valor')
       await user.type(input, '-15.3')
-      // No debería mostrar error de formato
+      // Should not show a format error
       await user.click(screen.getByDisplayValue('Modificar'))
       await waitFor(() => {
         expect(screen.queryByText('Debe introducirse un número')).toBeNull()

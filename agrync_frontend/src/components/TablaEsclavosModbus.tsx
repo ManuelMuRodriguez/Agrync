@@ -68,7 +68,7 @@ export default function TablaEsclavosModbus() {
     }) ?? [];
   }, [dataTableSlave]);
 
-  // Estado local sincronizado con datos formateados
+  // Local state synchronised with formatted data
   const [tableData, setTableData] = useState<ModbusSlaveTable[]>([]);
 
   useEffect(() => {

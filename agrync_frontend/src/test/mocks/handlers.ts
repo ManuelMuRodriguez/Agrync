@@ -17,7 +17,7 @@ export const handlers = [
       });
     }
     return HttpResponse.json(
-      { detail: "Email o contraseña incorrectos" },
+      { detail: "Incorrect email or password" },
       { status: 401 },
     );
   }),
@@ -46,7 +46,7 @@ export const handlers = [
       });
     }
     return HttpResponse.json(
-      { detail: "Access Token inválido" },
+      { detail: "Invalid access token" },
       { status: 401 },
     );
   }),
@@ -60,12 +60,12 @@ export const handlers = [
     };
     if (body.password !== body.password_confirmation) {
       return HttpResponse.json(
-        { detail: "Las contraseñas no son iguales" },
+        { detail: "Passwords do not match" },
         { status: 400 },
       );
     }
     return HttpResponse.json(
-      { message: "Validación correcta" },
+      { message: "Activation successful" },
       { status: 201 },
     );
   }),
@@ -80,6 +80,6 @@ export const handlers = [
 
   // PUT /api/v1/devices/:userId/:deviceId (write value)
   http.put(`${BASE}/devices/:userId/:deviceId`, () =>
-    HttpResponse.json({ message: "Valor modificado correctamente" }),
+    HttpResponse.json({ message: "Value modified successfully" }),
   ),
 ];

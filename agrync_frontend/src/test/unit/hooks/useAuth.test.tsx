@@ -7,7 +7,7 @@ import React from 'react'
 import { server } from '../../mocks/server'
 import { http, HttpResponse } from 'msw'
 
-// Almacenamos el token antes de cada test
+// Store the token before each test
 function setupToken(token: string | null) {
   if (token) {
     localStorage.setItem('ACCESS_TOKEN_AGRYNC', token)
@@ -22,7 +22,7 @@ function wrapper({ children }: { children: React.ReactNode }) {
 }
 
 describe('useAuth', () => {
-  it('devuelve los datos del usuario cuando el token es válido', async () => {
+  it('returns user data when the token is valid', async () => {
     setupToken('fake-access-token')
     const { result } = renderHook(() => useAuth(), { wrapper })
 
@@ -38,13 +38,13 @@ describe('useAuth', () => {
     expect(result.current.isError).toBe(false)
   })
 
-  it('devuelve isError=true cuando el token es inválido', async () => {
+  it('returns isError=true when the token is invalid', async () => {
     setupToken('invalid-token')
 
-    // Sobreescribimos el handler para devolver 401
+    // Override the handler to return 401
     server.use(
       http.get('http://localhost:8000/api/v1/auth/info', () =>
-        HttpResponse.json({ detail: 'Access Token inválido' }, { status: 401 })
+        HttpResponse.json({ detail: 'Invalid access token' }, { status: 401 })
       )
     )
 
@@ -55,12 +55,12 @@ describe('useAuth', () => {
     expect(result.current.data).toBeUndefined()
   })
 
-  it('devuelve isError=true sin token', async () => {
+  it('returns isError=true without a token', async () => {
     setupToken(null)
 
     server.use(
       http.get('http://localhost:8000/api/v1/auth/info', () =>
-        HttpResponse.json({ detail: 'Access Token no encontrado' }, { status: 401 })
+        HttpResponse.json({ detail: 'Access token not found' }, { status: 401 })
       )
     )
 

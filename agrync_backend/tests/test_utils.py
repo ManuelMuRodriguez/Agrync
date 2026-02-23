@@ -1,4 +1,4 @@
-"""Tests para las utilidades de contraseña y fecha."""
+"""Tests for password and date utilities."""
 import pytest
 from utils.password import get_password_hash, verify_password
 from utils.datetime import time_at
@@ -25,7 +25,7 @@ class TestPasswordUtils:
         assert verify_password("OtraPassword456", hashed) is False
 
     def test_two_hashes_of_same_password_differ(self):
-        """bcrypt usa salt aleatorio: dos hashes del mismo texto deben ser distintos."""
+        """bcrypt uses a random salt: two hashes of the same text must differ."""
         plain = "RepetidaPassword"
         h1 = get_password_hash(plain)
         h2 = get_password_hash(plain)

@@ -3,12 +3,12 @@ import { login, logout, validateUser, getUserInfo } from "../../../api/AuthAPI";
 import { server } from "../../mocks/server";
 import { http, HttpResponse } from "msw";
 
-// Limpia el localStorage entre tests
+// Clear localStorage between tests
 afterEach(() => localStorage.clear());
 
 describe("AuthAPI", () => {
   describe("login()", () => {
-    it("devuelve el token y lo guarda en localStorage con credenciales válidas", async () => {
+    it("returns the token and saves it in localStorage with valid credentials", async () => {
       const result = await login({
         username: "admin@example.com",
         password: "AdminPass123",
@@ -19,13 +19,13 @@ describe("AuthAPI", () => {
       );
     });
 
-    it("lanza un Error con el mensaje del servidor si las credenciales son incorrectas", async () => {
+    it("throws an Error with the server message if credentials are incorrect", async () => {
       await expect(
         login({ username: "malo@example.com", password: "WrongPassword" }),
-      ).rejects.toThrow("Email o contraseña incorrectos");
+      ).rejects.toThrow("Incorrect email or password");
     });
 
-    it("lanza un Error genérico si el servidor no responde con detail", async () => {
+    it("throws a generic Error if the server does not respond with detail", async () => {
       server.use(
         http.post("http://localhost:8000/api/v1/auth/login", () =>
           HttpResponse.json(
@@ -41,27 +41,27 @@ describe("AuthAPI", () => {
   });
 
   describe("logout()", () => {
-    it("devuelve el mensaje de éxito del servidor", async () => {
+    it("returns the success message from the server", async () => {
       const result = await logout();
       expect(result).toBe("Session closed successfully");
     });
   });
 
   describe("validateUser()", () => {
-    it("devuelve el mensaje de éxito al validar correctamente", async () => {
+    it("returns the success message when validating correctly", async () => {
       const result = await validateUser({
         email: "user@example.com",
         password: "NuevaPass123",
         password_confirmation: "NuevaPass123",
       });
-      expect(result).toBe("Validación correcta");
+      expect(result).toBe("Activation successful");
     });
 
-    it("lanza un Error si las contraseñas no coinciden", async () => {
+    it("throws an Error if the passwords do not match", async () => {
       server.use(
         http.post("http://localhost:8000/api/v1/auth/validate", () =>
           HttpResponse.json(
-            { detail: "Las contraseñas no son iguales" },
+            { detail: "Passwords do not match" },
             { status: 400 },
           ),
         ),
@@ -72,12 +72,12 @@ describe("AuthAPI", () => {
           password: "Pass1",
           password_confirmation: "Pass2",
         }),
-      ).rejects.toThrow("Las contraseñas no son iguales");
+      ).rejects.toThrow("Passwords do not match");
     });
   });
 
   describe("getUserInfo()", () => {
-    it("devuelve los datos del usuario con un token válido", async () => {
+    it("returns the user data with a valid token", async () => {
       localStorage.setItem("ACCESS_TOKEN_AGRYNC", "fake-access-token");
       const result = await getUserInfo();
       expect(result).toMatchObject({
@@ -87,30 +87,30 @@ describe("AuthAPI", () => {
       });
     });
 
-    it("lanza un Error con token inválido", async () => {
+    it("throws an Error with an invalid token", async () => {
       localStorage.setItem("ACCESS_TOKEN_AGRYNC", "bad-token");
       server.use(
         http.get("http://localhost:8000/api/v1/auth/info", () =>
           HttpResponse.json(
-            { detail: "Access Token inválido" },
+            { detail: "Invalid access token" },
             { status: 401 },
           ),
         ),
       );
-      // La función puede lanzar o retornar undefined dependiendo del interceptor
+      // The function may throw or return undefined depending on the interceptor
       try {
         const result = await getUserInfo();
-        // Si no lanza, al menos no debería devolver datos válidos
+        // If it does not throw, it should at least not return valid data
         expect(result).toBeUndefined();
       } catch (e: unknown) {
-        expect((e as Error).message).toContain("Access Token");
+        expect((e as Error).message).toContain("Invalid access token");
       }
     });
 
-    it("devuelve undefined si los datos no cumplen el schema zod", async () => {
+    it("returns undefined if data does not match the zod schema", async () => {
       server.use(
         http.get("http://localhost:8000/api/v1/auth/info", () =>
-          HttpResponse.json({ unexpected_field: "valor inesperado" }),
+          HttpResponse.json({ unexpected_field: "unexpected value" }),
         ),
       );
       localStorage.setItem("ACCESS_TOKEN_AGRYNC", "fake-access-token");

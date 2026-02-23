@@ -1,21 +1,20 @@
 """
-Tests de regresión para los bugs encontrados en el análisis.
-Se prueban los comportamientos problemáticos de forma aislada,
-sin conexiones reales a Modbus ni OPC.
+Regression tests for bugs found during analysis.
+Behaviour is tested in isolation, without real Modbus or OPC connections.
 
-Bug #1 - UnboundLocalError en read_and_send_OPC:
-  'value' puede quedar sin asignar si ModbusException ocurre
-  durante la conversión de registros.
+Bug #1 - UnboundLocalError in read_and_send_OPC:
+  'value' may remain unassigned if ModbusException occurs
+  during register conversion.
 
-Bug #2 - Bucle infinito en send_opc:
-  Si el error no contiene el string esperado, el bucle no termina.
+Bug #2 - Infinite loop in send_opc:
+  If the error does not contain the expected string, the loop never terminates.
 
-Bug #3 - round_to_decimals duplicada:
-  La función existe en Modbus.py y OPCtoFIWARE.py; se verifica
-  que ambas se comportan igual.
+Bug #3 - Duplicate round_to_decimals:
+  The function exists in both Modbus.py and OPCtoFIWARE.py;
+  both are verified to behave identically.
 
-Bug #10 - Tareas asyncio ejecutadas secuencialmente con 'await task':
-  Demostración del efecto: gather vs bucle secuencial.
+Bug #10 - Asyncio tasks executed sequentially with 'await task':
+  Demonstration of the effect: gather vs sequential loop.
 """
 import asyncio
 import pytest

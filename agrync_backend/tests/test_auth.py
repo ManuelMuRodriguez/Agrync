@@ -1,14 +1,14 @@
 """
-Tests del router de autenticación.
+Tests for the authentication router.
 
-Cubre:
-  - Login correcto / credenciales incorrectas / usuario inactivo
+Covers:
+  - Successful login / wrong credentials / inactive user
   - Refresh token
-  - Validación de contraseña (endpoint /validate)
-  - Registro de usuario
+  - Password validation (endpoint /validate)
+  - User registration
   - Logout
-  - Obtención de info del usuario autenticado
-  - Acceso a ruta protegida sin token (401)
+  - Retrieval of authenticated user info
+  - Access to protected route without token (401)
 """
 import pytest
 from httpx import AsyncClient
@@ -109,7 +109,7 @@ class TestValidatePassword:
             },
         )
         assert resp.status_code == 201
-        assert "Validación correcta" in resp.json()["message"]
+        assert "Activation successful" in resp.json()["message"]
 
     async def test_validate_password_mismatch_returns_400(self, http_client: AsyncClient, inactive_user):
         resp = await http_client.post(
@@ -121,7 +121,7 @@ class TestValidatePassword:
             },
         )
         assert resp.status_code == 400
-        assert "contraseñas" in resp.json()["detail"].lower()
+        assert "passwords" in resp.json()["detail"].lower()
 
     async def test_validate_password_too_short_returns_400(self, http_client: AsyncClient, inactive_user):
         resp = await http_client.post(
@@ -133,7 +133,7 @@ class TestValidatePassword:
             },
         )
         assert resp.status_code == 400
-        assert "8 caracteres" in resp.json()["detail"]
+        assert "8 characters" in resp.json()["detail"]
 
     async def test_validate_already_active_user_returns_400(self, http_client: AsyncClient, admin_user):
         resp = await http_client.post(
@@ -145,7 +145,7 @@ class TestValidatePassword:
             },
         )
         assert resp.status_code == 400
-        assert "validado" in resp.json()["detail"].lower()
+        assert "activated" in resp.json()["detail"].lower()
 
     async def test_validate_nonexistent_user_returns_403(self, http_client: AsyncClient):
         resp = await http_client.post(
@@ -234,6 +234,6 @@ class TestLogout:
         )
         resp = await http_client.post("/auth/logout")
         assert resp.status_code == 200
-        # La cookie debe haber sido eliminada (valor vacío o no presente)
+        # The cookie should have been deleted (empty value or absent)
         cookie_value = resp.cookies.get("refresh-Token", "")
         assert cookie_value == ""

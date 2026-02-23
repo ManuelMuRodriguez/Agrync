@@ -1,99 +1,98 @@
 ================================================================================
-AGRYNC: PLATAFORMA IoT PARA TELEMETRÍA INDUSTRIAL AGROINDUSTRIAL
-Resumen Ejecutivo
+AGRYNC: IoT PLATFORM FOR INDUSTRIAL AGROINDUSTRIAL TELEMETRY
+Executive Summary
 ================================================================================
 
-VISIÓN GENERAL
---------------
-Agrync es una plataforma full-stack diseñada para integrar, recolectar y 
-gestionar datos de telemetría de dispositivos industriales e IoT en 
-instalaciones agroindustriales. El sistema unifica múltiples protocolos 
-industriales (Modbus TCP/IP, OPC UA) en una única interfaz web, facilitando 
-la monitorización y gestión de sensores sin necesidad de conocimientos 
-técnicos especializados.
+OVERVIEW
+--------
+Agrync is a full-stack platform designed to integrate, collect and manage
+telemetry data from industrial and IoT devices in agroindustrial facilities.
+The system unifies multiple industrial protocols (Modbus TCP/IP, OPC UA) into
+a single web interface, enabling sensor monitoring and management without
+requiring specialised technical knowledge.
 
 
-PROBLEMÁTICA ABORDADA
----------------------
-Las plantas agroindustriales enfrentan desafíos críticos:
+PROBLEM STATEMENT
+-----------------
+Agroindustrial plants face critical challenges:
 
-• Fragmentación de sistemas: cada protocolo requiere herramientas separadas
-• Complejidad técnica: configuración manual requiere expertos especializados
-• Altos costos: inversión significativa en infraestructura heterogénea
-• Falta de escalabilidad: dificultad para añadir nuevos dispositivos
-• Ausencia de estándares: incompatibilidad entre sistemas propietarios
-
-
-SOLUCIÓN PROPUESTA
-------------------
-Agrync proporciona:
-
-1. INTEGRACIÓN UNIFICADA
-   - Soporte nativo para Modbus TCP/IP
-   - Servidor OPC UA para interoperabilidad
-   - Integración con estándares IoT (FIWARE)
-   - Base de datos MongoDB para almacenamiento centralizado
-
-2. INTERFAZ WEB INTUITIVA
-   - Gestión visual de dispositivos y sensores
-   - Configuración manual o importación masiva (JSON)
-   - Dashboard de monitorización en tiempo real
-   - Sistema de roles y autenticación
-
-3. DESPLIEGUE SIMPLIFICADO
-   - Contenedores Docker para instalación rápida
-   - Docker Compose para stack completo
-   - Sin dependencias complejas
+• System fragmentation: each protocol requires separate tools
+• Technical complexity: manual configuration requires specialised experts
+• High costs: significant investment in heterogeneous infrastructure
+• Lack of scalability: difficulty adding new devices
+• Absence of standards: incompatibility between proprietary systems
 
 
-ARQUITECTURA TÉCNICA
---------------------
+PROPOSED SOLUTION
+-----------------
+Agrync provides:
+
+1. UNIFIED INTEGRATION
+   - Native support for Modbus TCP/IP
+   - OPC UA server for interoperability
+   - Integration with IoT standards (FIWARE)
+   - MongoDB database for centralised storage
+
+2. INTUITIVE WEB INTERFACE
+   - Visual management of devices and sensors
+   - Manual configuration or bulk import (JSON)
+   - Real-time monitoring dashboard
+   - Role and authentication system
+
+3. SIMPLIFIED DEPLOYMENT
+   - Docker containers for quick installation
+   - Docker Compose for full stack
+   - No complex dependencies
+
+
+TECHNICAL ARCHITECTURE
+----------------------
 Backend:
   • Framework: FastAPI (Python 3.11+)
-  • Base de datos: MongoDB con Beanie ODM
-  • Protocolos: Modbus TCP/IP, OPC UA
-  • Integración: Cliente FIWARE para IoT estándar
-  • Autenticación: JWT tokens con RBAC
+  • Database: MongoDB with Beanie ODM
+  • Protocols: Modbus TCP/IP, OPC UA
+  • Integration: FIWARE client for standard IoT
+  • Authentication: JWT tokens with RBAC
 
 Frontend:
-  • Framework: React 19+ con TypeScript
-  • Build tool: Vite (HMR, optimización)
-  • API Client: Axios con hooks personalizados
-  • UI: Componentes modulares y reutilizables
+  • Framework: React 19+ with TypeScript
+  • Build tool: Vite (HMR, optimisation)
+  • API Client: Axios with custom hooks
+  • UI: Modular and reusable components
 
 
-CARACTERÍSTICAS PRINCIPALES
-----------------------------
-✓ Lectura automática de registros Modbus (bobinas, entradas, registros)
-✓ Servidor OPC UA para exposición de variables a sistemas SCADA
-✓ Sincronización bidireccional con plataformas FIWARE
-✓ Gestión de múltiples dispositivos y esclavos simultáneos
-✓ Configuración en lote mediante archivos JSON
-✓ Validación automática de rangos y valores
-✓ Sistema de logs y trazabilidad
-✓ Control de acceso basado en roles (Admin, Operador, Visualizador)
+KEY FEATURES
+------------
+✓ Automatic reading of Modbus registers (coils, inputs, registers)
+✓ OPC UA server for exposing variables to SCADA systems
+✓ Bidirectional synchronisation with FIWARE platforms
+✓ Management of multiple simultaneous devices and slaves
+✓ Batch configuration via JSON files
+✓ Automatic range and value validation
+✓ Logging and traceability system
+✓ Role-based access control (Admin, Operator, Viewer)
 
 
-FLUJO DE OPERACIÓN
-------------------
-1. Usuario configura dispositivo Modbus (IP, puerto, ID esclavo)
-2. Sistema establece conexión TCP/IP automática
-3. Lectura periódica de registros configurados
-4. Almacenamiento en MongoDB con timestamp
-5. Exposición de datos vía OPC UA para clientes externos
-6. Reenvío opcional a FIWARE para análisis avanzado
-7. Visualización en dashboard web con gráficos en tiempo real
+OPERATION FLOW
+--------------
+1. User configures Modbus device (IP, port, slave ID)
+2. System establishes automatic TCP/IP connection
+3. Periodic reading of configured registers
+4. Storage in MongoDB with timestamp
+5. Data exposure via OPC UA for external clients
+6. Optional forwarding to FIWARE for advanced analysis
+7. Visualisation on web dashboard with real-time graphs
 
 
-DESPLIEGUE
+DEPLOYMENT
 ----------
-Opción 1 - Docker Compose (Recomendado):
+Option 1 - Docker Compose (Recommended):
   $ docker compose up --build
   • Backend: http://localhost:8000
   • Frontend: http://localhost:5173
   • MongoDB: localhost:27017
 
-Opción 2 - Desarrollo Local:
+Option 2 - Local Development:
   Backend:
     $ cd agrync_backend
     $ python -m venv .venv && source .venv/bin/activate
@@ -105,111 +104,110 @@ Opción 2 - Desarrollo Local:
     $ npm install && npm run dev
 
 
-REQUISITOS DEL SISTEMA
-----------------------
-Mínimos:
-  • Docker Engine 20.10+ y Docker Compose 1.29+
-  • 2GB RAM disponible
-  • Puertos 8000, 5173, 27017 libres
+SYSTEM REQUIREMENTS
+-------------------
+Minimum:
+  • Docker Engine 20.10+ and Docker Compose 1.29+
+  • 2 GB RAM available
+  • Ports 8000, 5173, 27017 free
 
-Desarrollo:
+Development:
   • Python 3.11+ (backend)
   • Node.js 18+ (frontend)
   • MongoDB 5.0+
 
 
-SEGURIDAD
----------
-• Autenticación JWT con tokens de corta duración
-• Contraseñas hasheadas con algoritmos modernos
-• Control de acceso basado en roles (RBAC)
-• Certificados opcionales para OPC UA
-• Validación de datos con Pydantic (backend) y TypeScript (frontend)
-• HTTPS recomendado en producción (vía reverse proxy)
+SECURITY
+--------
+• JWT authentication with short-lived tokens
+• Passwords hashed with modern algorithms
+• Role-based access control (RBAC)
+• Optional certificates for OPC UA
+• Data validation with Pydantic (backend) and TypeScript (frontend)
+• HTTPS recommended in production (via reverse proxy)
 
 
-BENEFICIOS CLAVE
-----------------
-1. REDUCCIÓN DE COSTOS
-   - Un solo sistema vs. múltiples herramientas propietarias
-   - Infraestructura basada en contenedores (menor mantenimiento)
-   - Open source y extensible
-
-2. SIMPLICIDAD
-   - Interfaz web intuitiva sin curva de aprendizaje pronunciada
-   - Configuración visual vs. programación manual
-   - Importación masiva para escalado rápido
-
-3. INTEROPERABILIDAD
-   - Estándares abiertos (Modbus, OPC UA, FIWARE)
-   - No vendor lock-in
-   - Integración con ecosistemas existentes
-
-4. ESCALABILIDAD
-   - Arquitectura modular y desacoplada
-   - Soporte para múltiples dispositivos simultáneos
-   - Preparado para clustering y alta disponibilidad
-
-
-CASOS DE USO
+KEY BENEFITS
 ------------
-• Monitorización de invernaderos (temperatura, humedad, CO2)
-• Control de sistemas de riego automatizado
-• Gestión de silos y almacenes (peso, nivel, temperatura)
-• Supervisión de equipos de procesamiento (PLCs industriales)
-• Integración con sistemas SCADA existentes
+1. COST REDUCTION
+   - A single system vs. multiple proprietary tools
+   - Container-based infrastructure (lower maintenance)
+   - Open source and extensible
+
+2. SIMPLICITY
+   - Intuitive web interface with a gentle learning curve
+   - Visual configuration vs. manual programming
+   - Bulk import for rapid scaling
+
+3. INTEROPERABILITY
+   - Open standards (Modbus, OPC UA, FIWARE)
+   - No vendor lock-in
+   - Integration with existing ecosystems
+
+4. SCALABILITY
+   - Modular and decoupled architecture
+   - Support for multiple simultaneous devices
+   - Ready for clustering and high availability
 
 
-ROADMAP Y MEJORAS FUTURAS
---------------------------
-Corto plazo:
-  □ Suite de tests automatizados (pytest, Cypress)
-  □ CI/CD con GitHub Actions
-  □ Internacionalización (i18n)
+USE CASES
+---------
+• Greenhouse monitoring (temperature, humidity, CO2)
+• Automated irrigation system control
+• Silo and warehouse management (weight, level, temperature)
+• Processing equipment supervision (industrial PLCs)
+• Integration with existing SCADA systems
 
-Mediano plazo:
-  □ Message queue (RabbitMQ) para tareas asíncronas
-  □ Redis para caché de alto rendimiento
-  □ Grafana + Prometheus para métricas
 
-Largo plazo:
-  □ Machine Learning para predicción de fallos
-  □ Soporte adicional para protocolos (MQTT, CoAP)
+ROADMAP AND FUTURE IMPROVEMENTS
+--------------------------------
+Short term:
+  □ Automated test suite (pytest, Cypress)
+  □ CI/CD with GitHub Actions
+  □ Internationalisation (i18n)
+
+Medium term:
+  □ Message queue (RabbitMQ) for asynchronous tasks
+  □ Redis for high-performance caching
+  □ Grafana + Prometheus for metrics
+
+Long term:
+  □ Machine Learning for fault prediction
+  □ Additional protocol support (MQTT, CoAP)
   □ Mobile app (React Native)
 
 
-MÉTRICAS DE RENDIMIENTO
-------------------------
-• Latencia de lectura Modbus: <100ms
-• Capacidad de dispositivos concurrentes: 50+ (configuración estándar)
-• Throughput: 1000+ lecturas/minuto
-• Almacenamiento: MongoDB escalable hasta TB de datos históricos
+PERFORMANCE METRICS
+-------------------
+• Modbus read latency: <100 ms
+• Concurrent device capacity: 50+ (standard configuration)
+• Throughput: 1,000+ reads/minute
+• Storage: MongoDB scalable to TB of historical data
 
 
-LICENCIA Y CONTRIBUCIONES
---------------------------
-Licencia: MIT (ver archivo LICENSE en repositorio)
-Repositorio: https://github.com/ManuelMuRodriguez/Agrync
-Contribuciones: Bienvenidas vía Pull Requests
+LICENCE AND CONTRIBUTIONS
+-------------------------
+Licence: MIT (see LICENSE file in repository)
+Repository: https://github.com/ManuelMuRodriguez/Agrync
+Contributions: Welcome via Pull Requests
 
 
-CONTACTO Y SOPORTE
-------------------
-Para consultas técnicas, implementación o colaboraciones:
+CONTACT AND SUPPORT
+-------------------
+For technical enquiries, implementation or collaborations:
   • GitHub Issues: https://github.com/ManuelMuRodriguez/Agrync/issues
-  • Documentación completa: Ver ARTICULO_CIENTIFICO_BASE.md
+  • Full documentation: See ARTICULO_CIENTIFICO_BASE.md
 
 
-CONCLUSIÓN
+CONCLUSION
 ----------
-Agrync representa una solución moderna, escalable y de bajo costo para la 
-digitalización de instalaciones agroindustriales. Al unificar protocolos 
-industriales heterogéneos en una plataforma coherente, reduce barreras 
-técnicas y económicas, democratizando el acceso a tecnologías IoT para 
-operaciones de cualquier escala.
+Agrync represents a modern, scalable and low-cost solution for the
+digitalisation of agroindustrial facilities. By unifying heterogeneous
+industrial protocols on a coherent platform, it reduces technical and economic
+barriers, democratising access to IoT technologies for operations of any scale.
 
 
 ================================================================================
-Documento generado: 17 de diciembre de 2025
-Versión: 1.0
+Document generated: 17 December 2025
+Version: 1.0
 ================================================================================

@@ -8,14 +8,14 @@ vi.mock('react-toastify', () => ({
   toast: { error: vi.fn(), success: vi.fn() },
 }))
 
-// Mock de la API - verificamos que se llama con los datos correctos
+// Mock the API — verify it is called with the correct data
 const mockLogin = vi.fn()
 vi.mock('../../../api/AuthAPI', () => ({
   login: (...args: unknown[]) => mockLogin(...args),
   getUserInfo: vi.fn(),
 }))
 
-// Mock de navigate
+// Mock navigate
 const mockNavigate = vi.fn()
 vi.mock('react-router-dom', async () => {
   const actual = await vi.importActual('react-router-dom')

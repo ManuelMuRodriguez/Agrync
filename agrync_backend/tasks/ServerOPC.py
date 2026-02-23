@@ -31,7 +31,7 @@ load_dotenv()
 
 LOG_CONFIG = str(BASE_DIR / os.getenv("LOG_CONFIG", "logging.conf"))
 
-# Configuración del log para el cliente Modbus y el servidor OPC
+# Log configuration for the Modbus client and OPC server
 logging.config.fileConfig(LOG_CONFIG)
 
 LOG_OPC= os.getenv("LOG_OPC")
@@ -39,7 +39,7 @@ LOG_OPC= os.getenv("LOG_OPC")
 
 
 
-    # Creación del logger para el cliente Modbus
+    # Create logger for the OPC server
 logger = logging.getLogger(LOG_OPC)
 
 for handler in logging.getLogger().handlers:
@@ -47,28 +47,28 @@ for handler in logging.getLogger().handlers:
         handler.formatter.converter = time.gmtime
 
 
-# IP y puerto utilizados para crear la URL del servidor OPC
+# IP and port used to build the OPC server URL
 OPCUA_IP_PORT = os.getenv('OPCUA_IP_PORT')
 
-# URL donde se encuentra le sevidor OPC
+# OPC server URL
 URL=os.getenv('URL')
 
 URL = URL.replace("{OPCUA_IP_PORT}", OPCUA_IP_PORT)
 
-# Usuario y contraseña para el usuario y administrador del servidor
+# Username and password for the server user and administrator
 USERNAME = os.getenv('USERNAME_OPC')
 PASSWORD = os.getenv('PASSWORD_OPC')
 USERNAME_ADMIN= os.getenv('USERNAME_OPC_ADMIN')
 PASSWORD_ADMIN= os.getenv('PASSWORD_OPC_ADMIN')
 
-#URL del servidor
+# Server URL
 URI = os.getenv('URI')
 
 CERTIFICATE = str(BASE_DIR /os.getenv('CERT'))
 PRIVATE_KEY= str(BASE_DIR /os.getenv('PRIVATE_KEY'))
 
 
-# Manejador de las credenciales de acceso al servidor
+# Access credential handler for the OPC server
 class CustomUserManager:
     def get_user(self, iserver, username=None, password=None, certificate=None):
         if username == USERNAME_ADMIN:
@@ -88,13 +88,13 @@ async def setup():
             document_models=[GenericDevice]
         )
     except Exception as exc:
-        print(f"Error de conexión con la base de datos: {exc}")
-        logger.error(f"Error de conexión con la base de datos: {exc}")
+        print(f"Database connection error: {exc}")
+        logger.error(f"Database connection error: {exc}")
         sys.exit(1)
 
 
 
-# Crea el servidor OPC UA
+# Create OPC UA server instance
 server = Server(user_manager = CustomUserManager())
 
 
@@ -133,7 +133,7 @@ async def create_nodes(device: GenericDevice, idx: int):
 
                 nodeID = f"ns={idx};s={full_name_variable}"
 
-                # Creación de nodo para la variable
+                # Create node for the variable
                 if(variable.type == "Float64"):
                     variable_node = await slave_node.add_variable(nodeID, full_name_variable, val= 0.0, varianttype=ua.VariantType.Double)
                     #variable_node = await slave_node.add_variable(nodeID, variable.name, ua.DataValue(ua.Variant(0.0, ua.VariantType.Double), StatusCode_=ua.StatusCodes.Good, SourceTimestamp=timestamp, ServerTimestamp=timestamp))
@@ -168,40 +168,40 @@ async def create_nodes(device: GenericDevice, idx: int):
                             #variable_node = await slave_node.add_variable(nodeID, variable.name, ua.DataValue(ua.Variant(0, ua.VariantType.UInt64), StatusCode_=ua.StatusCodes.Good, SourceTimestamp=timestamp, ServerTimestamp=timestamp))
                             variable_node = await slave_node.add_variable(nodeID, full_name_variable, val= 0, varianttype=ua.VariantType.UInt64)
                 
-                    # Establecimiento de ciertas variables como editables
+                    # Mark certain variables as writable
                     await variable_node.set_writable(variable.writable)
                     if(variable.writable == False):
                         await variable_node.set_read_only()
         else: 
-            logger.error("No se ha encontrado variables en base de datos")
-            print("No se ha encontrado variables en base de datos")
+            logger.error("No variables found in the database")
+            print("No variables found in the database")
             sys.exit(2)
 
     else:
-        logger.error("No se ha encontrado el dispositivo en base de datos")
-        print("No se ha encontrado el dispositivo en base de datos")
+        logger.error("No device found in the database")
+        print("No device found in the database")
         sys.exit(3)
 
  
 
-# Inicio del servidor OPC
+# Start the OPC server
 async def run_opc_server(devices: list[GenericDevice]) -> None:
 
 
-    # Configurar el servidor OPC UA
+    # Configure the OPC UA server
     await server.init()
 
-    #URL del servidor
+    #Server URL
     server.set_endpoint(URL)
 
-    # Establecimiento de la seguridad del servidor
+    # Set server security policy
     server.set_security_policy(
         [
             ua.SecurityPolicyType.Basic256Sha256_SignAndEncrypt
         ]
     )
 
-    # Carga del certificado y claves necesarias para el cifrado y encriptado de la comunicación
+    # Load the certificate and keys required for encrypted communication
     await server.load_certificate(str(CERTIFICATE)) 
     await server.load_private_key(str(PRIVATE_KEY))
     
@@ -209,21 +209,21 @@ async def run_opc_server(devices: list[GenericDevice]) -> None:
     idx = await server.register_namespace(URI)
     
 
-    # Creación de un nodo para cada dispositivo, esclavo y variables
+    # Create a node for each device, slave and its variables
     for device in devices:
 
         await create_nodes(device, idx)
 
-    # Inicio del servidor OPC UA
+    # Start the OPC UA server
     await server.start()
-    print(f"Servidor OPC UA iniciado en: {URL}")
-    logger.info(f"Servidor OPC UA iniciado en: {URL}")
+    print(f"OPC UA server started at: {URL}")
+    logger.info(f"OPC UA server started at: {URL}")
     
 
 
 def signal_handler(signal, frame):
-    logger.info("Finalizando servidor OPC...")
-    print("Finalizando servidor OPC...")
+    logger.info("Shutting down OPC server...")
+    print("Shutting down OPC server...")
     sys.exit(0)
 
 
@@ -232,13 +232,13 @@ def signal_handler(signal, frame):
 
 async def main():
 
-    logger.info("Iniciando servidor OPC...")
+    logger.info("Starting OPC server...")
     signal.signal(signal.SIGINT, signal_handler)
     signal.signal(signal.SIGTERM, signal_handler)
 
     await setup()
 
-    # Carga de los dispositivos
+    # Load devices from the database
     try:
         #devices = await ModbusDevice.find(fetch_links=True).project(DeviceShortView).to_list()
         
@@ -253,22 +253,22 @@ async def main():
         #print(json.dumps(devices.pop().model_dump(), indent=4))
 
         if not devices:
-            print("No se encontraron dispositivos")
+            print("No devices found")
             sys.exit(0)
 
-        # Inicio del servidor
+        # Start the server
         await run_opc_server(devices)
 
         while True:
             await asyncio.sleep(0.1)
     except Exception as exc:
-        logger.warning(f"Posible error durante la ejecución del servidor {exc}")
-        print(f"Posible error durante la ejecución del servidor {exc}")
+        logger.warning(f"Possible error during server execution {exc}")
+        print(f"Possible error during server execution {exc}")
         await server.stop()
     
     except RuntimeError as exc:
-        logger.warning(f"Posible error durante la ejecución del servidor {exc}")
-        print(f"Posible error durante la ejecución del servidor {exc}")
+        logger.warning(f"Possible error during server execution {exc}")
+        print(f"Possible error during server execution {exc}")
         await server.stop()
 
 

@@ -36,7 +36,7 @@ CERT = BASE_DIR / "tasks" / os.getenv('CERT')
 PRIVATE_KEY = BASE_DIR / "tasks" / os.getenv('PRIVATE_KEY')
 CLIENT_CERT = BASE_DIR / "tasks" / os.getenv('CLIENT_CERT')
 
-# URI del servidor
+# Server application URI
 CLIENT_APP_URI= os.getenv('CLIENT_APP_URI')
 
 
@@ -102,13 +102,13 @@ async def write_variable(user_id: PydanticObjectId, variable_input: VariableWrit
         client_opc.set_user(USERNAME)
         client_opc.set_password(PASSWORD)
     except Exception as e: 
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=f"La creación del cliente OPC ha fallado: {e}")
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=f"OPC client creation failed: {e}")
     
     try:
         await client_opc.connect()
         nsidx = await client_opc.get_namespace_index(URI)
     except:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="La conexión con el servidor OPC ha fallado")
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Connection to the OPC server failed")
     
 
 
@@ -152,4 +152,4 @@ async def write_variable(user_id: PydanticObjectId, variable_input: VariableWrit
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="La escritura del nuevo valor ha fallado")
     
 
-    return {"message": f"Valor modificado correctamente"}
+    return {"message": f"Value modified successfully"}

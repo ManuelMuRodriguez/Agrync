@@ -1,11 +1,11 @@
 """
-Configuración central de fixtures para todos los tests.
+Central fixture configuration for all tests.
 
-Estrategia de base de datos:
-  - Se utiliza mongomock-motor para emular MongoDB en memoria.
-  - init_beanie se llama una vez por test para garantizar un estado limpio.
-  - Se construye una mini-app FastAPI sin el lifespan de producción para
-    evitar conexiones reales a MongoDB, OPC, etc.
+Database strategy:
+  - mongomock-motor is used to emulate MongoDB in memory.
+  - init_beanie is called once per test to guarantee a clean state.
+  - A mini FastAPI app is built without the production lifespan to
+    avoid real connections to MongoDB, OPC, etc.
 """
 import os
 

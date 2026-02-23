@@ -174,9 +174,9 @@ async def update_user(user_id: PydanticObjectId, user_data: UserForm, current_ad
         user.full_name = user_data.full_name
         user.role = user_data.role
         await user.replace()
-        return {"message": "Usuario actualizado"}
+        return {"message": "User updated"}
 
-    return {"message": "No se realizaron cambios. Los datos ya son utilizados por el usuario"}
+    return {"message": "No changes made. The data is already in use by this user"}
 
 
 @users_router.get('/{user_id}/name', status_code=status.HTTP_200_OK)

@@ -1,9 +1,9 @@
 import "@testing-library/jest-dom";
 import { server } from "./mocks/server";
 
-// Levanta el servidor MSW antes de todos los tests
+// Start the MSW server before all tests
 beforeAll(() => server.listen({ onUnhandledRequest: "warn" }));
-// Resetea handlers sobreescritos por cada test
+// Reset any overridden handlers after each test
 afterEach(() => server.resetHandlers());
-// Cierra el servidor al terminar
+// Close the server after all tests
 afterAll(() => server.close());
