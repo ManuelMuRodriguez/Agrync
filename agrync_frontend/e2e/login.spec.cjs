@@ -100,14 +100,14 @@ test.describe('Login flow', () => {
   test('shows validation error if email is empty', async ({ page }) => {
     await page.goto('/login')
     await page.click('input[type="submit"]')
-    await expect(page.getByText('El email es obligatorio')).toBeVisible()
+    await expect(page.getByText('Email is required')).toBeVisible()
   })
 
   test('shows validation error if password is empty', async ({ page }) => {
     await page.goto('/login')
     await page.fill('input[placeholder="Email"]', 'test@example.com')
     await page.click('input[type="submit"]')
-    await expect(page.getByText('The password is mandatory')).toBeVisible()
+    await expect(page.getByText('Password is required')).toBeVisible()
   })
 
   test('shows error if email format is invalid', async ({ page }) => {

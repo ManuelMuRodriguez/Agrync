@@ -43,9 +43,13 @@ test.describe('Rutas protegidas', () => {
     await setupApiMocks(page, false)
     await page.goto('/dashboard')
 
-    await page.waitForURL(/.+/, { timeout: 5000 })
-    const url = page.url()
+    // Auth check is async (waits for /auth/info + /auth/refresh to fail before redirecting)
+    await Promise.race([
+      page.waitForURL(/login/, { timeout: 10000 }),
+      page.locator('input[placeholder="Email"]').waitFor({ timeout: 10000 }),
+    ]).catch(() => {})
 
+    const url = page.url()
     const isOnLogin = url.includes('login')
     const loginForm = await page.locator('input[placeholder="Email"]').isVisible()
     expect(isOnLogin || loginForm).toBe(true)
