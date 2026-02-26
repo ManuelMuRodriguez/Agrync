@@ -5,7 +5,7 @@
 Agrync is a web-based platform that bridges the gap between industrial field devices and the people who need to monitor them. It collects sensor data from the shop floor, stores it, and presents it through a clean web interface — so operators and engineers can watch values in real time, review historical trends, and act on anomalies without writing a single line of code.
 
 <!-- screenshot: landing dashboard showing several variable cards with live values -->
-![Agrync overview](../images/overview-dashboard.png)
+![Agrync overview](../images/dashboard-cards.png)
 *The Agrync dashboard showing live sensor readings from multiple devices.*
 
 ## Key capabilities
@@ -24,16 +24,20 @@ Agrync is a web-based platform that bridges the gap between industrial field dev
 
 Agrync is composed of three main layers:
 
-```
-Browser (React + Vite)
-        │
-        │  HTTP / WebSocket
-        ▼
-FastAPI backend  ──────►  MongoDB
-        │
-        ├── Modbus task  ──────────►  Modbus TCP/IP devices
-        ├── ServerOPC task ─────────►  OPC UA clients
-        └── OPCtoFIWARE task ───────►  FIWARE Orion
+```mermaid
+graph TD
+        A["Browser<br/>(React + Vite)"]
+        B["FastAPI backend"]
+        C["MongoDB"]
+        D["Modbus TCP/IP devices"]
+        E["OPC UA clients"]
+        F["FIWARE Orion"]
+
+        A -->|HTTP / WebSocket| B
+        B --> C
+        B -->|Modbus task| D
+        B -->|ServerOPC task| E
+        B -->|OPCtoFIWARE task| F
 ```
 
 The **backend** exposes a REST API and manages three long-running background tasks. The **frontend** communicates exclusively with the backend API — it never contacts field devices directly.

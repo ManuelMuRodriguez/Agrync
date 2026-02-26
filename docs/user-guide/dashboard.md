@@ -11,10 +11,6 @@ The **Dashboard** page displays live-value cards for any combination of Modbus v
 
 1. Go to **Dashboard**.
 2. Click the **Configure** button (or a similar controls icon in the toolbar).
-
-    <!-- screenshot: Dashboard toolbar with the Configure/select-variables button highlighted -->
-    ![Dashboard configure button](../images/dashboard-configure.png)
-
 3. A modal dialog opens listing all the Modbus devices assigned to your account. Under each device the available variables are shown as checkboxes.
 
     <!-- screenshot: variable-selection modal with device headings and variable checkboxes -->
@@ -51,10 +47,6 @@ The dashboard polls for new values at a fixed interval. The page does not need t
 ## Writing a value (OPC UA)
 
 If a variable is writable and your account has the **Administrator** or **Editor** role, a write form appears at the bottom of the card.
-
-<!-- screenshot: a value card with the write-value input and Submit button visible -->
-![Write value form on a card](../images/dashboard-write-value.png)
-*Write-value form for a writable variable.*
 
 To write a value:
 

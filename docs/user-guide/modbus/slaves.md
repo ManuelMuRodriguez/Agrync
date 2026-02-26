@@ -6,10 +6,6 @@ A **slave** (also called a Modbus unit or node) is a logical entity within a dev
 
 Click on a device row to select it. The slaves table below automatically filters to show only the slaves that belong to the selected device.
 
-<!-- screenshot: the ModbusSlavesTable showing slaves for a selected device, with the device row highlighted above -->
-![Slaves table](../../images/modbus-slaves-table.png)
-*Slaves table filtered to the selected device.*
-
 ## Adding a slave
 
 1. Select the parent device by clicking its row.
@@ -22,10 +18,6 @@ Click on a device row to select it. The slaves table below automatically filters
 | **Slave ID** | ✅ | Integer greater than `0`. Must be unique within the device. |
 
 4. Click **Save**.
-
-<!-- screenshot: the add-slave form with Name and Slave ID fields -->
-![Add slave form](../../images/modbus-slaves-add.png)
-*The add-slave form.*
 
 ## Editing a slave
 

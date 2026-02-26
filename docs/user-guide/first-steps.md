@@ -8,6 +8,7 @@ Open the activation link in your browser. You will land on the **Set password** 
 
 <!-- screenshot: the CreatePassword page showing the activation form with email, password and confirm-password fields -->
 ![Set password page](../images/first-steps-create-password.png)
+
 *The account activation page. Enter your email and choose a password.*
 
 Fill in the fields:
@@ -31,6 +32,7 @@ Navigate to http://localhost:5173/login (or the URL provided by your administrat
 
 <!-- screenshot: the Login page showing the email and password fields and the Log in button -->
 ![Login page](../images/first-steps-login.png)
+
 *The login page. Enter your email address and password.*
 
 Enter your **email** and **password** and click **Log in**.
@@ -54,6 +56,7 @@ After logging in, the main navigation menu is always visible on the left side of
 
 <!-- screenshot: the full app layout showing the left sidebar menu with all navigation items visible -->
 ![Navigation menu](../images/first-steps-navigation.png)
+
 *The main navigation menu with all available sections.*
 
 | Section | Description |

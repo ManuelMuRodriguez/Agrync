@@ -12,15 +12,8 @@ This task is **locked**: only one locked task can run at a time. If **OPCtoFIWAR
 2. Verify the current state is **Stopped**.
 3. Click **Start**.
 
-<!-- screenshot: ServerOPC task page with state "Stopped" and the Start button -->
-![ServerOPC task – stopped](../../images/monitoring-server-opc-stopped.png)
-*ServerOPC task ready to start.*
-
 If the task starts successfully, the state changes to **Running** and the log panel begins streaming.
 
-<!-- screenshot: ServerOPC task running with log panel active -->
-![ServerOPC task – running](../../images/monitoring-server-opc-running.png)
-*ServerOPC task running, log panel active.*
 
 !!! note "OPCtoFIWARE must be stopped first"
     If the OPCtoFIWARE task is currently running, an error is shown and the ServerOPC task will not start. Stop OPCtoFIWARE first, then start ServerOPC.
@@ -63,8 +56,5 @@ If ServerOPC transitions to **Failed**:
 
 The log panel streams output in real time via a WebSocket connection when the task is running.
 
-<!-- screenshot: ServerOPC log panel with timestamped lines -->
-![ServerOPC live log](../../images/monitoring-server-opc-log.png)
-*Live log for the ServerOPC task.*
 
 The underlying log file is stored at `tasks/logServer/ServerOPC.log` inside the backend container.

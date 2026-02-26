@@ -6,10 +6,6 @@ A **variable** maps to one or more consecutive Modbus registers within a slave. 
 
 Click on a slave row to select it. The variables table at the bottom filters to show the variables of that slave.
 
-<!-- screenshot: the ModbusVariablesTable showing variables for a selected slave -->
-![Variables table](../../images/modbus-variables-table.png)
-*Variables table filtered to the selected slave.*
-
 ## Adding a variable
 
 1. Select a device row, then select a slave row.
@@ -31,10 +27,6 @@ Click on a slave row to select it. The variables table at the bottom filters to 
 | **Max value** | — | `null` | Upper bound for value range (must be set together with min). |
 
 4. Click **Save**.
-
-<!-- screenshot: the add-variable form with several fields filled in -->
-![Add variable form](../../images/modbus-variables-add.png)
-*The add-variable form.*
 
 ### Data types
 

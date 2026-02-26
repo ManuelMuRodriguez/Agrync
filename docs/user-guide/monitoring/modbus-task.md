@@ -10,10 +10,6 @@ The **Modbus** task polls all Modbus devices and slaves configured in Agrync and
 2. The current state of the task is displayed (Stopped / Running / Failed).
 3. Click **Start**.
 
-<!-- screenshot: Modbus task page with state "Stopped" and the Start button highlighted -->
-![Modbus task – stopped state](../../images/monitoring-modbus-stopped.png)
-*Modbus task ready to start.*
-
 If the task starts successfully, the state changes to **Running** and the log panel begins streaming output.
 
 <!-- screenshot: Modbus task page with state "Running" and the live log panel showing log lines -->
@@ -52,7 +48,7 @@ If the Modbus task transitions to **Failed**:
 When the task is running, the log panel streams output in real time via a WebSocket connection. Each line is prefixed with a timestamp and severity level.
 
 <!-- screenshot: Modbus log panel showing timestamped log lines such as INFO read, DEBUG value, ERROR connection -->
-![Modbus live log](../../images/monitoring-modbus-log.png)
+![Modbus live log](../../images/monitoring-modbus-running.png)
 *Live log lines for the Modbus task.*
 
 Log lines use standard levels: `DEBUG`, `INFO`, `WARNING`, `ERROR`, `CRITICAL`.

@@ -23,10 +23,6 @@ Each task can be in one of three states:
 | **Stopped** | The process is not running. |
 | **Failed** | The process started but terminated with an error. Check the log for details. |
 
-<!-- screenshot: the monitoring overview page showing the three task cards with their current states and start/stop buttons -->
-![Monitoring overview](../../images/monitoring-overview.png)
-*The monitoring page showing the three tasks with their current states.*
-
 ## Task dependencies
 
 The **OPCtoFIWARE** task depends on the **ServerOPC** task because it subscribes to the OPC UA server. Both tasks are marked as **locked**: if either is running, the other is blocked from starting independently.

@@ -102,7 +102,7 @@ When the backend starts for the first time against an empty database, it automat
 
 | Field | Value |
 |---|---|
-| Email | `admin@admin.com` |
+| Email | `admin@example.com` |
 | Role | Administrator |
 | Password | *(set on first login — see [First Steps](first-steps.md))* |
 

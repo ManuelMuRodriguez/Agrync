@@ -20,10 +20,6 @@ The page displays a table of all registered users with the following columns:
 | **Role** | `Administrator` or `Editor`. |
 | **Actions** | Edit, device assignment, and delete buttons. |
 
-<!-- screenshot: user list table with at least three rows and action buttons visible -->
-![User list](../images/user-management-list.png)
-*List of registered users.*
-
 ---
 
 ## Creating a user
@@ -38,7 +34,7 @@ The page displays a table of all registered users with the following columns:
     | **Role** | Yes | `Administrator` or `Editor`. See [User Roles](user-roles.md). |
     | **Password** | Yes | Temporary password. The user should change it on first login (see [Account Settings](account.md)). |
 
-3. Click **Create**.
+3. Click **Save**.
 
 <!-- screenshot: create-user form with all fields filled in -->
 ![Create user form](../images/user-management-create.png)
@@ -95,10 +91,6 @@ Device assignment controls which Modbus devices a user can see on the Dashboard 
     - **Available devices** — all devices in the system not yet assigned.
 3. Use the checkboxes (or drag-and-drop) to move devices between panels.
 4. Click **Save**.
-
-<!-- screenshot: device assignment modal with two panels and checkboxes -->
-![Device assignment modal](../images/user-management-devices.png)
-*Device assignment modal.*
 
 !!! note
     Administrators always see all devices regardless of device assignment.

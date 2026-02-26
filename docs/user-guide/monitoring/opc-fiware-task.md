@@ -16,15 +16,7 @@ This task is **locked**: only one locked task can run at a time. If **ServerOPC*
 3. Verify the current state is **Stopped**.
 4. Click **Start**.
 
-<!-- screenshot: OPCtoFIWARE task page with state "Stopped" and the Start button -->
-![OPCtoFIWARE task – stopped](../../images/monitoring-opc-fiware-stopped.png)
-*OPCtoFIWARE task ready to start.*
-
 If the task starts successfully, the state changes to **Running** and the log panel begins streaming.
-
-<!-- screenshot: OPCtoFIWARE task running with log panel showing subscription and publish lines -->
-![OPCtoFIWARE task – running](../../images/monitoring-opc-fiware-running.png)
-*OPCtoFIWARE task running, forwarding values to FIWARE.*
 
 ---
 
@@ -58,28 +50,21 @@ If OPCtoFIWARE transitions to **Failed**:
 
 The log panel streams output in real time via a WebSocket connection when the task is running.
 
-<!-- screenshot: OPCtoFIWARE log panel with lines like "Subscription created", "Published entity", ERROR lines -->
-![OPCtoFIWARE live log](../../images/monitoring-opc-fiware-log.png)
-*Live log for the OPCtoFIWARE task.*
-
 The underlying log file is stored at `tasks/logOPCtoFIWARE/OPCtoFIWARE.log` inside the backend container. Previous rotated logs are retained with numeric suffixes.
 
 ---
 
 ## Full pipeline summary
 
+## Full pipeline summary
+
 The following diagram shows the data flow from Modbus device to FIWARE Orion:
 
-```
- Modbus device  ──►  [Modbus task]  ──►  Database
-                                             │
-                                    [ServerOPC task]
-                                             │
-                                      OPC UA server
-                                             │
-                                  [OPCtoFIWARE task]
-                                             │
-                                    FIWARE Orion CB
+```mermaid
+graph LR
+    A["Modbus device"] -->|Modbus task| B["Database"]
+    B -->|ServerOPC task| C["OPC UA server"]
+    C -->|OPCtoFIWARE task| D["FIWARE Orion CB"]
 ```
 
 All three tasks must be running for end-to-end FIWARE integration to be active.

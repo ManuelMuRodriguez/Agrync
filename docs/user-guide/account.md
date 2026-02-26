@@ -11,11 +11,7 @@ Navigate to your account by clicking your username or avatar in the top navigati
 1. Locate the **Name** section.
 2. Enter your new full name.
 3. Click **Save**.
-
-<!-- screenshot: Change name form with a text input and Save button -->
-![Change name form](../images/account-name.png)
-*Update your display name.*
-
+4. 
 The new name appears immediately in the navigation bar.
 
 ---
@@ -30,10 +26,6 @@ Your email address is your login identifier. To change it:
 4. Enter the new email again in the **Confirm new email** field.
 5. Click **Save**.
 
-<!-- screenshot: the three-field email change form -->
-![Change email form](../images/account-email.png)
-*Email change form requiring current address confirmation.*
-
 !!! warning
     After saving, your login username changes to the new email address. Use the new address on your next login.
 
@@ -46,10 +38,6 @@ Your email address is your login identifier. To change it:
 3. Enter the **new password**.
 4. Enter the new password again in the **Confirm new password** field.
 5. Click **Save**.
-
-<!-- screenshot: the three-field password change form with masked input fields -->
-![Change password form](../images/account-password.png)
-*Password change form.*
 
 Password requirements:
 

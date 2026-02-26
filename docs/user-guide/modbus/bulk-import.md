@@ -6,10 +6,6 @@ Instead of adding devices, slaves, and variables one by one, you can upload a si
 
 Click **Download template** on the Modbus configuration page to get a ready-to-fill JSON example. The template shows the correct structure with sample values for every field.
 
-<!-- screenshot: the Download template button on the Modbus devices page -->
-![Download template button](../../images/modbus-bulk-download-template.png)
-*Download the JSON template to use as a starting point.*
-
 ## File structure
 
 The file must be a JSON array of devices. Each device contains an array of slaves, and each slave contains an array of variables.
@@ -81,10 +77,6 @@ The file must be a JSON array of devices. Each device contains an array of slave
 1. Click **Upload configuration** on the Modbus configuration page.
 2. Select your JSON file.
 3. Click **Upload**.
-
-<!-- screenshot: the file upload button/dialog on the Modbus devices page -->
-![Upload configuration button](../../images/modbus-bulk-upload.png)
-*Uploading a configuration JSON file.*
 
 The system validates the file and processes each device, slave, and variable:
 

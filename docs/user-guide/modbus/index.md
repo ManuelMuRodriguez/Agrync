@@ -35,10 +35,6 @@ Go to **Administration → Devices → Modbus** to reach the Modbus configuratio
 2. **Slaves** — filtered to the currently selected device.
 3. **Variables** — filtered to the currently selected slave.
 
-<!-- screenshot: the full ModbusDevices page showing the three tables (devices, slaves, variables) -->
-![Modbus configuration page](../../images/modbus-overview.png)
-*The Modbus configuration page with the three-level hierarchy visible.*
-
 ## Configuration methods
 
 There are two ways to configure Modbus:

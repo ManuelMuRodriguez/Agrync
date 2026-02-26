@@ -8,6 +8,7 @@ The devices table is at the top of the **Administration → Devices → Modbus**
 
 <!-- screenshot: the ModbusDevicesTable component showing a list of devices with their IP addresses and action buttons -->
 ![Devices table](../../images/modbus-devices-table.png)
+
 *The devices table. Each row shows the device name and IP address.*
 
 ## Adding a device
@@ -22,9 +23,6 @@ The devices table is at the top of the **Administration → Devices → Modbus**
 
 3. Click **Save**. The new device appears in the table.
 
-<!-- screenshot: the add-device modal/form with the Name and IP fields filled in -->
-![Add device form](../../images/modbus-devices-add.png)
-*The add-device form.*
 
 !!! note
     Adding a device does not start data collection. You need to add at least one slave and one variable, and then start the **Modbus task** (see [Modbus Task](../monitoring/modbus-task.md)).
