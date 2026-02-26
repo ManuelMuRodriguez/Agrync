@@ -1,0 +1,79 @@
+site_name: Agrync Documentation
+site_description: User manual for the Agrync IoT platform
+site_author: Agrync Team
+repo_url: https://github.com/ManuelMuRodriguez/Agrync
+repo_name: ManuelMuRodriguez/Agrync
+
+theme:
+  name: material
+  language: en
+  palette:
+    - scheme: default
+      primary: green
+      accent: light green
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - scheme: slate
+      primary: green
+      accent: light green
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.expand
+    - navigation.top
+    - search.highlight
+    - search.suggest
+    - content.code.copy
+  icon:
+    repo: fontawesome/brands/github
+
+plugins:
+  - search
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - attr_list
+  - md_in_html
+  - tables
+  - footnotes
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+
+nav:
+  - Home: index.md
+  - User Guide:
+    - Introduction: user-guide/introduction.md
+    - Installation: user-guide/installation.md
+    - First Steps: user-guide/first-steps.md
+    - User Roles: user-guide/user-roles.md
+    - Dashboard: user-guide/dashboard.md
+    - Charts: user-guide/charts.md
+    - Modbus Configuration:
+      - Overview: user-guide/modbus/index.md
+      - Devices: user-guide/modbus/devices.md
+      - Slaves: user-guide/modbus/slaves.md
+      - Variables: user-guide/modbus/variables.md
+      - Bulk Import: user-guide/modbus/bulk-import.md
+    - Monitoring:
+      - Overview: user-guide/monitoring/index.md
+      - Modbus Task: user-guide/monitoring/modbus-task.md
+      - OPC UA Server Task: user-guide/monitoring/server-opc-task.md
+      - OPC to FIWARE Task: user-guide/monitoring/opc-fiware-task.md
+    - User Management: user-guide/user-management.md
+    - Account Settings: user-guide/account.md
+    - Reference:
+      - JSON Import Template: user-guide/reference/json-template.md
+  - Technical Manual:
+    - Overview: technical/index.md

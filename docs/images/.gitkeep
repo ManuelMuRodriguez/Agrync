@@ -1,0 +1,3 @@
+# Place screenshot PNG files in this directory.
+# Each docs page references images as ../images/<filename>.png
+# or ../../images/<filename>.png depending on nesting depth.
