@@ -37,7 +37,11 @@ plugins:
 markdown_extensions:
   - admonition
   - pymdownx.details
-  - pymdownx.superfences
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
   - pymdownx.tabbed:
       alternate_style: true
   - pymdownx.highlight:
@@ -77,3 +81,25 @@ nav:
       - JSON Import Template: user-guide/reference/json-template.md
   - Technical Manual:
     - Overview: technical/index.md
+    - Architecture:
+      - System Overview: technical/architecture/index.md
+      - Backend: technical/architecture/backend.md
+      - Frontend: technical/architecture/frontend.md
+    - API Reference:
+      - Authentication: technical/api/authentication.md
+      - Users: technical/api/users.md
+      - Modbus: technical/api/modbus.md
+      - Tasks: technical/api/tasks.md
+      - OPC UA: technical/api/opc.md
+      - FIWARE: technical/api/fiware.md
+    - Data Models:
+      - User & Roles: technical/data-models/user-roles.md
+      - Modbus Hierarchy: technical/data-models/modbus.md
+      - Tasks: technical/data-models/tasks.md
+    - Background Tasks:
+      - Modbus Task: technical/background-tasks/modbus.md
+      - ServerOPC Task: technical/background-tasks/server-opc.md
+      - OPCtoFIWARE Task: technical/background-tasks/opc-to-fiware.md
+    - Authentication & Security: technical/auth-security.md
+    - Configuration: technical/configuration.md
+    - Testing: technical/testing.md
