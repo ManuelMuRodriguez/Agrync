@@ -33,7 +33,7 @@ services:
       - "5173:5173"
     volumes:
       - ./agrync_frontend:/Agrync/agrync_frontend
-      - node_modules:/Agrync/agrync_frontend/node_modules
+      - /Agrync/agrync_frontend/node_modules
     depends_on:
       - backend
     networks:
@@ -55,5 +55,4 @@ networks:
     driver: bridge
 
 volumes:
-  node_modules:
   mongo_data:
