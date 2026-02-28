@@ -159,22 +159,37 @@ USE CASES
 • Integration with existing SCADA systems
 
 
+CURRENT LIMITATIONS
+-------------------
+• MongoDB without authentication by default in development
+• Single concurrent Modbus task (locking prevents parallelism)
+• No API rate limiting
+• Basic logging — no centralised aggregation (Loki/ELK)
+• English-only interface (no i18n)
+• No runtime observability layer (Prometheus/Grafana)
+• Single-node MongoDB (no replication or sharding)
+
+Note: backend pytest tests, frontend Vitest + Playwright E2E tests
+and a full GitHub Actions CI/CD pipeline are already implemented.
+
+
 ROADMAP AND FUTURE IMPROVEMENTS
 --------------------------------
-Short term:
-  □ Automated test suite (pytest, Cypress)
-  □ CI/CD with GitHub Actions
-  □ Internationalisation (i18n)
+Short term (immediate):
+  □ API rate limiting (slowapi or nginx)
+  □ MongoDB authentication enabled by default in dev
+  □ Structured/JSON logging (structlog)
 
 Medium term:
-  □ Message queue (RabbitMQ) for asynchronous tasks
+  □ Prometheus + Grafana observability stack
+  □ Message queue (RabbitMQ/Celery) for async tasks
   □ Redis for high-performance caching
-  □ Grafana + Prometheus for metrics
 
 Long term:
-  □ Machine Learning for fault prediction
+  □ MongoDB replica sets for high availability
   □ Additional protocol support (MQTT, CoAP)
   □ Mobile app (React Native)
+  □ Machine Learning for fault prediction and anomaly detection
 
 
 PERFORMANCE METRICS

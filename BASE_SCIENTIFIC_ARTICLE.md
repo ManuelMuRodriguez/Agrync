@@ -507,35 +507,53 @@ MONGO_INITDB_ROOT_PASSWORD=password
 
 ### 9.1 Current Limitations
 
-1. **Single-user in development**: MongoDB without authentication by default
-2. **No automated tests**: No unit/integration test suite
-3. **Basic logging**: Manual logging system; could be improved with structured logging
-4. **Documentation**: Basic README, lacks detailed guides
+1. **MongoDB without authentication by default in development**: The development environment does not enforce MongoDB credentials; additional configuration is required before production.
+2. **Single-node MongoDB**: No replica set or sharding is configured; availability and read scalability depend on a single instance.
+3. **Single concurrent Modbus task**: The locking mechanism prevents more than one Modbus background task from running simultaneously, limiting multi-device parallelism.
+4. **No API rate limiting**: The REST API does not implement request throttling, which may expose the system to abuse in open network environments.
+5. **Basic logging without centralised aggregation**: Although `logging.conf` is in place, there is no centralised log collection (e.g. Loki, ELK Stack), making it harder to correlate events across services.
+6. **No runtime observability**: There is no Prometheus, Grafana or equivalent integration for performance metrics or alerting.
 
 ### 9.2 Proposed Improvements
 
-1. **Internationalisation (i18n)**
-   - Implement react-i18next for multi-language support
-   - Translate interface to multiple languages
+#### Short term (immediate)
 
-2. **Test Suite**
-   - Unit tests with pytest (backend)
-   - Integration tests with Docker Compose
-   - E2E tests with Cypress/Playwright (frontend)
+1. **API rate limiting**
+   - Add `slowapi` middleware or an nginx upstream rule to throttle requests per client.
 
-3. **CI/CD Pipeline**
-   - GitHub Actions for linting and tests
-   - Automatic Docker image builds
-   - Automated deployment to registry
+2. **MongoDB authentication in all environments**
+   - Enable `MONGO_INITDB_ROOT_USERNAME` / `MONGO_INITDB_ROOT_PASSWORD` by default, even in development.
 
-4. **Monitoring**
-   - Prometheus + Grafana for metrics
-   - ELK Stack for centralised logs
+3. **Structured/JSON logging**
+   - Migrate to `structlog` or equivalent JSON-formatted output to facilitate parsing and forwarding to external systems.
 
-5. **Scalability**
-   - Message queue (RabbitMQ) for asynchronous tasks
-   - Redis for caching
-   - MongoDB replication for high availability
+#### Medium term
+
+4. **Monitoring and observability**
+   - Prometheus exporters for task metrics (reads/min, latency, error rate).
+   - Grafana dashboards for real-time visualisation.
+   - Centralised log aggregation with Loki or ELK Stack.
+
+5. **Message queue for asynchronous tasks**
+   - Replace direct in-process task scheduling with RabbitMQ or Celery to decouple task execution and improve resilience.
+
+6. **Redis caching**
+   - Cache frequently queried telemetry data to reduce MongoDB read pressure.
+
+#### Long term
+
+7. **MongoDB high availability**
+   - Configure replica sets for fault tolerance and horizontal read scalability.
+
+8. **Additional protocol support**
+   - MQTT broker integration for lightweight IoT devices.
+   - CoAP support for constrained environments.
+
+9. **Mobile application**
+    - React Native app for on-site monitoring and push alerts.
+
+10. **Machine Learning integration**
+    - Anomaly detection and predictive maintenance models trained on stored telemetry.
 
 ---
 
