@@ -1,5 +1,9 @@
 # Agrync / Agroconnect V2
 
+<p align="center">
+  <img src="agrync_frontend/public/agrync.png" alt="Agrync Logo" width="200"/>
+</p>
+
 [![CI](https://github.com/ManuelMuRodriguez/Agrync/actions/workflows/ci.yml/badge.svg)](https://github.com/ManuelMuRodriguez/Agrync/actions/workflows/ci.yml)
 ![Python](https://img.shields.io/badge/Python-3.13-3776ab?logo=python&logoColor=white)
 ![Node](https://img.shields.io/badge/Node.js-22-339933?logo=node.js&logoColor=white)
@@ -9,6 +13,14 @@
 ![Docker](https://img.shields.io/badge/Docker-Compose-2496ed?logo=docker&logoColor=white)
 
 Agroindustrial facilities typically operate hundreds of sensors and PLCs from different manufacturers, each speaking its own protocol — Modbus, OPC-UA, or proprietary variants — creating isolated data silos that are expensive to integrate, hard to maintain, and impossible to monitor from a single interface. Bridging this IT/OT gap has traditionally required specialist engineering teams and customized middleware that few small or mid-size agro-processing plants can afford. Agrync is a full-stack platform — FastAPI backend and React + Vite frontend — built to eliminate that barrier: it provides a unified, open-source layer that speaks the industrial protocols already present on the plant floor, normalises the data, and exposes it through a modern web interface, so operators can configure, monitor and manage every sensor in the facility without writing a single line of integration code.
+
+---
+
+## Documentation
+
+Full documentation — installation, configuration, usage guides and API reference — is available at:
+
+**[https://agrync.readthedocs.io/](https://agrync.readthedocs.io/)**
 
 ---
 
