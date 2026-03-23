@@ -1,4 +1,4 @@
-# Agrync / Agroconnect V2
+# Agrync / Agroconnect
 
 <p align="center">
   <img src="agrync_frontend/public/agrync.png" alt="Agrync Logo" width="200"/>
@@ -11,6 +11,11 @@
 ![React](https://img.shields.io/badge/React-18-61dafb?logo=react&logoColor=white)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.7-3178c6?logo=typescript&logoColor=white)
 ![Docker](https://img.shields.io/badge/Docker-Compose-2496ed?logo=docker&logoColor=white)
+
+**M. Muñoz\*** · J.J. León · M. Torres · A. Becerra-Terón · J.A. Sánchez  
+*University of Almería, Spain* · \*Corresponding author: mmr411@ual.es
+
+---
 
 Agroindustrial facilities typically operate hundreds of sensors and PLCs from different manufacturers, each speaking its own protocol — Modbus, OPC-UA, or proprietary variants — creating isolated data silos that are expensive to integrate, hard to maintain, and impossible to monitor from a single interface. Bridging this IT/OT gap has traditionally required specialist engineering teams and customized middleware that few small or mid-size agro-processing plants can afford. Agrync is a full-stack platform — FastAPI backend and React + Vite frontend — built to eliminate that barrier: it provides a unified, open-source layer that speaks the industrial protocols already present on the plant floor, normalises the data, and exposes it through a modern web interface, so operators can configure, monitor and manage every sensor in the facility without writing a single line of integration code.
 
@@ -155,6 +160,73 @@ docker build agrync_frontend -t agrync-frontend:latest
 
 - If TypeScript or JSX errors appear in the frontend, run `npm install` in `agrync_frontend` to install dependencies and type packages.
 - If the backend cannot connect to MongoDB, check `MONGODB_URI`, network access and that MongoDB is running.
+
+---
+
+## Running the tests
+
+Full testing documentation is available at **[https://agrync.readthedocs.io/en/latest/technical/testing/](https://agrync.readthedocs.io/en/latest/technical/testing/)**.
+
+### Backend (pytest)
+
+The backend test suite uses an in-memory MongoDB mock — no running database or Docker is required.
+
+```bash
+cd agrync_backend
+python -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt -r requirements-test.txt
+pytest -v
+```
+
+To run a single file:
+
+```bash
+pytest tests/test_auth.py -v
+```
+
+Expected result: **99 passed, 1 xfailed**.
+
+### Frontend — unit tests (Vitest)
+
+```bash
+cd agrync_frontend
+npm install
+npm run test -- --run
+```
+
+With coverage report:
+
+```bash
+npm run test -- --coverage
+```
+
+Expected result: **49 passed**.
+
+### Frontend — end-to-end tests (Playwright)
+
+E2E tests require the full stack to be running first:
+
+```bash
+# From the repository root
+docker compose up -d
+
+# Then, in a separate terminal
+cd agrync_frontend
+npx playwright test --config playwright.config.cjs
+```
+
+To run a single spec:
+
+```bash
+npx playwright test e2e/login.spec.cjs --config playwright.config.cjs
+```
+
+Expected result: **11 passed**. An HTML report can be opened with:
+
+```bash
+npx playwright show-report
+```
 
 ---
 
