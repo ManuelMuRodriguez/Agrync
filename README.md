@@ -12,12 +12,14 @@
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.7-3178c6?logo=typescript&logoColor=white)
 ![Docker](https://img.shields.io/badge/Docker-Compose-2496ed?logo=docker&logoColor=white)
 
-**M. Muñoz\*** · J.J. León · M. Torres · A. Becerra-Terón · J.A. Sánchez  
-*University of Almería, Spain* · \*Corresponding author: mmr411@ual.es
-
 ---
 
 Agroindustrial facilities typically operate hundreds of sensors and PLCs from different manufacturers, each speaking its own protocol — Modbus, OPC-UA, or proprietary variants — creating isolated data silos that are expensive to integrate, hard to maintain, and impossible to monitor from a single interface. Bridging this IT/OT gap has traditionally required specialist engineering teams and customized middleware that few small or mid-size agro-processing plants can afford. Agrync is a full-stack platform — FastAPI backend and React + Vite frontend — built to eliminate that barrier: it provides a unified, open-source layer that speaks the industrial protocols already present on the plant floor, normalises the data, and exposes it through a modern web interface, so operators can configure, monitor and manage every sensor in the facility without writing a single line of integration code.
+
+---
+
+**M. Muñoz\*** · J.J. León · M. Torres · A. Becerra-Terón · J.A. Sánchez  
+*University of Almería, Spain* · \*Corresponding author: mmr411@ual.es
 
 ---
 
