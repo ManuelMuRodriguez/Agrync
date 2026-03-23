@@ -69,8 +69,14 @@ docker compose up --build
 
 After the services start:
 
-- Backend API: http://localhost:8000 (FastAPI app is mounted under `/api/v1`)
-- Frontend: http://localhost:5173
+| Service | URL | Notes |
+|---|---|---|
+| Frontend | http://localhost:5173 | React + Vite UI |
+| Backend REST API | http://localhost:8000/api/v1 | FastAPI |
+| Swagger / OpenAPI | http://localhost:8000/api/v1/docs | Interactive API docs |
+| OPC UA Server | opc.tcp://localhost:4842 | Exposed by the backend container |
+| FIWARE Orion | http://localhost:1026 | NGSI v2 Context Broker |
+| MongoDB | localhost:27020 | Internal port 27017 |
 
 To stop and remove containers:
 
@@ -98,11 +104,54 @@ pip install -r requirements.txt
 
 3. Environment variables
 
-Provide a MongoDB connection and other secrets as environment variables. Example `.env`:
+All environment variables must be provided before starting the backend. Full configuration reference is available at **[https://agrync.readthedocs.io/en/latest/technical/configuration/](https://agrync.readthedocs.io/en/latest/technical/configuration/)**.
+
+Create a `.env` file in `agrync_backend/` (or export the variables directly):
 
 ```text
-MONGODB_URI=mongodb://localhost:27017/agrync
-SECRET_KEY=some-secret-key
+# ── MongoDB ────────────────────────────────────────────────
+MONGO_URI=mongodb://localhost:27017
+
+# ── Authentication (JWT) ───────────────────────────────────
+ACCESS_TOKEN_SECRET_KEY=change-me-access
+REFRESH_TOKEN_SECRET_KEY=change-me-refresh
+ALGORITHM=HS256
+ACCESS_TOKEN_EXPIRE_MINUTES=30
+REFRESH_TOKEN_EXPIRE_MINUTES=1440
+ADMIN_EMAIL=admin@example.com
+
+# ── OPC UA Server ──────────────────────────────────────────
+OPCUA_IP_PORT=4842
+URL=opc.tcp://localhost:{OPCUA_IP_PORT}
+URL_ADMIN=opc.tcp://localhost:{OPCUA_IP_PORT}
+URI=urn:agrync:server
+USERNAME_OPC=operator
+PASSWORD_OPC=change-me
+USERNAME_OPC_ADMIN=admin
+PASSWORD_OPC_ADMIN=change-me
+CERT=certificate/my_cert.der
+PRIVATE_KEY=certificate/private_key.pem
+CLIENT_CERT=certificate/client_cert.der
+CLIENT_APP_URI=urn:agrync:client
+
+# ── Modbus task ────────────────────────────────────────────
+RECONNECTION_TIME=5
+
+# ── FIWARE Orion ───────────────────────────────────────────
+FIWARE_URL=http://orion:1026
+FIWARE_SERVICE=agrync
+FIWARE_SERVICE_PATH=/
+
+# ── Telegram alerts (optional) ─────────────────────────────
+TELEGRAM_BOT_TOKEN=
+TELEGRAM_CHAT_ID=
+ALERT_INTERVAL=60
+
+# ── Logging ────────────────────────────────────────────────
+LOG_CONFIG=logging.conf
+LOG_MODBUS=ModbusLogger
+LOG_OPC=OPCLogger
+LOG_OPC_FIWARE=OPCtoFIWARELogger
 ```
 
 4. Run the backend in development:
@@ -147,6 +196,20 @@ Build frontend image:
 ```bash
 docker build agrync_frontend -t agrync-frontend:latest
 ```
+
+---
+
+## Background tasks
+
+The core integration logic runs as three independent background processes managed from the Administration panel. See the "Docs" column for detailed documentation on each task.
+
+| Task | Description | Docs |
+|---|---|---|
+| **Modbus** | Polls all configured Modbus TCP/IP devices at their configured intervals, decodes register values (Int16/32/64, Float32/64, endianness, scaling) and persists them in MongoDB (`LastVariable` + `HistoricalVariable`). Also subscribes to the OPC UA server to relay write-back commands to writable registers. | [→ docs](https://agrync.readthedocs.io/en/latest/technical/background-tasks/modbus/) |
+| **ServerOPC** | Starts an OPC UA server (port 4842) secured with X.509 certificates (`Basic256Sha256 + SignAndEncrypt`). Exposes every Modbus variable as an OPC UA node and keeps their values in sync from the database. | [→ docs](https://agrync.readthedocs.io/en/latest/technical/background-tasks/server-opc/) |
+| **OPCtoFIWARE** | Connects as an OPC UA client to ServerOPC, subscribes to all nodes, and forwards value changes to a FIWARE Orion Context Broker via NGSI v2 PATCH requests. Registers a webhook on Orion so that platform-side updates flow back to the database. Supports optional Telegram alerts on out-of-range values. | [→ docs](https://agrync.readthedocs.io/en/latest/technical/background-tasks/opc-to-fiware/) |
+
+Tasks are started and stopped from the web UI (*Administration → Monitoring*) or via the REST API (`POST /api/v1/tasks/{name}/start`). ServerOPC and OPCtoFIWARE are locked tasks (they start and stop together as a pair).
 
 ---
 
@@ -229,6 +292,34 @@ Expected result: **11 passed**. An HTML report can be opened with:
 ```bash
 npx playwright show-report
 ```
+
+---
+
+## Screenshots
+
+**Login**
+
+<p align="center">
+  <img src="docs/images/first-steps-login.png" alt="Login screen" width="800"/>
+</p>
+
+**Dashboard — real-time sensor values**
+
+<p align="center">
+  <img src="docs/images/dashboard-cards.png" alt="Dashboard with real-time sensor cards" width="800"/>
+</p>
+
+**Modbus device management**
+
+<p align="center">
+  <img src="docs/images/modbus-devices-table.png" alt="Modbus devices configuration table" width="800"/>
+</p>
+
+**Task monitoring — Modbus running**
+
+<p align="center">
+  <img src="docs/images/monitoring-modbus-running.png" alt="Monitoring panel showing the Modbus task running" width="800"/>
+</p>
 
 ---
 
