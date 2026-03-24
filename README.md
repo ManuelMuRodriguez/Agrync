@@ -1,11 +1,11 @@
 
 <p align="center">
   <img src="agrync_frontend/public/agrync.png" alt="Agrync Logo" width="200"/>
-  # Agrync : A Modular Integration Layer for Industrial IoT interoperability in Agro-industrial Environments
-
 </p>
 
 
+
+<p align="center"><em># Agrync : A Modular Integration Layer for Industrial IoT interoperability in Agro-industrial Environments</em></p>
 
 [![CI](https://github.com/ManuelMuRodriguez/Agrync/actions/workflows/ci.yml/badge.svg)](https://github.com/ManuelMuRodriguez/Agrync/actions/workflows/ci.yml)
 ![Python](https://img.shields.io/badge/Python-3.13-3776ab?logo=python&logoColor=white)
