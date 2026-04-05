@@ -220,7 +220,8 @@
     "unknown": "Desconocido",
     "cooldownWarning": "*Por favor, espera al menos 2 minutos antes de volver a pulsar el botón.*",
     "logs": "Logs {{taskName}}",
-    "errorLoading": "Error cargando el estado del servicio"
+    "errorLoading": "Error cargando el estado del servicio",
+    "demoNotice": "Modo demo: el pipeline OPC-UA (tarea Modbus, ServerOPC, OPCtoFIWARE) está sustituido por el simulador integrado. Estos controles están deshabilitados en la demo."
   },
   "variableCard": {
     "notAvailable": "No disponible",

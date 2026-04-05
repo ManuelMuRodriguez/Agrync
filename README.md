@@ -98,7 +98,109 @@ docker compose down
 
 ---
 
-## Backend — local development
+## Demo mode (reproducibility)
+
+Agrync ships with a self-contained demo that simulates a virtual greenhouse PLC — no physical hardware, OPC-UA certificates, or external services needed. This is the recommended way for software reviewers to verify the full pipeline.
+
+### How it differs from the normal stack
+
+In production the data flow is:
+```
+Modbus device → OPC-UA Server → OPCtoFIWARE task → FIWARE Orion → backend webhook → MongoDB
+```
+In demo mode the OPC-UA layer is replaced by a lightweight built-in poller:
+```
+Modbus Simulator (Docker) → demo_task → FIWARE Orion → backend webhook → MongoDB
+```
+
+### Quick start
+
+**1. Copy the demo environment file**
+```bash
+cp .env.demo.example .env.demo
+```
+
+**2. Start the demo stack**
+```bash
+docker-compose -f docker-compose.yml -f docker-compose.demo.yml up --build
+```
+Six containers start: `mongodb`, `orion`, `agrync_backend`, `agrync_frontend`, `modbus_simulator`, `modbus_demo_task`.
+
+**3. Set the admin password**  
+Open http://localhost:5173/create-password and set a password for `admin@agrync-demo.com`. No REST API call is needed — account activation is done entirely through the web form.
+
+<p align="center">
+  <img src="docs/images/first-steps-create-password.png" alt="Activate user page" width="420"/>
+</p>
+
+**4. Log in**  
+Open http://localhost:5173/login — email `admin@agrync-demo.com`.
+
+**5. Import the demo device**  
+*Administration → Devices → Upload* — select `modbus_simulator/demo_devices.json`. After the import, the Devices table shows `Demo_Greenhouse` with its two Modbus slaves.
+
+<p align="center">
+  <img src="docs/images/import.png" alt="Devices table after import" width="800"/>
+</p>
+
+**6. Assign the device to the admin user**  
+*Administration → Users → Devices (button) → move `Demo_Greenhouse` to Assigned → Save.*
+
+<p align="center">
+  <img src="docs/images/assignet.png" alt="Device assignment modal" width="650"/>
+</p>
+
+**7. View live data**  
+Open **Dashboard** — 10 sensor cards update every 5 seconds.
+
+<p align="center">
+  <img src="docs/images/Dashboard1.png" alt="Dashboard with real-time sensor cards" width="800"/>
+</p>
+
+**8. Explore historical data**  
+Open **Graphs**, select a date range and one or more variables — the chart renders historical trends from the data already collected by the simulator.
+
+<p align="center">
+  <img src="docs/images/historical_data.png" alt="Historical data chart in the Graphs section" width="800"/>
+</p>
+
+### Verifying data in FIWARE Orion
+
+Once the stack is running you can query FIWARE Orion directly to verify the pipeline is active (requires the `Fiware-Service: demo` header):
+
+```bash
+# List all entities published by the demo poller
+curl -s \
+  -H "Fiware-Service: demo" \
+  -H "Fiware-ServicePath: /" \
+  http://localhost:1026/v2/entities | python3 -m json.tool
+
+# Environmental sensors entity
+curl -s \
+  -H "Fiware-Service: demo" \
+  -H "Fiware-ServicePath: /" \
+  "http://localhost:1026/v2/entities/Demo_Greenhouse-Env_Sensors" | python3 -m json.tool
+
+# Actuators entity
+curl -s \
+  -H "Fiware-Service: demo" \
+  -H "Fiware-ServicePath: /" \
+  "http://localhost:1026/v2/entities/Demo_Greenhouse-Actuators" | python3 -m json.tool
+```
+
+Expected response: a JSON object with attributes `Interior_Temp`, `Relative_Humidity`, `CO2_Concentration`, `Global_Radiation`, `Soil_Temp_5cm`, `Soil_Temp_30cm` (Env_Sensors entity) and `Zenith_Ventilation`, `Lateral_Ventilation`, `Thermal_Screen`, `Active_Irrigation` (Actuators entity), each carrying a `value` and a `timestamp` metadata field updated every 5 seconds.
+
+> **Note on the Monitoring panel:** *Administration → Monitoring* controls the OPC-UA background tasks, which are intentionally inactive in demo mode. A banner on each page explains this. Data acquisition is handled autonomously by the `modbus_demo_task` container.
+
+### Stopping the demo
+```bash
+docker-compose -f docker-compose.yml -f docker-compose.demo.yml down
+# Add -v to also remove the MongoDB data volume
+```
+
+---
+
+## Production deployment — Backend
 
 1. Create and activate a virtual environment:
 
@@ -178,7 +280,7 @@ Open http://localhost:8000/api/v1/docs
 
 ---
 
-## Frontend — local development
+## Production deployment — Frontend
 
 1. Install dependencies and run the dev server:
 
@@ -307,7 +409,7 @@ npx playwright show-report
 
 ---
 
-## Screenshots
+## Screenshots — production deployment
 
 **Dashboard — real-time sensor values**
 

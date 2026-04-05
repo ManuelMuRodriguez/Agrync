@@ -127,8 +127,17 @@ export default function MonitorizacionTareas({ taskName, cooldownKey, cooldownMs
     }
   }, [isError]);
 
+  const isDemoMode = import.meta.env.VITE_DEMO_MODE === "true";
+
   return (
-    <div className="flex flex-row p-4">
+    <div className="flex flex-col p-4">
+      {isDemoMode && (
+        <div className="mb-4 flex items-start gap-3 rounded-lg border border-yellow-400 bg-yellow-50 px-4 py-3 text-yellow-800">
+          <span className="mt-0.5 text-xl">⚠️</span>
+          <p className="text-sm font-medium">{t('monitoring.demoNotice')}</p>
+        </div>
+      )}
+    <div className="flex flex-row">
       <div className="w-1/3 mt-12">
         <h2 className="text-button font-bold text-2xl mb-8 text-center">
          {t('monitoring.serviceControl', { taskName })}
@@ -183,6 +192,7 @@ export default function MonitorizacionTareas({ taskName, cooldownKey, cooldownMs
           <PacmanLoader color="#0BCCAF" loading={true} size={50} />
         </div>
       )}
+    </div>
     </div>
   );
 }

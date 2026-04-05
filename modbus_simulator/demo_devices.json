@@ -1,0 +1,126 @@
+[
+  {
+    "name": "Demo_Greenhouse",
+    "ip": "172.30.0.100",
+    "slaves": [
+      {
+        "name": "Env_Sensors",
+        "slave_id": 1,
+        "variables": [
+          {
+            "name": "Interior_Temp",
+            "type": "Float32",
+            "address": 100,
+            "decimals": 2,
+            "endian": "Big",
+            "interval": 5,
+            "unit": "C",
+            "min_value": -10,
+            "max_value": 60
+          },
+          {
+            "name": "Relative_Humidity",
+            "type": "Float32",
+            "address": 102,
+            "decimals": 2,
+            "endian": "Big",
+            "interval": 5,
+            "unit": "%",
+            "min_value": 0,
+            "max_value": 100
+          },
+          {
+            "name": "CO2_Concentration",
+            "type": "Float32",
+            "address": 104,
+            "decimals": 2,
+            "endian": "Big",
+            "interval": 5,
+            "unit": "ppm",
+            "min_value": 300,
+            "max_value": 2000
+          },
+          {
+            "name": "Global_Radiation",
+            "type": "Float32",
+            "address": 106,
+            "decimals": 2,
+            "endian": "Big",
+            "interval": 5,
+            "unit": "W_m2",
+            "min_value": 0,
+            "max_value": 1200
+          },
+          {
+            "name": "Soil_Temp_5cm",
+            "type": "Float32",
+            "address": 108,
+            "decimals": 2,
+            "endian": "Big",
+            "interval": 10,
+            "unit": "C",
+            "min_value": 0,
+            "max_value": 50
+          },
+          {
+            "name": "Soil_Temp_30cm",
+            "type": "Float32",
+            "address": 110,
+            "decimals": 2,
+            "endian": "Big",
+            "interval": 10,
+            "unit": "C",
+            "min_value": 0,
+            "max_value": 50
+          }
+        ]
+      },
+      {
+        "name": "Actuators",
+        "slave_id": 2,
+        "variables": [
+          {
+            "name": "Zenith_Ventilation",
+            "type": "UInt16",
+            "address": 1,
+            "decimals": 0,
+            "interval": 5,
+            "writable": true,
+            "unit": "%",
+            "min_value": 0,
+            "max_value": 100
+          },
+          {
+            "name": "Lateral_Ventilation",
+            "type": "UInt16",
+            "address": 2,
+            "decimals": 0,
+            "interval": 5,
+            "unit": "%",
+            "min_value": 0,
+            "max_value": 100
+          },
+          {
+            "name": "Thermal_Screen",
+            "type": "UInt16",
+            "address": 3,
+            "decimals": 0,
+            "interval": 5,
+            "writable": true,
+            "min_value": 0,
+            "max_value": 1
+          },
+          {
+            "name": "Active_Irrigation",
+            "type": "UInt16",
+            "address": 4,
+            "decimals": 0,
+            "interval": 5,
+            "min_value": 0,
+            "max_value": 1
+          }
+        ]
+      }
+    ]
+  }
+]

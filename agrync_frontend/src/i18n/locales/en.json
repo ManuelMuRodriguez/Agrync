@@ -220,7 +220,8 @@
     "unknown": "Unknown",
     "cooldownWarning": "*Please wait at least 2 minutes before pressing the button again.*",
     "logs": "Logs {{taskName}}",
-    "errorLoading": "Error loading service status"
+    "errorLoading": "Error loading service status",
+    "demoNotice": "Demo mode: the OPC-UA pipeline (Modbus task, ServerOPC, OPCtoFIWARE) is replaced by the built-in simulator. These controls are disabled in demo."
   },
   "variableCard": {
     "notAvailable": "Not available",

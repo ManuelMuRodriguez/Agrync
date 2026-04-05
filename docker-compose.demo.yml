@@ -1,0 +1,90 @@
+# =============================================================================
+# Agrync — Demo overlay for Software X (Elsevier) review
+# =============================================================================
+#
+# Adds a Modbus TCP simulator that replaces real greenhouse hardware so the
+# application can be evaluated without physical PLCs.
+#
+# Usage (from the project root):
+#
+#   docker-compose -f docker-compose.yml -f docker-compose.demo.yml up --build
+#
+# The simulator gets the fixed internal IP 172.20.0.100 so you can import
+# modbus_simulator/demo_devices.json through the Agrync web UI and see live
+# data immediately.
+#
+# To tear down cleanly (required before re-running if the network config was
+# previously different):
+#
+#   docker-compose -f docker-compose.yml -f docker-compose.demo.yml down
+#
+# =============================================================================
+
+services:
+
+  modbus_simulator:
+    build:
+      context: ./modbus_simulator
+    container_name: modbus_simulator
+    restart: unless-stopped
+    command: python server.py
+    # Port 5020 on the host lets you inspect the simulator with any
+    # Modbus TCP client (e.g. QModMaster) at localhost:5020.
+    ports:
+      - "5020:502"
+    networks:
+      agrync_demo:
+        ipv4_address: 172.30.0.100
+
+  # Standalone poller: reads Modbus simulator → sends to FIWARE Orion.
+  # Starts automatically — no task management needed from the UI.
+  modbus_demo_task:
+    build:
+      context: ./modbus_simulator
+    container_name: modbus_demo_task
+    restart: unless-stopped
+    command: python demo_task.py
+    depends_on:
+      - mongodb
+      - orion
+      - backend
+      - modbus_simulator
+    env_file:
+      - .env.demo
+    networks:
+      agrync_demo: {}
+
+  # Re-attach all existing services to the shared demo network so they can
+  # reach the simulator at 172.20.0.100.
+  mongodb:
+    networks:
+      agrync_demo: {}
+
+  backend:
+    env_file:
+      - .env.demo
+    networks:
+      agrync_demo: {}
+
+  frontend:
+    environment:
+      - VITE_DEMO_MODE=true
+    networks:
+      agrync_demo: {}
+
+  orion:
+    networks:
+      agrync_demo: {}
+
+
+networks:
+  # Replace the default bridge with a custom-subnet network so the simulator
+  # gets a predictable, static IP that matches demo_devices.json.
+  agrync_network:
+    name: agrync_demo
+  agrync_demo:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.30.0.0/24
